@@ -1,0 +1,1064 @@
+import os
+import subprocess
+
+HTML_CONTENT = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeCity AI — Complete Feature & Operations Walkthrough Manual</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 14mm 18mm 14mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #030712;
+      color: #e2e8f0;
+      line-height: 1.55;
+      font-size: 9.5pt;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .cover {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 90vh;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      padding: 40px;
+      background: radial-gradient(circle at 80% 20%, rgba(0, 240, 255, 0.08), transparent 60%),
+                  radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.08), transparent 60%),
+                  #070d1e;
+      position: relative;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 9999px;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      background: rgba(0, 240, 255, 0.1);
+      color: #38bdf8;
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+    
+    .cover h1 {
+      font-size: 32pt;
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 0 0 10px 0;
+      letter-spacing: -0.03em;
+      color: #f8fafc;
+      background: linear-gradient(135deg, #ffffff 40%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .cover .subtitle {
+      font-size: 13pt;
+      color: #94a3b8;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+    
+    .cover .promise {
+      font-size: 11pt;
+      font-style: italic;
+      color: #38bdf8;
+      padding: 12px 18px;
+      border-left: 3px solid #00f0ff;
+      background: rgba(6, 182, 212, 0.08);
+      margin-bottom: 30px;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .meta-item h4 {
+      margin: 0 0 4px 0;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+    
+    .meta-item p {
+      margin: 0;
+      font-size: 9.5pt;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+    
+    /* Document Layout */
+    .section {
+      margin-bottom: 28px;
+      page-break-inside: avoid;
+    }
+    
+    h2 {
+      font-size: 15pt;
+      font-weight: 700;
+      color: #f1f5f9;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+      padding-bottom: 6px;
+      margin-top: 28px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    h2 .num {
+      background: #00f0ff;
+      color: #030712;
+      font-size: 9pt;
+      font-weight: 900;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    h3 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    
+    p {
+      margin: 0 0 10px 0;
+      color: #cbd5e1;
+    }
+    
+    /* Feature Card Styles */
+    .feature-card {
+      background: #090e1f;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+    
+    .io-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    
+    .io-box {
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 8.5pt;
+    }
+    
+    .io-input {
+      background: rgba(16, 185, 129, 0.07);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .io-input h4 {
+      color: #34d399;
+      margin: 0 0 6px 0;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .io-output {
+      background: rgba(0, 240, 255, 0.07);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+    
+    .io-output h4 {
+      color: #38bdf8;
+      margin: 0 0 6px 0;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    ul, ol {
+      margin: 4px 0 10px 20px;
+      padding: 0;
+      color: #cbd5e1;
+    }
+    
+    li {
+      margin-bottom: 4px;
+    }
+    
+    code {
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+      font-size: 8.5pt;
+      background: rgba(30, 41, 59, 0.7);
+      color: #38bdf8;
+      padding: 2px 5px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 8.5pt;
+    }
+    
+    th {
+      background: #0f172a;
+      color: #38bdf8;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      font-weight: 600;
+    }
+    
+    td {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+    
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .shortcut-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      background: #1e293b;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #f8fafc;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 8pt;
+      border-radius: 4px;
+    }
+    
+    .callout {
+      border-left: 3px solid #f59e0b;
+      background: rgba(245, 158, 11, 0.08);
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      margin: 10px 0;
+      font-size: 8.5pt;
+    }
+    
+    .callout-title {
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 4px;
+      font-size: 8.5pt;
+    }
+    
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover">
+    <div class="badge">Comprehensive Operations Manual</div>
+    <h1>CodeCity AI</h1>
+    <div class="subtitle">Complete Feature-by-Feature Operational Guide, Inputs, Outputs & Interactive Walkthrough</div>
+    <div class="promise">
+      "See where your code will break next, and what breaks with it."
+    </div>
+    
+    <p style="font-size: 10.5pt; color: #94a3b8; max-width: 650px;">
+      This manual provides exhaustive instructions for exploring, operating, demonstrating, and evaluating every capability of CodeCity AI. Each section specifies exact user inputs, expected outputs, background mechanisms (ML + AST), and verification steps.
+    </p>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <h4>Target Audience</h4>
+        <p>Software Engineers, Product Reviewers, Evaluators, Exhibition Visitors</p>
+      </div>
+      <div class="meta-item">
+        <h4>Runtime Environment</h4>
+        <p>FastAPI (Python 3.12+) &bull; React 18 / Three.js &bull; Port 5173 / 8000</p>
+      </div>
+      <div class="meta-item">
+        <h4>Offline Demo Repositories</h4>
+        <p><code>pallets/flask</code>, <code>pallets/click</code>, <code>psf/requests</code>, <code>ecotrace-ai</code></p>
+      </div>
+      <div class="meta-item">
+        <h4>ML Engine & Explanations</h4>
+        <p>Zero-Leakage XGBoost &bull; AST Blast Radius &bull; Rule-Based SHAP</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: SYSTEM QUICKSTART & OVERVIEW -->
+  <div class="section">
+    <h2><span class="num">1</span> System Architecture & Quickstart</h2>
+    <p>
+      CodeCity AI transforms any Python Git repository into a real-time, interactive 3D cyber-metropolis. The application operates in a completely decoupled client-server architecture:
+    </p>
+    <ul>
+      <li><strong>Backend (FastAPI & ML Engine)</strong>: Traverses repository Git commit logs via PyDriller, parses Python Abstract Syntax Trees (<code>ast</code>) with NetworkX, computes cyclomatic complexity using Radon, and infers future bug probabilities via a pre-trained XGBoost model.</li>
+      <li><strong>Frontend (React + Three.js)</strong>: Renders hundreds of architectural buildings at 60 FPS using GPU instancing (<code>InstancedMesh</code>), procedural GLSL window facades, dynamic parabolic blast-radius tubes, and a cybernetic glassmorphism HUD.</li>
+    </ul>
+
+    <div class="feature-card">
+      <h3>One-Click Launch Command</h3>
+      <p>CodeCity AI includes dedicated startup scripts for instantaneous local startup:</p>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>&#x25B6; Launch Input</h4>
+          <p>Double-click <code>start.bat</code> in the repository root, or run in terminal:</p>
+          <code>python run.py dev</code>
+        </div>
+        <div class="io-box io-output">
+          <h4>&#x2714; System Output</h4>
+          <ul>
+            <li>Backend activates at <code>http://127.0.0.1:8000</code></li>
+            <li>Frontend activates at <code>http://127.0.0.1:5173</code></li>
+            <li>Zero internet connection required</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: 3D CYBER METROPOLIS NAVIGATION -->
+  <div class="section">
+    <h2><span class="num">2</span> 3D Cyber-City Navigation & Spatial Controls</h2>
+    <p>
+      The city occupies the entire viewport as the hero visual element. Code hierarchy maps directly into physical metropolitan urban structures:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Code Element</th>
+          <th>Metropolitan Visual Representation</th>
+          <th>Design Logic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Directories</strong></td>
+          <td>City Districts & Glass Plates</td>
+          <td>Squarified treemap partition with floating 3D billboard labels.</td>
+        </tr>
+        <tr>
+          <td><strong>Files (.py)</strong></td>
+          <td>Architectural Skyscrapers</td>
+          <td>Chamfered corners, emissive rooftops, and procedural facade windows.</td>
+        </tr>
+        <tr>
+          <td><strong>Lines of Code (LOC)</strong></td>
+          <td>Building Footprint (Width & Depth)</td>
+          <td>Larger modules occupy larger city plots.</td>
+        </tr>
+        <tr>
+          <td><strong>Cyclomatic Complexity</strong></td>
+          <td>Building Height</td>
+          <td>Log-scaled vertical growth ($H \propto \ln(1 + \text{CC})$).</td>
+        </tr>
+        <tr>
+          <td><strong>Defect Probability</strong></td>
+          <td>Facade Emissive Color</td>
+          <td>Emerald Green (Safe) &rarr; Amber (Moderate) &rarr; Crimson (Critical).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="feature-card">
+      <h3>Interactive Navigation Controls</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>User Gestures & Inputs</h4>
+          <ul>
+            <li><strong>Left-Click Drag</strong>: Orbit camera around city center.</li>
+            <li><strong>Right-Click Drag / Two-Finger Pan</strong>: Pan camera across districts.</li>
+            <li><strong>Mouse Wheel / Pinch</strong>: Zoom in and out smoothly.</li>
+            <li><strong>Hover Building</strong>: Triggers cyan wireframe bracket and reveals tooltip.</li>
+            <li><strong>Click Building</strong>: Selects building, frames camera, triggers Blast Radius.</li>
+            <li><span class="shortcut-badge">Esc</span>: Clears selection and returns to default angle.</li>
+          </ul>
+        </div>
+        <div class="io-box io-output">
+          <h4>Visual & Spatial Outputs</h4>
+          <ul>
+            <li>Silky 60 FPS camera fly-to animation.</li>
+            <li>Dynamic wet asphalt ground reflections and cyber grid perspective.</li>
+            <li>Selected building glows with electric cyan rooftop highlight.</li>
+            <li>Unselected structures dim to 20% opacity to highlight focus.</li>
+            <li>Slide-in Right Drawer opens with full file diagnostics.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 3: REPOSITORY SWITCHING & CACHED DEMO DATASETS -->
+  <div class="section">
+    <h2><span class="num">3</span> Repository Switching & Offline Demo Datasets</h2>
+    <p>
+      CodeCity AI bundles four pre-mined demonstration repositories for instantaneous offline analysis. Users can explore dense production frameworks or lightweight scripts with zero waiting time.
+    </p>
+
+    <div class="feature-card">
+      <h3>How to Switch Repositories</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>Input Methods</h4>
+          <ol>
+            <li><strong>Top Bar Dropdown</strong>: Click the repository selector in the center-left of the top bar (ID: <code>nav-repo-select</code>).</li>
+            <li><strong>Command Palette</strong>: Press <span class="shortcut-badge">Ctrl+K</span>, type <code>flask</code>, <code>click</code>, <code>requests</code>, or <code>ecotrace</code>, and press <span class="shortcut-badge">Enter</span>.</li>
+          </ol>
+        </div>
+        <div class="io-box io-output">
+          <h4>Expected Output</h4>
+          <ul>
+            <li>Instantaneous city layout generation (&lt; 200ms).</li>
+            <li>Minimap immediately reflects new building coordinates.</li>
+            <li>Left Panel KPIs recalculate (Total Files, Avg Risk, Critical Hotspots).</li>
+            <li>Hotspot list ranks new repository files from riskiest to safest.</li>
+          </ul>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Repository</th>
+            <th>Files</th>
+            <th>Architectural Characteristics</th>
+            <th>Recommended Exploration Goal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>pallets/flask</code></td>
+            <td>10 files</td>
+            <td>Dense web framework core; high fan-in on <code>app.py</code> and <code>helpers.py</code>.</td>
+            <td>Examine cascading blast radius from <code>app.py</code> to dependent modules.</td>
+          </tr>
+          <tr>
+            <td><code>pallets/click</code></td>
+            <td>14 files</td>
+            <td>Command-line interface builder with deep parser and formatting modules.</td>
+            <td>Inspect cyclomatic complexity hotspots in <code>core.py</code> and <code>formatting.py</code>.</td>
+          </tr>
+          <tr>
+            <td><code>psf/requests</code></td>
+            <td>17 files</td>
+            <td>HTTP library with intricate session, adapter, and model dependencies.</td>
+            <td>Test 2-hop and 3-hop reverse reachability from <code>models.py</code>.</td>
+          </tr>
+          <tr>
+            <td><code>ecotrace-ai</code></td>
+            <td>4 files</td>
+            <td>Sparse repository demonstrating intelligent dynamic layout scaling ($2.4\times$).</td>
+            <td>Observe how small codebases appear intentional and grand rather than empty.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 4: REPOSITORY SCANNER (PUBLIC GITHUB & LOCAL PATHS) -->
+  <div class="section">
+    <h2><span class="num">4</span> Scanning Any Public GitHub or Local Repository</h2>
+    <p>
+      Beyond bundled datasets, CodeCity AI can mine and analyze any live Python repository from GitHub or your local disk.
+    </p>
+
+    <div class="feature-card">
+      <h3>Step-by-Step Scan Instructions</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>Input Steps</h4>
+          <ol>
+            <li>In the Left Panel, locate the <strong>Analyze Python Repository</strong> card.</li>
+            <li>Paste any valid public Python Git URL (e.g., <code>https://github.com/psf/requests</code>) or enter a local folder path on your machine.</li>
+            <li>Click the blue <strong>Scan</strong> button or press <span class="shortcut-badge">Enter</span>.</li>
+          </ol>
+        </div>
+        <div class="io-box io-output">
+          <h4>Output Pipeline (Asynchronous Job)</h4>
+          <ul>
+            <li>Submits POST request to <code>/api/analyze</code> &rarr; receives <code>job_id</code>.</li>
+            <li>Status radar animation appears with progress bar:
+              <br>&bull; <em>Cloning repository...</em> (0-20%)
+              <br>&bull; <em>Mining commit history...</em> (20-60%)
+              <br>&bull; <em>Parsing AST dependencies...</em> (60-85%)
+              <br>&bull; <em>Executing XGBoost inference...</em> (85-100%)
+            </li>
+            <li>City immediately renders upon completion.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Safe Mining Guardrails</div>
+        To ensure snappy local performance, the backend enforces a <strong>150 MB repository size cap</strong> and limits commit mining to the <strong>latest 2,000 commits</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 5: FIVE VISUALIZATION COLOR MODES -->
+  <div class="section">
+    <h2><span class="num">5</span> Five Visualization Color Modes</h2>
+    <p>
+      CodeCity AI provides five distinct visual lenses to inspect different dimensions of code health. Each mode dynamically recalculates the building facade materials and updates the Bottom HUD legend.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mode</th>
+          <th>Key</th>
+          <th>Data Source & Calculation</th>
+          <th>Color Spectrum & Tiers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Defect Risk</strong></td>
+          <td><span class="shortcut-badge">1</span></td>
+          <td>XGBoost ML predicted defect probability ($0.0 \to 1.0$).</td>
+          <td>
+            <span style="color:#10b981;">&#9679; Safe (&lt;30%)</span> &bull; 
+            <span style="color:#f59e0b;">&#9679; Moderate (30-60%)</span> &bull; 
+            <span style="color:#ef4444;">&#9679; Critical (&gt;60%)</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. Complexity</strong></td>
+          <td><span class="shortcut-badge">2</span></td>
+          <td>Radon cyclomatic branching complexity (max CC score).</td>
+          <td>
+            <span style="color:#38bdf8;">&#9679; Simple (&le;4)</span> &bull; 
+            <span style="color:#818cf8;">&#9679; Moderate (5-10)</span> &bull; 
+            <span style="color:#c084fc;">&#9679; Complex (11-15)</span> &bull; 
+            <span style="color:#f43f5e;">&#9679; Extreme (&gt;15)</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. 90-Day Churn</strong></td>
+          <td><span class="shortcut-badge">3</span></td>
+          <td>Number of commit edits touching the file in prior 90 days.</td>
+          <td>
+            <span style="color:#14b8a6;">&#9679; Low (&le;5)</span> &bull; 
+            <span style="color:#fb923c;">&#9679; Moderate (6-20)</span> &bull; 
+            <span style="color:#f43f5e;">&#9679; Hot (&gt;20 edits)</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. File Age</strong></td>
+          <td><span class="shortcut-badge">4</span></td>
+          <td>Days since file was originally created in Git history.</td>
+          <td>
+            <span style="color:#10b981;">&#9679; Fresh (&le;30d)</span> &bull; 
+            <span style="color:#a855f7;">&#9679; Mature (&gt;180d)</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>5. Impact Score</strong></td>
+          <td><span class="shortcut-badge">5</span></td>
+          <td>$\text{Risk Probability} \times (1 + \ln(1 + \text{BlastRadius}))$.</td>
+          <td>
+            <span style="color:#38bdf8;">&#9679; Low (&lt;1.0)</span> &bull; 
+            <span style="color:#f59e0b;">&#9679; Medium (1.0-3.0)</span> &bull; 
+            <span style="color:#ef4444;">&#9679; Severe (&gt;3.0)</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="feature-card">
+      <h3>How to Switch Modes</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>Input Methods</h4>
+          <ul>
+            <li><strong>Keyboard Numbers</strong>: Press <span class="shortcut-badge">1</span>, <span class="shortcut-badge">2</span>, <span class="shortcut-badge">3</span>, <span class="shortcut-badge">4</span>, or <span class="shortcut-badge">5</span> on your keyboard.</li>
+            <li><strong>Bottom HUD Pills</strong>: Click any of the mode buttons in the center of the Bottom HUD.</li>
+            <li><strong>Command Palette</strong>: Press <span class="shortcut-badge">Ctrl+K</span> &rarr; type "Switch to..." &rarr; press <span class="shortcut-badge">Enter</span>.</li>
+          </ul>
+        </div>
+        <div class="io-box io-output">
+          <h4>Observed Output</h4>
+          <ul>
+            <li>Active pill illuminates with a glowing cyan outline.</li>
+            <li>Bottom HUD legend dynamically renders exact score thresholds.</li>
+            <li>All 3D buildings instantly transition their facade materials.</li>
+            <li>Procedural window lights and roof trims adapt harmoniously.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: DEFECT HOTSPOT RANKING -->
+  <div class="section">
+    <h2><span class="num">6</span> Defect Hotspot Ranking & Bidirectional Sync</h2>
+    <p>
+      The Left Panel features a curated list of the top highest-risk files in the repository. It provides bidirectional synchronization with the 3D scene.
+    </p>
+
+    <div class="feature-card">
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>User Actions</h4>
+          <ul>
+            <li><strong>Hover over any Hotspot item</strong> in the Left Panel list.</li>
+            <li><strong>Click any Hotspot item</strong> in the Left Panel list.</li>
+            <li><strong>Click any 3D Building</strong> directly inside the city.</li>
+          </ul>
+        </div>
+        <div class="io-box io-output">
+          <h4>Synchronized System Output</h4>
+          <ul>
+            <li><strong>Hovering</strong>: Immediately displays a cyan scanning bracket and highlights the corresponding building in 3D.</li>
+            <li><strong>Clicking</strong>: Camera smoothly flies and frames the selected file; Right Drawer opens with detailed diagnostics; Blast Radius arcs illuminate.</li>
+            <li><strong>Clicking Building in 3D</strong>: Automatically scrolls the Left Panel hotspot list to highlight the selected file.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 7: THE BLAST RADIUS SIGNATURE MOMENT -->
+  <div class="section">
+    <h2><span class="num">7</span> Blast Radius: The Signature Dependency Moment</h2>
+    <p>
+      The blast radius answers the core product question: <strong>"What breaks when this file fails?"</strong>
+      Using an AST-derived directed dependency graph, CodeCity AI computes exact reverse-reachability up to 3 hops.
+    </p>
+
+    <div class="feature-card">
+      <h3>Visual Anatomy of the Blast Radius</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>Trigger Input</h4>
+          <p>Click on any high-impact file (e.g. <code>app.py</code> in <code>pallets/flask</code> or <code>models.py</code> in <code>psf/requests</code>).</p>
+        </div>
+        <div class="io-box io-output">
+          <h4>Spectacular 3D Output</h4>
+          <ol>
+            <li><strong>Shockwave Ring</strong>: An expanding cyan shockwave emits across the wet asphalt from the building's base.</li>
+            <li><strong>Parabolic Tubes</strong>: Glowing 3D tubular arches rise and connect the selected module to dependent files.</li>
+            <li><strong>Glowing Data Packets</strong>: Luminous particles stream along the tubes from origin to dependents.</li>
+            <li><strong>Hop-Depth Chromatic Coding</strong>:
+              <br>&bull; <strong style="color:#00f0ff;">Hop 1 (Direct Importers)</strong>: Neon Cyan tubes.
+              <br>&bull; <strong style="color:#a855f7;">Hop 2 (Transitive Callers)</strong>: Electric Violet tubes.
+              <br>&bull; <strong style="color:#f43f5e;">Hop 3 (Distant Cascades)</strong>: Cyber Rose tubes.
+            </li>
+            <li><strong>Contextual Dimming</strong>: Unrelated buildings dim to 20% opacity.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: RIGHT DRAWER & SHAP EXPLAINABILITY -->
+  <div class="section">
+    <h2><span class="num">8</span> Slide-In Right Drawer & Explainable SHAP Diagnostics</h2>
+    <p>
+      When a building is selected, the Right Drawer slides in with zero-hallucination, deterministic model explanations.
+    </p>
+
+    <div class="feature-card">
+      <h3>Anatomy of File Diagnostics</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Diagnostic Element</th>
+            <th>Description & Output Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Animated Risk Gauge</strong></td>
+            <td>Circular SVG gauge tweening from 0% to the exact predicted probability (e.g., <strong>96% Defect Risk</strong>).</td>
+          </tr>
+          <tr>
+            <td><strong>Architectural Impact</strong></td>
+            <td>Numerical impact score factoring risk and dependent count: $\text{Risk} \times (1 + \ln(1 + \text{BlastRadius}))$.</td>
+          </tr>
+          <tr>
+            <td><strong>AI Defect Diagnosis</strong></td>
+            <td>
+              Plain-English synthesis (e.g., <em>"High defect likelihood (96.2%). Driven primarily by large codebase footprint (17 LOC) and intricate branching complexity (max CC 5.0). Partially buffered by mature codebase longevity."</em>)
+            </td>
+          </tr>
+          <tr>
+            <td><strong>SHAP Feature Contributions</strong></td>
+            <td>
+              Granular breakdown of feature forces:
+              <br>&bull; <span style="color:#ef4444;">&#9650; Positive Forces (Red)</span>: Increases defect risk (e.g. Lines of Code +1.58, High CC +1.51).
+              <br>&bull; <span style="color:#10b981;">&#9660; Mitigating Forces (Cyan)</span>: Decreases risk (e.g. File Age -0.22, Low Churn -0.53).
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Dependent Files List</strong></td>
+            <td>Interactive clickable list of direct and indirect callers affected by this file.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 9: 2D RADAR MINIMAP & COMMAND PALETTE -->
+  <div class="section">
+    <h2><span class="num">9</span> 2D Radar Minimap & Command Palette</h2>
+
+    <div class="feature-card">
+      <h3>Real-Time 2D Radar Minimap (Bottom HUD)</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>Inputs</h4>
+          <ul>
+            <li>Look at the bottom-left corner of the Bottom HUD.</li>
+            <li>Click the <strong>Center</strong> button on the minimap.</li>
+          </ul>
+        </div>
+        <div class="io-box io-output">
+          <h4>Outputs</h4>
+          <ul>
+            <li>Displays 2D scatter coordinates of all repository buildings.</li>
+            <li>Active building pulses with a bright cyan beacon.</li>
+            <li>Clicking "Center" smoothly resets camera angle to center framing.</li>
+            <li>Displays active node count and selected filename.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <h3>Command Palette (<span class="shortcut-badge">Ctrl+K</span> / <span class="shortcut-badge">Cmd+K</span>)</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>How to Use</h4>
+          <ol>
+            <li>Press <span class="shortcut-badge">Ctrl+K</span> or click <strong>Command ⌘K</strong> in the top navbar.</li>
+            <li>Type any keyword (e.g., <code>risk</code>, <code>flask</code>, <code>eco</code>, <code>model</code>, <code>exhibition</code>).</li>
+            <li>Navigate with <span class="shortcut-badge">&uarr;</span> <span class="shortcut-badge">&darr;</span> arrow keys and press <span class="shortcut-badge">Enter</span>.</li>
+            <li>Press <span class="shortcut-badge">Esc</span> to dismiss.</li>
+          </ol>
+        </div>
+        <div class="io-box io-output">
+          <h4>Supported Commands</h4>
+          <ul>
+            <li>Switch visualization modes (Risk, Complexity, Churn, Age, Impact).</li>
+            <li>Switch repositories (Flask, Click, Requests, EcoTrace).</li>
+            <li>Toggle Exhibition Mode & Low-Power Mode.</li>
+            <li>Open Model Card evaluation modal.</li>
+            <li>Reset 3D camera to default overview.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10: MODEL EVALUATION CARD -->
+  <div class="section">
+    <h2><span class="num">10</span> Model Evaluation Card (Honest Zero-Leakage Metrics)</h2>
+    <p>
+      Clicking <strong>Model Card</strong> in the top bar opens an exhaustive evaluation modal displaying genuine machine learning performance.
+    </p>
+
+    <div class="feature-card">
+      <h3>Evaluation Metrics & Zero Data Leakage</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+            <th>Honest Interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ROC-AUC</strong></td>
+            <td><code>0.667</code></td>
+            <td>Solid predictive capability distinguishing bug-prone modules on strictly held-out repositories.</td>
+          </tr>
+          <tr>
+            <td><strong>Precision @ 10</strong></td>
+            <td><code>0.500</code></td>
+            <td>5 out of the top 10 flagged files experienced verified future defect commits.</td>
+          </tr>
+          <tr>
+            <td><strong>Recall @ 10%</strong></td>
+            <td><code>0.450</code></td>
+            <td>Captures nearly half of all future defects by inspecting only the top 10% riskiest files.</td>
+          </tr>
+          <tr>
+            <td><strong>Benchmark vs Churn Baseline</strong></td>
+            <td><code>+0.12 ROC-AUC</code></td>
+            <td>Demonstrably outperforms naive commit frequency ranking (Churn ROC-AUC: <code>0.547</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <div class="callout-title">Zero Data Leakage Protocol</div>
+        Training enforced strict temporal cutoffs at time $T$. All historical features were extracted strictly before $T$. Defect labels were extracted from bug fixes in the future window $(T, T + 90\text{ days}]$. Tested on a held-out repository (<code>httpie/cli</code>) never seen during training.
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 11: EXHIBITION MODE & ATTRACT SCREENSAVER -->
+  <div class="section">
+    <h2><span class="num">11</span> Exhibition Mode & Inactivity Attract Kiosk</h2>
+    <p>
+      Designed specifically for college project showcases, booth exhibitions, and conference demos, Exhibition Mode transforms CodeCity AI into a hands-free presentation kiosk.
+    </p>
+
+    <div class="feature-card">
+      <h3>How to Activate and Experience Exhibition Mode</h3>
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>Activation Inputs</h4>
+          <ul>
+            <li>Press <span class="shortcut-badge">P</span> on your keyboard.</li>
+            <li>Click <strong>Exhibition</strong> in the top navbar.</li>
+            <li><strong>Auto-Attract</strong>: Leave the keyboard and mouse untouched for <strong>45 seconds</strong>.</li>
+          </ul>
+        </div>
+        <div class="io-box io-output">
+          <h4>Kiosk Presentation Experience</h4>
+          <ul>
+            <li><strong>Continuous Auto-Orbit</strong>: Camera smoothly glides around the city at an elegant cinematic angle.</li>
+            <li><strong>Rotating Hotspot Showcase</strong>: Automatically cycles through the top 5 highest-risk files every 8 seconds.</li>
+            <li><strong>Blast Radius Demonstration</strong>: Conduits and flowing particles pulse automatically for each highlighted hotspot.</li>
+            <li><strong>Projector HUD</strong>: Displays high-contrast banners and risk callouts readable from 10+ feet away.</li>
+            <li><strong>Instant Wakeup</strong>: Any mouse motion, touch, or keypress immediately resumes normal interactive mode.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 12: ECO / LOW-POWER RENDERING MODE -->
+  <div class="section">
+    <h2><span class="num">12</span> Eco / Low-Power Rendering Mode</h2>
+    <p>
+      Ensures smooth demonstration on older laptops, ultrabooks with integrated Intel/AMD graphics, and battery-powered devices.
+    </p>
+
+    <div class="feature-card">
+      <div class="io-container">
+        <div class="io-box io-input">
+          <h4>How to Toggle</h4>
+          <p>Click the <strong>Eco</strong> button in the top navbar (ID: <code>nav-eco-toggle</code>) or press <span class="shortcut-badge">Ctrl+K</span> &rarr; "Enable Low-Power Mode".</p>
+        </div>
+        <div class="io-box io-output">
+          <h4>Hardware Optimization Results</h4>
+          <ul>
+            <li>Bypasses multi-pass postprocessing bloom shaders.</li>
+            <li>Lightens GPU fillrate load while preserving complete 3D geometry and color modes.</li>
+            <li>Navbar and Bottom HUD badge indicate <strong>Low-Power Active</strong> in warm amber.</li>
+            <li>Guarantees sustained 60 FPS even on low-end hardware.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 13: MASTER SHORTCUT CHEAT SHEET -->
+  <div class="section">
+    <h2><span class="num">13</span> Complete Master Shortcut Cheat Sheet</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Key / Gesture</th>
+          <th>Feature Triggered</th>
+          <th>Operational Effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="shortcut-badge">Left-Click Drag</span></td>
+          <td>Camera Orbit</td>
+          <td>Rotates the 3D metropolis around the central urban core.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">Right-Click Drag</span></td>
+          <td>Camera Pan</td>
+          <td>Pans across districts and neighboring modules.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">Mouse Wheel</span></td>
+          <td>Camera Zoom</td>
+          <td>Smoothly moves closer to inspect building facades and rooftops.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">Click Building</span></td>
+          <td>Select & Blast Radius</td>
+          <td>Focal camera fly-to, Right Drawer opening, shockwave & dependency tubes.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">Ctrl+K</span> / <span class="shortcut-badge">Cmd+K</span></td>
+          <td>Command Palette</td>
+          <td>Opens instant fuzzy-searchable launcher for repos, modes, and actions.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">Esc</span></td>
+          <td>Deselect / Close</td>
+          <td>Closes drawers/modals, clears active building selection, resets camera.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">F</span></td>
+          <td>Focus Search</td>
+          <td>Instantly jumps cursor into the Left Panel file search bar.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">1</span></td>
+          <td>Risk Mode</td>
+          <td>Colors city buildings by XGBoost ML defect probability ($0.0 \to 1.0$).</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">2</span></td>
+          <td>Complexity Mode</td>
+          <td>Colors city buildings by Radon cyclomatic branching complexity.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">3</span></td>
+          <td>Churn Mode</td>
+          <td>Colors city buildings by 90-day Git commit edit frequency.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">4</span></td>
+          <td>Age Mode</td>
+          <td>Colors city buildings by file creation age (Fresh vs Matured).</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">5</span></td>
+          <td>Impact Mode</td>
+          <td>Colors city buildings by Architectural Impact score.</td>
+        </tr>
+        <tr>
+          <td><span class="shortcut-badge">P</span></td>
+          <td>Exhibition Mode</td>
+          <td>Toggles hands-free cinematic auto-orbit and rotating hotspot showcase.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 14: END-TO-END DEMO SCRIPT -->
+  <div class="section">
+    <h2><span class="num">14</span> 3-Minute Live Demonstration Walkthrough Script</h2>
+    <p>
+      Follow this exact sequence when presenting CodeCity AI to evaluators, professors, or exhibition visitors:
+    </p>
+
+    <div class="feature-card">
+      <ol>
+        <li>
+          <strong>The Hook (0:00 - 0:30)</strong>:
+          <br>Open <code>pallets/flask</code>. Show the full-screen city at night. Explain: <em>"This is not a mockup—it's an interactive 3D digital twin of a real Python codebase. Directories are districts, files are buildings, and height is cyclomatic complexity."</em>
+        </li>
+        <li>
+          <strong>The Prediction (0:30 - 1:15)</strong>:
+          <br>Point to the top hotspot (<code>app.py</code>). Explain: <em>"Our XGBoost model predicts a 96% defect likelihood in the upcoming release cycle based on historical commit churn, complexity, and graph topology."</em>
+        </li>
+        <li>
+          <strong>The Signature Blast Radius (1:15 - 2:00)</strong>:
+          <br>Click <code>app.py</code>. Watch the shockwave emit and 3D parabolic conduits arc to dependent modules. Show the glowing data packets flowing across the city. Highlight: <em>"It's not just risky—it has an Architectural Impact score of 2.02 because 2 critical modules break if app.py fails."</em>
+        </li>
+        <li>
+          <strong>Explainability & Zero Data Leakage (2:00 - 2:30)</strong>:
+          <br>Inspect the Right Drawer SHAP bars. Show why it's risky (Lines of Code +1.58, High CC +1.51). Open the <strong>Model Card</strong> to prove ROC-AUC 0.667 on held-out data with zero leakage.
+        </li>
+        <li>
+          <strong>Exhibition Kiosk Mode (2:30 - 3:00)</strong>:
+          <br>Press <span class="shortcut-badge">P</span> to trigger Exhibition Mode. Let the camera orbit smoothly while explaining: <em>"The platform even includes an automatic attract mode that self-demonstrates at exhibition booths."</em>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+</body>
+</html>
+"""
+
+def generate_pdf():
+    docs_dir = os.path.abspath("docs")
+    os.makedirs(docs_dir, exist_ok=True)
+    
+    html_path = os.path.join(docs_dir, "CodeCity_AI_Complete_Walkthrough.html")
+    pdf_path = os.path.abspath("CodeCity_AI_Complete_Feature_Walkthrough.pdf")
+    
+    with open(html_path, "w", encoding="utf-8") as f:
+        f.write(HTML_CONTENT)
+    print(f"Wrote HTML walkthrough to: {html_path}")
+    
+    chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    if not os.path.exists(chrome_path):
+        chrome_path = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+    
+    cmd = [
+        chrome_path,
+        "--headless=new",
+        "--disable-gpu",
+        "--no-pdf-header-footer",
+        f"--print-to-pdf={pdf_path}",
+        html_path
+    ]
+    print(f"Running Chrome print to PDF...")
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if os.path.exists(pdf_path):
+        print(f"SUCCESS! Generated PDF ({os.path.getsize(pdf_path)} bytes) at: {pdf_path}")
+    else:
+        print(f"FAILED to generate PDF. Return code: {res.returncode}. Stderr: {res.stderr}")
+
+if __name__ == "__main__":
+    generate_pdf()

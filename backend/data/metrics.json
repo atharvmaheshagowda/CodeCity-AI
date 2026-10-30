@@ -1,0 +1,98 @@
+{
+  "model_name": "XGBoost Defect Predictor",
+  "evaluation_date": "2026-10-29 18:24:06 UTC",
+  "training_repositories": [
+    "pallets/flask",
+    "pallets/click",
+    "psf/requests"
+  ],
+  "held_out_repository": "httpie/cli",
+  "training_samples": 27,
+  "held_out_samples": 8,
+  "held_out_positives": 2,
+  "used_synthetic_fallback": true,
+  "metrics": {
+    "model": {
+      "roc_auc": 0.6667,
+      "precision_at_10": 0.25,
+      "recall_at_top_10_percent": 0.0
+    },
+    "baseline_churn": {
+      "roc_auc": 0.5833,
+      "precision_at_10": 0.25,
+      "recall_at_top_10_percent": 0.0
+    }
+  },
+  "roc_curve": [
+    {
+      "fpr": 0.0,
+      "tpr": 0.0
+    },
+    {
+      "fpr": 0.167,
+      "tpr": 0.0
+    },
+    {
+      "fpr": 0.333,
+      "tpr": 0.0
+    },
+    {
+      "fpr": 0.333,
+      "tpr": 1.0
+    },
+    {
+      "fpr": 1.0,
+      "tpr": 1.0
+    }
+  ],
+  "feature_importances": [
+    {
+      "feature": "loc",
+      "importance": 0.3386
+    },
+    {
+      "feature": "mean_complexity",
+      "importance": 0.0525
+    },
+    {
+      "feature": "max_complexity",
+      "importance": 0.2043
+    },
+    {
+      "feature": "commit_count",
+      "importance": 0.0
+    },
+    {
+      "feature": "distinct_authors",
+      "importance": 0.0
+    },
+    {
+      "feature": "file_age_days",
+      "importance": 0.1477
+    },
+    {
+      "feature": "days_since_last_change",
+      "importance": 0.0
+    },
+    {
+      "feature": "churn_90d",
+      "importance": 0.0
+    },
+    {
+      "feature": "total_churn",
+      "importance": 0.0
+    },
+    {
+      "feature": "past_bug_fixes",
+      "importance": 0.0
+    },
+    {
+      "feature": "fan_in",
+      "importance": 0.192
+    },
+    {
+      "feature": "fan_out",
+      "importance": 0.0648
+    }
+  ]
+}
