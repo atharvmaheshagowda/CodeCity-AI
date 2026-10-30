@@ -99,7 +99,7 @@ export const RightDrawer: React.FC = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 360, opacity: 0 }}
       transition={{ type: 'spring', stiffness: 340, damping: 28 }}
-      className="w-80 md:w-84 h-[calc(100vh-4rem)] glass-panel border-l border-white/10 flex flex-col z-20 select-none overflow-hidden shadow-glass-panel backdrop-blur-2xl bg-slate-950/90"
+      className="w-76 md:w-84 h-[calc(100vh-3.5rem)] glass-panel border-l border-white/10 flex flex-col z-20 select-none overflow-hidden shadow-glass-panel backdrop-blur-2xl bg-slate-950/90"
     >
       {/* 1. Header with Breadcrumb & Filename */}
       <div className="p-3.5 border-b border-white/10 flex items-start justify-between bg-slate-900/30">

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { AnimatePresence } from 'motion/react';
 import { Loader2, AlertCircle, RefreshCw, PanelLeftOpen } from 'lucide-react';
 import { useCityStore } from './store/useCityStore';
 import { Navbar } from './components/Navbar';
@@ -117,7 +118,11 @@ export const App: React.FC = () => {
       {/* 2. Main Content Viewport: Fullscreen 3D Canvas with Floating Chrome */}
       <div className="flex flex-1 relative overflow-hidden">
         {/* Left Intelligence Panel (Floating & Collapsible) */}
-        {!presentationMode && <LeftPanel />}
+        {!presentationMode && (
+          <AnimatePresence>
+            {!isLeftPanelCollapsed && <LeftPanel />}
+          </AnimatePresence>
+        )}
 
         {/* Floating panel trigger when collapsed */}
         {!presentationMode && isLeftPanelCollapsed && (

@@ -97,15 +97,13 @@ export const LeftPanel: React.FC = () => {
     return list;
   }, [currentRepo, searchQuery, sortBy]);
 
-  if (isLeftPanelCollapsed) return null;
-
   return (
     <motion.aside
-      initial={{ x: -320, opacity: 0 }}
+      initial={{ x: -340, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      exit={{ x: -320, opacity: 0 }}
-      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-      className="w-80 h-[calc(100vh-4rem)] glass-panel border-r border-white/10 flex flex-col z-20 select-none overflow-hidden shadow-glass-panel backdrop-blur-2xl bg-slate-950/90"
+      exit={{ x: -340, opacity: 0 }}
+      transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+      className="w-76 md:w-80 h-[calc(100vh-3.5rem)] glass-panel border-r border-white/10 flex flex-col z-20 select-none overflow-hidden shadow-glass-panel backdrop-blur-2xl bg-slate-950/90"
     >
       {/* 1. Mode Tabs (Repository | Analyze URL) */}
       <div className="p-3 border-b border-white/10 flex items-center gap-2 bg-slate-900/30">
