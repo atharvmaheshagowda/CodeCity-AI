@@ -57,6 +57,17 @@
   - [x] Measured 144–146 FPS performance across 1080p, 768p, Eco mode, and large repo switching (`pallets/flask`).
   - [x] Documented in `PHASE1_ARCHITECTURE_NOTES.md`.
 
+- [x] **Phase 1.5: Cinematic Visual Refinement (Completed)**
+  - [x] Corrected 10 visible defects: facade blowout, bloom blinding, excessive cyan saturation, flat ground disconnection, arbitrary geometric rings, repetitive facade patterns, lack of depth, label collisions, camera offset balance, and decorative rings.
+  - [x] Calibrated nocturnal lighting: dimmed directional moonlight (`0.68`) and indigo ambient (`0.26`), preventing diffuse white wash.
+  - [x] Precision bloom calibration: raised threshold to `0.84` (Neon `0.78`), reduced radius to `0.32` and intensity to `0.44`, preserving razor-sharp architectural edges.
+  - [x] Archetype-tailored facade shaders: per-archetype window apertures, grid frequencies, recessed window sill bevels, and distinct architectural character (datacenter LED slits, brutalist embrasures, industrial factory sash, residential punched windows).
+  - [x] PBR wet asphalt pavement: procedural puddle noise with specular sheen, dynamic ambient grounding under structures, and subdued realistic road corridors (removed outer Tron ring).
+  - [x] Replaced background concentric neon rings with an architectural cybernetic arena pavilion dome.
+  - [x] Anti-collision HUD labels: dynamic camera framing with HUD drawer offset, lateral pin staggering, deduplicated district billboard, and non-overlapping micro-pins for dense repos.
+  - [x] Verified zero console errors, 7/7 frontend unit tests passing, clean production build in 18.98s, 32/32 backend pytest passing, and 145 FPS measured on `pallets/flask` (15 buildings).
+
+
   - [x] Designed states: scanning radar loading effect, skeleton shimmer for loading panels, empty/error states, toast notifications.
   - [x] Guided onboarding tour spotlight on first run (skippable).
   - [x] Exhibition mode: auto-orbit camera, rotating callouts of riskiest buildings, large readable HUD type, 45s idle attract mode.

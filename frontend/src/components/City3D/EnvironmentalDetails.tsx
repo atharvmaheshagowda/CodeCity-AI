@@ -141,7 +141,7 @@ export const EnvironmentalDetails: React.FC<EnvironmentalDetailsProps> = ({
         metalness: 0.88,
         roughness: 0.24,
         emissive: '#0284c7',
-        emissiveIntensity: 0.45,
+        emissiveIntensity: 0.28,
       }),
     []
   );
@@ -152,7 +152,7 @@ export const EnvironmentalDetails: React.FC<EnvironmentalDetailsProps> = ({
       new THREE.MeshBasicMaterial({
         map: lightPoolTexture,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.35,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
       }),
@@ -178,7 +178,7 @@ export const EnvironmentalDetails: React.FC<EnvironmentalDetailsProps> = ({
         metalness: 0.9,
         roughness: 0.2,
         emissive: '#38bdf8',
-        emissiveIntensity: 0.55,
+        emissiveIntensity: 0.30,
       }),
     []
   );

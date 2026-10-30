@@ -96,7 +96,25 @@ Testing was performed under automated headless and interactive environments acro
 
 ## 5. Automated Test Results
 - **Frontend Test Suite**: 2 test files passed, 7 of 7 unit tests passed (`vitest`).
-- **Production Build**: Zero TypeScript errors, bundled cleanly in 17.16s (`tsc -b && vite build`).
+- **Production Build**: Zero TypeScript errors, bundled cleanly in 18.98s (`tsc -b && vite build`).
 - **Backend Test Suite**: 32 of 32 tests passed (`pytest`).
 - **Browser Runtime**: Zero WebGL context loss, zero console errors, zero unhandled rejections.
+
+---
+
+## 6. Phase 1.5: Cinematic Visual Refinement Log
+
+Phase 1.5 corrected the 10 key visual defects identified during environment inspection to achieve a believable, high-contrast, nocturnal miniature cyberpunk metropolis:
+
+1. **Facade Overexposure & Blown-out Walls**: Calibrated directional key light (`0.68`) and ambient indigo (`0.26`), restoring deep dark metallic spandrels and tinted glass.
+2. **Bloom Obscuring Window Details**: Raised bloom luminance threshold from `0.34` to `0.84`, reducing intensity to `0.44` and radius to `0.32`. Bloom now captures only authentic emissive filament cores, keeping architectural edges crisp.
+3. **Excessive Cyan Saturation**: Reduced raw color multipliers and introduced subtle ($18\%$) metric harmonization into warm amber ($1.50$) and cyan ($1.30$) window interiors.
+4. **Flat Ground Disconnection**: Developed procedural wet asphalt with rain-slick puddle roughness variation ($0.08$ puddle specular sheen vs $0.38$ dry asphalt matte).
+5. **Dominating Geometric Markings**: Replaced laser-bright Tron road outlines with subdued urban avenue corridors ($0.55$ intensity) and subtle coordinate reference lines ($0.14$).
+6. **Repetitive Facade Patterns**: Introduced archetype-specific facade shader frequencies and window profiles (Datacenter LED slits, Brutalist narrow embrasures, Industrial factory sash, Glass Skyscraper curtain panels).
+7. **Lack of Facade Depth**: Engineered procedural window sill reveal bevels and lintel shadow calculations directly in the fragment shader, creating physical recessed apertures.
+8. **Overlapping Floating Labels**: Implemented screen-space anti-collision spacing, lateral pin staggering for closely packed nodes, deduplicated district billboard, and rendered sleek micro-pins in dense repositories.
+9. **Unbalanced Camera Composition**: Engineered dynamic camera target and position calculations that offset the city to the golden ratio center of the unobstructed viewport, accounting for the persistent left HUD drawer.
+10. **Decorative Geometric Rings**: Replaced the arbitrary flat concentric neon target rings in the background arena with a cyberpunk architectural convention pavilion dome featuring structural rib columns and soft interior spill.
+
 

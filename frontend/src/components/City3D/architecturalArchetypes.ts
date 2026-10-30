@@ -648,13 +648,61 @@ export function createArchetypeGeometries(): Record<BuildingArchetype, THREE.Buf
  * - Soft vertical gradient (ground plinth grounding to crown brilliance).
  * - Rooftop metallic surfaces with crisp perimeter parapet light strips.
  */
-export function createArchitecturalFacadeMaterial(): THREE.MeshStandardMaterial {
+export function createArchitecturalFacadeMaterial(archetype: BuildingArchetype = 'monumental_landmark'): THREE.MeshStandardMaterial {
   const mat = new THREE.MeshStandardMaterial({
-    roughness: 0.28,
-    metalness: 0.78,
+    roughness: 0.22,
+    metalness: 0.86,
     emissive: new THREE.Color('#000000'),
     emissiveIntensity: 1.0,
   });
+
+  // Archetype specific grid frequencies and window characteristics
+  let gridFreq = 'vec2(6.0, 4.6)';
+  let windowAperture = 'step(0.16, uvInCell.x) * step(uvInCell.x, 0.84) * step(0.18, uvInCell.y) * step(uvInCell.y, 0.82)';
+  let litThresholdWarm = '0.22';
+  let litThresholdCool = '0.08';
+  let isDatacenter = false;
+  let isBrutalist = false;
+
+  if (archetype === 'glass_skyscraper') {
+    gridFreq = 'vec2(7.2, 5.2)';
+    windowAperture = 'step(0.10, uvInCell.x) * step(uvInCell.x, 0.90) * step(0.12, uvInCell.y) * step(uvInCell.y, 0.88)';
+    litThresholdWarm = '0.18';
+  } else if (archetype === 'corporate_tower') {
+    gridFreq = 'vec2(5.8, 4.4)';
+    windowAperture = 'step(0.15, uvInCell.x) * step(uvInCell.x, 0.85) * step(0.20, uvInCell.y) * step(uvInCell.y, 0.80)';
+    litThresholdWarm = '0.20';
+  } else if (archetype === 'stepped_industrial') {
+    gridFreq = 'vec2(4.2, 3.4)';
+    windowAperture = 'step(0.20, uvInCell.x) * step(uvInCell.x, 0.80) * step(0.22, uvInCell.y) * step(uvInCell.y, 0.78)';
+    litThresholdWarm = '0.35';
+    litThresholdCool = '0.15';
+  } else if (archetype === 'brutalist_tech') {
+    isBrutalist = true;
+    gridFreq = 'vec2(3.8, 3.6)';
+    windowAperture = 'step(0.28, uvInCell.x) * step(uvInCell.x, 0.72) * step(0.32, uvInCell.y) * step(uvInCell.y, 0.68)';
+    litThresholdWarm = '0.45';
+    litThresholdCool = '0.25';
+  } else if (archetype === 'research_facility') {
+    gridFreq = 'vec2(5.5, 4.0)';
+    windowAperture = 'step(0.08, uvInCell.x) * step(uvInCell.x, 0.92) * step(0.24, uvInCell.y) * step(uvInCell.y, 0.76)';
+    litThresholdWarm = '0.30';
+    litThresholdCool = '0.06';
+  } else if (archetype === 'compact_residential') {
+    gridFreq = 'vec2(5.0, 4.2)';
+    windowAperture = 'step(0.22, uvInCell.x) * step(uvInCell.x, 0.78) * step(0.22, uvInCell.y) * step(uvInCell.y, 0.78)';
+    litThresholdWarm = '0.15';
+  } else if (archetype === 'datacenter') {
+    isDatacenter = true;
+    gridFreq = 'vec2(3.4, 8.5)';
+    windowAperture = 'step(0.38, uvInCell.x) * step(uvInCell.x, 0.62) * step(0.14, uvInCell.y) * step(uvInCell.y, 0.86)';
+    litThresholdWarm = '0.85';
+    litThresholdCool = '0.40';
+  } else if (archetype === 'monumental_landmark') {
+    gridFreq = 'vec2(6.8, 5.0)';
+    windowAperture = 'step(0.14, uvInCell.x) * step(uvInCell.x, 0.86) * step(0.16, uvInCell.y) * step(uvInCell.y, 0.84)';
+    litThresholdWarm = '0.18';
+  }
 
   mat.onBeforeCompile = (shader) => {
     shader.uniforms.uTime = { value: 0 };
@@ -699,117 +747,135 @@ export function createArchitecturalFacadeMaterial(): THREE.MeshStandardMaterial 
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <opaque_fragment>',
       `#include <opaque_fragment>
-       // High-Fidelity HDR Procedural Architectural Facade Shader with Architectural Trim & Metric Conduits
+       // Calibrated Nocturnal Architectural Facade Shader with Depth & Contrast
 
-       // Detect whether instanceColor is crimson/hotspot (high-risk indicator)
+       // Detect whether building instance is crimson/hotspot (high risk)
        float isCrimson = step(diffuseColor.g + 0.12, diffuseColor.r) * step(diffuseColor.b + 0.10, diffuseColor.r);
-       float crimsonPulse = 0.88 + 0.28 * sin(uTime * 2.4);
+       float crimsonPulse = 0.85 + 0.25 * sin(uTime * 2.2);
 
        // Active metric color passed via instanced mesh color
        vec3 metricColor = diffuseColor.rgb;
 
-       // 1. Facade Vertical Walls (abs(normal.y) < 0.40)
+       // 1. Facade Vertical Walls
        if (abs(vModelNormal.y) < 0.40) {
          vec2 wallCoord = abs(vModelNormal.x) > 0.40 ? vWorldPos.zy : vWorldPos.xy;
 
-         // High-density architectural window grid: 6.5 bays per unit, 4.8 floors per unit
-         vec2 gridPos = wallCoord * vec2(6.5, 4.8);
+         vec2 gridPos = wallCoord * ${gridFreq};
          vec2 cell = floor(gridPos);
          vec2 uvInCell = fract(gridPos);
 
-         // Crisp rectangular window aperture with clean metallic mullion borders
-         float isWindow = step(0.14, uvInCell.x) * step(uvInCell.x, 0.86) *
-                          step(0.16, uvInCell.y) * step(uvInCell.y, 0.84);
+         float isWindow = ${windowAperture};
 
          float instanceLuma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
          float isDimmed = step(instanceLuma, 0.12);
-         float dimFactor = mix(1.0, 0.22, isDimmed);
+         float dimFactor = mix(1.0, 0.20, isDimmed);
 
          if (isWindow > 0.5) {
            float h = hashWindow(cell);
            float flicker = 1.0;
-           if (h > 0.92) {
-             flicker = 0.84 + 0.16 * sin(uTime * 4.8 + h * 6.28);
+           if (h > 0.94) {
+             flicker = 0.85 + 0.15 * sin(uTime * 4.5 + h * 6.28);
            }
 
-           vec3 winColor = vec3(0.02, 0.03, 0.05); // Unlit dark glass
-           if (h > 0.20) {
-             // Warm golden incandescent amber interior glow
-             winColor = vec3(1.0, 0.82, 0.45) * 2.6;
-           } else if (h > 0.08) {
-             // Cool cyan/white terminal & office lighting
-             winColor = vec3(0.55, 0.88, 1.0) * 1.8;
+           // Inner window pane recessed shadow & reveal bevel
+           float revealShadow = smoothstep(0.12, 0.24, uvInCell.x) * smoothstep(0.86, 0.74, uvInCell.y);
+           float sillHighlight = mix(0.75, 1.0, smoothstep(0.16, 0.26, uvInCell.y));
+           float paneDepth = revealShadow * sillHighlight;
+
+           vec3 winColor = vec3(0.012, 0.018, 0.028); // Dark tinted unlit glass
+
+           ${isDatacenter ? `
+           // Server rack indicator LED slits
+           if (h > ${litThresholdCool}) {
+             winColor = mix(vec3(0.20, 0.85, 0.95), vec3(0.10, 0.95, 0.50), step(0.65, h)) * 1.35;
            }
+           ` : isBrutalist ? `
+           // High-security restrained window slits
+           if (h > ${litThresholdWarm}) {
+             winColor = vec3(1.0, 0.72, 0.35) * 1.30;
+           } else if (h > ${litThresholdCool}) {
+             winColor = vec3(0.35, 0.75, 0.92) * 1.15;
+           }
+           ` : `
+           // Living interior offices & residential lighting
+           if (h > ${litThresholdWarm}) {
+             winColor = vec3(1.0, 0.78, 0.40) * 1.50; // Warm golden amber interior
+           } else if (h > ${litThresholdCool}) {
+             winColor = vec3(0.40, 0.82, 0.98) * 1.30; // Cool cyan office glow
+           }
+           `}
 
-           // Subtle metric tint on warm windows to preserve both architectural reality and metric legibility
-           winColor = mix(winColor, metricColor * 2.2, 0.22);
+           // Subtle metric harmonization (preserves architectural realism)
+           winColor = mix(winColor, metricColor * 1.40, 0.18);
 
-           // On critical high-risk buildings, add pulsing crimson accent to living windows
+           // Controlled pulsing crimson accent on critical high-risk landmarks
            if (isCrimson > 0.5 && h > 0.20) {
-             winColor = mix(winColor, vec3(1.0, 0.48, 0.20) * 2.4, 0.45 * crimsonPulse);
+             winColor = mix(winColor, vec3(1.0, 0.24, 0.12) * 1.65, 0.35 * crimsonPulse);
            }
 
-           gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.18, winColor * flicker * dimFactor, 0.92);
+           // Blend into window surface with physical depth
+           gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.12, winColor * flicker * paneDepth * dimFactor, 0.92);
          } else {
-           // Dark metallic spandrel / mullion framing tinted with metric tone
-           gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.25, metricColor * 0.18, 0.35);
+           // Dark metallic spandrel / structural mullion framing
+           gl_FragColor.rgb = gl_FragColor.rgb * 0.14;
+
+           // Subtle floor divider reveal lines
+           float floorSlab = step(0.92, uvInCell.y) + step(uvInCell.y, 0.08);
+           gl_FragColor.rgb += vec3(0.02, 0.04, 0.07) * floorSlab;
          }
 
-         // Exoskeleton Conduits & Architectural Edge Trim (uses active metricColor)
-         // 4 Vertical corner buttress columns
-         float isCorner = step(0.36, abs(vObjectPos.x)) * step(0.36, abs(vObjectPos.z));
+         // Sleek corner buttress pilasters
+         float isCorner = step(0.44, abs(vObjectPos.x)) * step(0.44, abs(vObjectPos.z));
          if (isCorner > 0.5) {
            if (isCrimson > 0.5) {
-             gl_FragColor.rgb = vec3(1.0, 0.14, 0.08) * 3.8 * crimsonPulse;
+             gl_FragColor.rgb = vec3(1.0, 0.16, 0.08) * (1.8 + 0.35 * sin(uTime * 2.2));
            } else {
-             gl_FragColor.rgb = metricColor * 2.8 * dimFactor;
+             gl_FragColor.rgb = metricColor * 1.65 * dimFactor;
            }
          }
 
-         // Mid-tower architectural floor reveal / terrace belt
-         float isMidBelt = step(0.58, vObjectPos.y) * step(vObjectPos.y, 0.62);
+         // Mid-tower architectural floor reveal belt
+         float isMidBelt = step(0.585, vObjectPos.y) * step(vObjectPos.y, 0.615);
          if (isMidBelt > 0.5) {
            if (isCrimson > 0.5) {
-             gl_FragColor.rgb += vec3(1.0, 0.18, 0.10) * 2.6 * crimsonPulse;
+             gl_FragColor.rgb += vec3(1.0, 0.18, 0.10) * 1.35 * crimsonPulse;
            } else {
-             gl_FragColor.rgb += metricColor * 1.8 * dimFactor;
+             gl_FragColor.rgb += metricColor * 1.40 * dimFactor;
            }
          }
 
          // Rooftop crown frame
-         float isCrown = step(0.96, vObjectPos.y);
+         float isCrown = step(0.975, vObjectPos.y);
          if (isCrown > 0.5) {
            if (isCrimson > 0.5) {
-             gl_FragColor.rgb = vec3(1.0, 0.14, 0.08) * 4.0 * crimsonPulse;
+             gl_FragColor.rgb = vec3(1.0, 0.16, 0.08) * (1.9 + 0.35 * sin(uTime * 2.2));
            } else {
-             gl_FragColor.rgb = metricColor * 3.0 * dimFactor;
+             gl_FragColor.rgb = metricColor * 1.85 * dimFactor;
            }
          }
 
-         // Soft vertical gradient (ground plinth anchor to crown brilliance)
-         float vertGrad = mix(0.75, 1.12, clamp(vObjectPos.y, 0.0, 1.0));
+         // Soft vertical gradient from grounded plinth to crown
+         float vertGrad = mix(0.78, 1.10, clamp(vObjectPos.y, 0.0, 1.0));
          gl_FragColor.rgb *= vertGrad;
 
-         // Fresnel rim lighting for crisp architectural silhouette readability against night sky
-         float fresnel = pow(1.0 - max(0.0, dot(vModelNormal, vViewDir)), 2.8);
-         gl_FragColor.rgb += vec3(0.02, 0.15, 0.28) * fresnel * dimFactor;
+         // Fresnel rim lighting for razor-sharp silhouette readability
+         float fresnel = pow(1.0 - max(0.0, dot(vModelNormal, vViewDir)), 3.2);
+         gl_FragColor.rgb += vec3(0.02, 0.09, 0.18) * fresnel * dimFactor;
        }
-       // 2. Rooftop Surfaces (abs(normal.y) >= 0.40)
+       // 2. Rooftop Surfaces
        else if (vModelNormal.y > 0.40) {
-         gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.26, metricColor * 0.15, 0.30);
+         gl_FragColor.rgb = gl_FragColor.rgb * 0.18;
 
          vec2 roofPos = fract(vWorldPos.xz * 0.45);
          float borderDist = min(min(roofPos.x, 1.0 - roofPos.x), min(roofPos.y, 1.0 - roofPos.y));
 
          if (isCrimson > 0.5) {
-           // Brilliant red neon rooftop perimeter parapet
-           if (borderDist < 0.12) {
-             gl_FragColor.rgb = vec3(1.0, 0.14, 0.08) * 4.0 * crimsonPulse;
+           if (borderDist < 0.06) {
+             gl_FragColor.rgb = vec3(1.0, 0.16, 0.08) * (2.1 + 0.35 * sin(uTime * 2.2));
            }
          } else {
-           // Illuminated perimeter parapet trim tinted with active metric color
-           if (borderDist < 0.08) {
-             gl_FragColor.rgb = metricColor * 2.8;
+           if (borderDist < 0.05) {
+             gl_FragColor.rgb = metricColor * 1.65;
            }
          }
        }`

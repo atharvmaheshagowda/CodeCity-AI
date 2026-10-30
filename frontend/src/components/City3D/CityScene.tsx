@@ -74,22 +74,27 @@ function CameraController({
   const controlsRef = useRef<any>(null);
   const introAnimRef = useRef<number | null>(null);
 
-  // Compute optimal default overview framing
+  // Compute optimal default overview framing adapted to actual repository bounds
   const { defaultCamPos, defaultTarget, highIntroPos, midIntroPos } = useMemo(() => {
-    const spanX = bounds.maxX - bounds.minX;
-    const spanZ = bounds.maxZ - bounds.minZ;
+    const centerX = (bounds.minX + bounds.maxX) * 0.5;
+    const centerZ = (bounds.minZ + bounds.maxZ) * 0.5;
+    const spanX = Math.max(16, bounds.maxX - bounds.minX);
+    const spanZ = Math.max(16, bounds.maxZ - bounds.minZ);
     const maxSpan = Math.max(spanX, spanZ);
 
-    const camDist = Math.max(34, Math.min(130, maxSpan * 1.45));
-    const target = new THREE.Vector3(0, 0, 0);
+    // Target slightly shifted along screen-X to account for persistent left HUD drawer
+    const target = new THREE.Vector3(centerX - 1.2, 3.2, centerZ);
+
+    // Dynamic camera distance tailored to repository footprint
+    const camDist = Math.max(38, Math.min(88, maxSpan * 1.55));
 
     return {
-      defaultCamPos: new THREE.Vector3(30.0, 32.0, 36.0),
-      defaultTarget: new THREE.Vector3(0.0, 3.5, 0.0),
+      defaultCamPos: new THREE.Vector3(centerX + camDist * 0.72, camDist * 0.76, centerZ + camDist * 0.82),
+      defaultTarget: target,
       // High establishing altitude: looking across the distant skyline
-      highIntroPos: new THREE.Vector3(45.0, 52.0, 52.0),
+      highIntroPos: new THREE.Vector3(centerX + camDist * 1.05, camDist * 1.20, centerZ + camDist * 1.15),
       // Mid descent point sweeping over the districts
-      midIntroPos: new THREE.Vector3(36.0, 40.0, 42.0),
+      midIntroPos: new THREE.Vector3(centerX + camDist * 0.85, camDist * 0.95, centerZ + camDist * 0.95),
     };
   }, [bounds]);
 
@@ -299,8 +304,14 @@ function ProceduralArchitecturalMetropolis({
   // Shared Procedural Geometries for 10 Architectural Archetypes
   const archetypeGeometries = useMemo(() => createArchetypeGeometries(), []);
 
-  // Shared Procedural Architectural Facade Shader Material
-  const facadeMaterial = useMemo(() => createArchitecturalFacadeMaterial(), []);
+  // Distinct Procedural Architectural Facade Shader Materials for each Archetype
+  const facadeMaterials = useMemo(() => {
+    const mats: Record<BuildingArchetype, THREE.MeshStandardMaterial> = {} as any;
+    ALL_ARCHETYPES.forEach((arch) => {
+      mats[arch] = createArchitecturalFacadeMaterial(arch);
+    });
+    return mats;
+  }, []);
 
   // Group buildings by deterministically assigned archetype
   const { buildingsByArchetype } = useMemo(() => {
@@ -356,10 +367,16 @@ function ProceduralArchitecturalMetropolis({
     monumental_landmark: null,
   });
 
-  // Time-driven shader animations (crimson pulse, window flicker)
+  // Time-driven shader animations across all archetype materials (crimson pulse, window flicker)
   useFrame(({ clock }) => {
-    if (facadeMaterial.userData.shader && !lowPowerMode) {
-      facadeMaterial.userData.shader.uniforms.uTime.value = clock.getElapsedTime();
+    if (!lowPowerMode) {
+      const time = clock.getElapsedTime();
+      ALL_ARCHETYPES.forEach((arch) => {
+        const mat = facadeMaterials[arch];
+        if (mat && mat.userData.shader) {
+          mat.userData.shader.uniforms.uTime.value = time;
+        }
+      });
     }
   });
 
@@ -491,7 +508,7 @@ function ProceduralArchitecturalMetropolis({
             ref={(el) => {
               meshRefs.current[arch] = el;
             }}
-            args={[archetypeGeometries[arch], facadeMaterial, list.length]}
+            args={[archetypeGeometries[arch], facadeMaterials[arch], list.length]}
             onPointerMove={(e) => {
               e.stopPropagation();
               if (e.instanceId !== undefined && list[e.instanceId]) {
@@ -564,7 +581,7 @@ function CleanDistrictPlates({
           </lineSegments>
 
           {/* Floating In-Scene District Label: Positioned STRICTLY ABOVE all buildings in this district */}
-          {!hideHtmlLabels && d.fileCount !== 7 && (
+          {!hideHtmlLabels && (
             <Html
               position={[d.width * 0.38, (d.maxBuildingHeight || 4.0) + 3.8, -d.depth * 0.38]}
               center
@@ -730,19 +747,19 @@ export const CityScene: React.FC<CitySceneProps> = ({
         <primitive object={skyTexture} attach="background" />
         <fog attach="fog" args={[theme === 'neon' ? '#091533' : '#050e22', theme === 'neon' ? 100 : 130, 340]} />
 
-        {/* Directional, Ambient, & Hemisphere Lighting */}
-        <ambientLight intensity={theme === 'neon' ? 1.1 : 0.65} color={theme === 'neon' ? '#67e8f9' : '#fed7aa'} />
+        {/* Directional, Ambient, & Hemisphere Lighting (Calibrated for nocturnal contrast) */}
+        <ambientLight intensity={theme === 'neon' ? 0.38 : 0.26} color={theme === 'neon' ? '#38bdf8' : '#cbd5e1'} />
         <directionalLight
-          position={[70, 110, 60]}
-          intensity={theme === 'neon' ? 2.2 : 1.45}
-          color="#f8fafc"
+          position={[65, 95, 55]}
+          intensity={theme === 'neon' ? 0.95 : 0.68}
+          color="#e2e8f0"
           castShadow={false}
         />
-        <hemisphereLight args={[theme === 'neon' ? '#a855f7' : '#38bdf8', '#010308', theme === 'neon' ? 0.85 : 0.55]} />
-        <pointLight position={[0, 50, 0]} intensity={theme === 'neon' ? 1.8 : 0.85} color={theme === 'neon' ? '#38bdf8' : '#06b6d4'} distance={theme === 'neon' ? 260 : 220} />
+        <hemisphereLight args={[theme === 'neon' ? '#6366f1' : '#38bdf8', '#020617', theme === 'neon' ? 0.45 : 0.30]} />
+        <pointLight position={[0, 45, 0]} intensity={theme === 'neon' ? 0.50 : 0.32} color={theme === 'neon' ? '#38bdf8' : '#0ea5e9'} distance={theme === 'neon' ? 220 : 180} />
 
         {/* Dark Glossy Ground with Soft Reflections & Fading Grid (Zero Stray Dashes) */}
-        <CyberCityGround lowPowerMode={lowPowerMode} />
+        <CyberCityGround districts={districts} buildings={buildings} lowPowerMode={lowPowerMode} />
 
         {/* Small Decorative Industrial & Environmental Details (Streetlights, Light Pools, Transformers) */}
         <EnvironmentalDetails
@@ -755,7 +772,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
         <VolumetricSearchlights lowPowerMode={lowPowerMode} />
 
         {/* Distant Megalopolis Context Skyline (for small repos & depth) */}
-        {showDecorativeSkyline && <SkylineBackdrop lowPowerMode={lowPowerMode} />}
+        {showDecorativeSkyline && isSparse && <SkylineBackdrop lowPowerMode={lowPowerMode} />}
 
         {/* Floating Drifting Dust / Firefly Particles */}
         <AtmosphericParticles lowPowerMode={lowPowerMode} />
@@ -764,6 +781,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
         {/* In-Scene Floating 3D Billboard Badges for Buildings */}
         <InSceneBuildingBadges
           buildings={buildings}
+          districts={districts}
           selectedFile={selectedFile}
           onSelectFile={onSelectFile}
           hideHtmlLabels={hideHtmlLabels || presentationMode}
@@ -866,17 +884,17 @@ export const CityScene: React.FC<CitySceneProps> = ({
         {!lowPowerMode && (
           <EffectComposer multisampling={4}>
             <Bloom
-              luminanceThreshold={0.34}
-              luminanceSmoothing={0.26}
-              intensity={0.88}
-              radius={0.46}
+              luminanceThreshold={theme === 'neon' ? 0.78 : 0.84}
+              luminanceSmoothing={0.18}
+              intensity={theme === 'neon' ? 0.68 : 0.44}
+              radius={0.32}
             />
             <ChromaticAberration
-              offset={new THREE.Vector2(0.0011, 0.0011)}
+              offset={new THREE.Vector2(0.0006, 0.0006)}
               radialModulation
-              modulationOffset={0.25}
+              modulationOffset={0.30}
             />
-            <Vignette darkness={0.55} offset={0.32} />
+            <Vignette darkness={0.42} offset={0.38} />
           </EffectComposer>
         )}
       </Canvas>
