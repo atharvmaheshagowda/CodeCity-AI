@@ -456,3 +456,14 @@ export interface CommitRiskResult {
   file_breakdown: CommitRiskBreakdown[];
 }
 
+export type ExhibitionStage =
+  | 'reveal'
+  | 'overview'
+  | 'tour'
+  | 'hotspots'
+  | 'dependencies'
+  | 'simulation'
+  | 'summary'
+  | 'complete';
+
+

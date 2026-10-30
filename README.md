@@ -141,12 +141,18 @@ CodeCity AI features an award-winning cinematic user interface combining the atm
 - **Command Palette (`Ctrl+K` / `Cmd+K`)**: Instant fuzzy-searchable keyboard navigation for switching repositories, color modes, files, and system toggles.
 - **Model Card Modal**: Features a self-drawing animated SVG ROC curve comparing XGBoost against the naive churn baseline, along with precision/recall metric cards and temporal zero-leakage proof.
 
-### 4. Exhibition & Inactivity Attract Mode
-- Designed specifically for live kiosk presentations and college project exhibitions:
-- **Smooth Auto-Orbit**: Gently orbits the camera around the digital city at an interactive viewing angle.
-- **Rotating Hotspot Showcase**: Automatically cycles through the top 5 highest-risk files every 7.5 seconds, dynamically demonstrating their real blast-radius arcs.
-- **Large Projector Typography**: Clean, high-contrast banner and hotspot diagnostic HUD readable from across a room.
-- **Inactivity Attract Mode**: Automatically enters Exhibition mode after 45 seconds of user inactivity; instantly yields control back upon mouse movement, touch, or keypress.
+### 4. Cinematic Exhibition Mode & Interactive Presentation Engine (Phase 6)
+- **8-Stage Architectural Narrative**: A hands-free, choreographed demonstration sequence grounded 100% in real repository data:
+  1. *Stage A — City Reveal*: High-altitude establishing orbital view introducing the repository identity and 3D architectural mapping.
+  2. *Stage B — Repository Metrics*: High-contrast telemetry cards displaying file count, LOC, mean predicted risk %, and XGBoost ROC-AUC.
+  3. *Stage C — Architectural Tour*: Low-altitude district glide showcasing squarified treemaps, frosted plinths, and 10 procedural building archetypes.
+  4. *Stage D — Highest-Risk Hotspots*: Focal camera zoom on the primary predicted defect hotspot with line-level failure diagnosis and suggested remediation.
+  5. *Stage E — Dependency Web*: AST parabolic skybridges revealing immediate (Hop 1) and transitive (Hop 2/3) caller networks.
+  6. *Stage F — Failure Cascade*: Live cascading failure simulation demonstrating real-time import reachability and broken callers.
+  7. *Stage G — Intelligence Summary*: Executive architectural findings highlighting risk, structural bottlenecks (Betweenness Centrality), and refactor recommendations.
+  8. *Stage H — Return to Overview*: Seamless camera restoration with options to restart the tour or return to free interactive exploration.
+- **Projector-Grade Presentation HUD**: Fullscreen glass interface featuring an 8-stage interactive stepper, real-time countdown progress bars, and keyboard shortcuts (`Space` to pause, `←`/`→` to step, `R` to restart, `Esc` to exit).
+- **Opt-In Kiosk Attract Mode**: Configurable 45-second unattended idle timer that initiates the presentation on exhibition displays and instantly yields control upon user touch or keypress.
 
 ### 5. Architectural Intelligence & Health Engine (Phase 5)
 - **7-Category Architectural Health Matrix**: The flagship Overview dock synthesizes repository telemetry into actionable categories:

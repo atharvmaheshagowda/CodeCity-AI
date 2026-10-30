@@ -61,6 +61,7 @@ export const App: React.FC = () => {
 
   // Initial load
   useEffect(() => {
+    (window as any).useCityStore = useCityStore;
     fetchRepos();
   }, [fetchRepos]);
 

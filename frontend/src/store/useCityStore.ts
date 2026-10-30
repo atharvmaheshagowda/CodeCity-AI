@@ -22,7 +22,19 @@ import {
   CommitRiskResult,
   PlannerResult,
   BacktestResult,
+  ExhibitionStage,
 } from '../types';
+
+export const EXHIBITION_STAGES: ExhibitionStage[] = [
+  'reveal',
+  'overview',
+  'tour',
+  'hotspots',
+  'dependencies',
+  'simulation',
+  'summary',
+  'complete',
+];
 
 const API_BASE = 'http://127.0.0.1:8000/api';
 
@@ -113,6 +125,17 @@ interface CityState {
   theme: 'dark' | 'neon';
   isExhibitionTouring: boolean;
   tourStep: number;
+
+  // Exhibition Mode State (Phase 6)
+  exhibitionStage: ExhibitionStage;
+  isExhibitionPaused: boolean;
+  isAttractModeEnabled: boolean;
+  setExhibitionStage: (stage: ExhibitionStage) => void;
+  nextExhibitionStage: () => void;
+  prevExhibitionStage: () => void;
+  toggleExhibitionPause: () => void;
+  restartExhibition: () => void;
+  toggleAttractMode: (enabled?: boolean) => void;
 
   // Analysis state
   isAnalyzing: boolean;
@@ -292,6 +315,9 @@ export const useCityStore = create<CityState>((set, get) => ({
   theme: 'dark',
   isExhibitionTouring: false,
   tourStep: 0,
+  exhibitionStage: 'reveal',
+  isExhibitionPaused: false,
+  isAttractModeEnabled: false,
 
   isAnalyzing: false,
   analysisJobId: null,
@@ -366,7 +392,86 @@ export const useCityStore = create<CityState>((set, get) => ({
   setMaxHopDepth: (depth) => set({ maxHopDepth: depth, lastUserActivity: Date.now() }),
   setSearchQuery: (query) => set({ searchQuery: query, lastUserActivity: Date.now() }),
   setSelectedDirectory: (dir) => set({ selectedDirectory: dir, lastUserActivity: Date.now() }),
-  togglePresentationMode: () => set((state) => ({ presentationMode: !state.presentationMode, lastUserActivity: Date.now() })),
+  togglePresentationMode: () => {
+    const nextMode = !get().presentationMode;
+    if (nextMode) {
+      set({
+        presentationMode: true,
+        exhibitionStage: 'reveal',
+        isExhibitionPaused: false,
+        lastUserActivity: Date.now(),
+      });
+      get().selectFile(null);
+      get().simulateFailure(null);
+    } else {
+      set({
+        presentationMode: false,
+        isExhibitionPaused: false,
+        lastUserActivity: Date.now(),
+        cameraResetTrigger: get().cameraResetTrigger + 1,
+      });
+      get().simulateFailure(null);
+    }
+  },
+
+  setExhibitionStage: (stage: ExhibitionStage) => {
+    const { currentRepo } = get();
+    const files = currentRepo?.files || [];
+    const topHotspot = [...files].sort((a, b) => b.risk_probability - a.risk_probability)[0] || null;
+    const depFile = files.find((f) => (f.blast_radius?.total_count || 0) > 0) || topHotspot;
+
+    set({ exhibitionStage: stage, lastUserActivity: Date.now() });
+
+    if (stage === 'reveal' || stage === 'overview' || stage === 'tour' || stage === 'summary' || stage === 'complete') {
+      get().selectFile(null);
+      get().simulateFailure(null);
+    } else if (stage === 'hotspots') {
+      get().selectFile(topHotspot);
+      get().simulateFailure(null);
+    } else if (stage === 'dependencies') {
+      get().selectFile(depFile);
+      get().simulateFailure(null);
+    } else if (stage === 'simulation') {
+      if (depFile) {
+        get().selectFile(depFile);
+        get().simulateFailure(depFile);
+      }
+    }
+  },
+
+  nextExhibitionStage: () => {
+    const { exhibitionStage } = get();
+    const idx = EXHIBITION_STAGES.indexOf(exhibitionStage);
+    if (idx < EXHIBITION_STAGES.length - 1) {
+      get().setExhibitionStage(EXHIBITION_STAGES[idx + 1]);
+    } else {
+      get().setExhibitionStage('reveal');
+    }
+  },
+
+  prevExhibitionStage: () => {
+    const { exhibitionStage } = get();
+    const idx = EXHIBITION_STAGES.indexOf(exhibitionStage);
+    if (idx > 0) {
+      get().setExhibitionStage(EXHIBITION_STAGES[idx - 1]);
+    }
+  },
+
+  toggleExhibitionPause: () => {
+    set((s) => ({ isExhibitionPaused: !s.isExhibitionPaused, lastUserActivity: Date.now() }));
+  },
+
+  restartExhibition: () => {
+    set({ isExhibitionPaused: false });
+    get().setExhibitionStage('reveal');
+  },
+
+  toggleAttractMode: (enabled) => {
+    set((s) => ({
+      isAttractModeEnabled: enabled !== undefined ? enabled : !s.isAttractModeEnabled,
+      lastUserActivity: Date.now(),
+    }));
+  },
   toggleLowPowerMode: () => set((state) => ({ lowPowerMode: !state.lowPowerMode })),
   toggleLeftPanel: () => set((state) => ({ isLeftPanelCollapsed: !state.isLeftPanelCollapsed, lastUserActivity: Date.now() })),
   openCommandPalette: () => set({ isCommandPaletteOpen: true }),

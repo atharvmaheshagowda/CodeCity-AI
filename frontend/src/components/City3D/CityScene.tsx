@@ -73,6 +73,7 @@ function CameraController({
   lowPowerMode?: boolean;
 }) {
   const { camera } = useThree();
+  const { exhibitionStage, isExhibitionPaused } = useCityStore();
   const controlsRef = useRef<any>(null);
   const introAnimRef = useRef<number | null>(null);
   const lastInteractionRef = useRef<number>(performance.now());
@@ -293,9 +294,99 @@ function CameraController({
     requestAnimationFrame(animateDistrict);
   }, [focusedDistrict, camera, isIntroActive]);
 
-  // 5. Cinematic Ambient Idle Drift
+  // 5. Cinematic Exhibition Stage Camera Choreography (Phase 6)
+  useEffect(() => {
+    if (!presentationMode || isIntroActive) return;
+
+    soundFx.playWhoosh();
+    const centerX = (bounds.minX + bounds.maxX) * 0.5;
+    const centerZ = (bounds.minZ + bounds.maxZ) * 0.5;
+    const spanX = Math.max(16, bounds.maxX - bounds.minX);
+    const spanZ = Math.max(16, bounds.maxZ - bounds.minZ);
+    const maxSpan = Math.max(spanX, spanZ);
+    const camDist = Math.max(38, Math.min(88, maxSpan * 1.55));
+
+    let destCam = defaultCamPos.clone();
+    let destTarget = defaultTarget.clone();
+
+    if (exhibitionStage === 'reveal') {
+      destCam = highIntroPos.clone();
+      destTarget = defaultTarget.clone();
+    } else if (exhibitionStage === 'overview') {
+      destCam = new THREE.Vector3(centerX + camDist * 0.72, camDist * 0.76, centerZ + camDist * 0.82);
+      destTarget = new THREE.Vector3(centerX, 2.5, centerZ);
+    } else if (exhibitionStage === 'tour') {
+      // Lower sweeping district view
+      destCam = new THREE.Vector3(centerX + camDist * 0.50, Math.min(24, camDist * 0.40), centerZ + camDist * 0.60);
+      destTarget = new THREE.Vector3(centerX, 2.0, centerZ);
+    } else if (exhibitionStage === 'hotspots' && targetFile) {
+      const resolved = allBuildingsMap.get(targetFile.id) || allBuildingsMap.get(targetFile.path) || targetFile;
+      const bHeight = resolved.height || 4;
+      destTarget = new THREE.Vector3(resolved.x - 1.0, bHeight * 0.45, resolved.z);
+      const focusDist = Math.max(18, Math.min(36, bHeight * 1.8));
+      destCam = new THREE.Vector3(
+        resolved.x + focusDist * 0.65,
+        bHeight * 0.55 + focusDist * 0.60,
+        resolved.z + focusDist * 0.75
+      );
+    } else if (exhibitionStage === 'dependencies' && targetFile) {
+      const resolved = allBuildingsMap.get(targetFile.id) || allBuildingsMap.get(targetFile.path) || targetFile;
+      destTarget = new THREE.Vector3(resolved.x, 3.0, resolved.z);
+      destCam = new THREE.Vector3(resolved.x + 28, 26, resolved.z + 30);
+    } else if (exhibitionStage === 'simulation') {
+      destTarget = targetFile
+        ? new THREE.Vector3(targetFile.x, 3.5, targetFile.z)
+        : new THREE.Vector3(centerX, 3.0, centerZ);
+      destCam = new THREE.Vector3(centerX + camDist * 0.62, camDist * 0.72, centerZ + camDist * 0.78);
+    } else if (exhibitionStage === 'summary' || exhibitionStage === 'complete') {
+      destCam = defaultCamPos.clone();
+      destTarget = defaultTarget.clone();
+    }
+
+    const startTime = performance.now();
+    const startCam = camera.position.clone();
+    const startTarget = controlsRef.current ? controlsRef.current.target.clone() : new THREE.Vector3(0, 0, 0);
+
+    const animateStage = () => {
+      const elapsed = (performance.now() - startTime) / 750;
+      const t = Math.min(1.0, elapsed);
+      const ease = 1 - Math.pow(1 - t, 3);
+
+      camera.position.lerpVectors(startCam, destCam, ease);
+      if (controlsRef.current) {
+        controlsRef.current.target.lerpVectors(startTarget, destTarget, ease);
+        controlsRef.current.update();
+      }
+
+      if (t < 1.0) {
+        requestAnimationFrame(animateStage);
+      }
+    };
+    requestAnimationFrame(animateStage);
+  }, [exhibitionStage, presentationMode, isIntroActive, targetFile, allBuildingsMap, bounds, defaultCamPos, defaultTarget, highIntroPos, camera]);
+
+  // 6. Cinematic Ambient Idle Drift & Exhibition Orbit
   useFrame((_, delta) => {
-    if (
+    if (presentationMode && !isExhibitionPaused && !lowPowerMode && controlsRef.current) {
+      // Gentle exhibition orbit for overview & panoramic stages
+      if (
+        exhibitionStage === 'reveal' ||
+        exhibitionStage === 'overview' ||
+        exhibitionStage === 'tour' ||
+        exhibitionStage === 'summary'
+      ) {
+        const driftSpeed = 0.038 * delta;
+        const cam = camera.position;
+        const tgt = controlsRef.current.target;
+        const dx = cam.x - tgt.x;
+        const dz = cam.z - tgt.z;
+        const cos = Math.cos(driftSpeed);
+        const sin = Math.sin(driftSpeed);
+        cam.x = tgt.x + (dx * cos - dz * sin);
+        cam.z = tgt.z + (dx * sin + dz * cos);
+        controlsRef.current.update();
+      }
+    } else if (
       !targetFile &&
       !focusedDistrict &&
       !isIntroActive &&
