@@ -147,3 +147,89 @@ export const SkylineBackdrop: React.FC<SkylineBackdropProps> = ({ lowPowerMode =
     </group>
   );
 };
+
+/**
+ * 360-Degree Distant Megalopolis Horizon:
+ * Procedural low-poly background skyscrapers situated at R = 140-185m in the far horizon.
+ * Completely outside repository bounds (zero occlusion of repo buildings), blending softly
+ * into exponential night fog with subtle window slits and red aviation warning beacons.
+ */
+export const DistantMegalopolisHorizon: React.FC<{ lowPowerMode?: boolean }> = ({ lowPowerMode = false }) => {
+  const meshRef = React.useRef<THREE.InstancedMesh>(null);
+  const beaconRef = React.useRef<THREE.InstancedMesh>(null);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  const numTowers = 48;
+
+  // Deterministic seeded procedural background tower instances
+  const towers = useMemo(() => {
+    const list: Array<{ x: number; z: number; h: number; w: number; d: number }> = [];
+    let seed = 42;
+    const rnd = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
+
+    for (let i = 0; i < numTowers; i++) {
+      const angle = (i / numTowers) * Math.PI * 2 + (rnd() - 0.5) * 0.08;
+      const radius = 140 + rnd() * 42;
+      const x = Math.sin(angle) * radius;
+      const z = Math.cos(angle) * radius;
+      const h = 32 + rnd() * 85;
+      const w = 7 + rnd() * 9;
+      const d = 7 + rnd() * 9;
+      list.push({ x, z, h, w, d });
+    }
+    return list;
+  }, []);
+
+  React.useEffect(() => {
+    if (!meshRef.current || lowPowerMode) return;
+    towers.forEach((t, i) => {
+      // Tower volume
+      dummy.position.set(t.x, t.h * 0.5, t.z);
+      dummy.rotation.set(0, (i * 0.4) % Math.PI, 0);
+      dummy.scale.set(t.w, t.h, t.d);
+      dummy.updateMatrix();
+      meshRef.current!.setMatrixAt(i, dummy.matrix);
+
+      // Rooftop red hazard beacon
+      if (beaconRef.current) {
+        dummy.position.set(t.x, t.h + 0.8, t.z);
+        dummy.rotation.set(0, 0, 0);
+        dummy.scale.set(0.65, 0.65, 0.65);
+        dummy.updateMatrix();
+        beaconRef.current.setMatrixAt(i, dummy.matrix);
+      }
+    });
+
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    if (beaconRef.current) {
+      beaconRef.current.instanceMatrix.needsUpdate = true;
+    }
+  }, [towers, dummy, lowPowerMode]);
+
+  if (lowPowerMode) return null;
+
+  return (
+    <group name="distant-megalopolis-horizon">
+      {/* 1. Low-Poly Distant Monolithic Tower Instances */}
+      <instancedMesh ref={meshRef} args={[undefined, undefined, numTowers]} receiveShadow={false}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial
+          color="#030713"
+          roughness={0.85}
+          metalness={0.78}
+          emissive="#0284c7"
+          emissiveIntensity={0.12}
+        />
+      </instancedMesh>
+
+      {/* 2. Red Aviation Hazard Beacons on Horizon Towers */}
+      <instancedMesh ref={beaconRef} args={[undefined, undefined, numTowers]}>
+        <sphereGeometry args={[1, 6, 6]} />
+        <meshBasicMaterial color="#ef4444" toneMapped={false} />
+      </instancedMesh>
+    </group>
+  );
+};
