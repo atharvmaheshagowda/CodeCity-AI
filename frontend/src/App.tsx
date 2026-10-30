@@ -15,6 +15,7 @@ import { InsightsDock } from './components/InsightsDock/InsightsDock';
 import { HotspotScatterModal } from './components/HotspotScatterModal';
 import { TerminalLogDrawer } from './components/TerminalLogDrawer';
 import { RepoComparisonModal } from './components/RepoComparisonModal';
+import { DependencyGraphModal } from './components/DependencyGraphModal';
 import { ColorMode } from './types';
 
 export const App: React.FC = () => {
@@ -44,9 +45,18 @@ export const App: React.FC = () => {
     toggleCommandPalette,
     toggleLeftPanel,
     recordUserActivity,
+    isScatterPlotOpen,
+    isRepoComparisonOpen,
+    isDependencyGraphOpen,
   } = useCityStore();
 
-  const isModalOpen = isModelCardOpen || isCommandPaletteOpen || isOnboardingOpen;
+  const isModalOpen =
+    isModelCardOpen ||
+    isCommandPaletteOpen ||
+    isOnboardingOpen ||
+    isScatterPlotOpen ||
+    isRepoComparisonOpen ||
+    isDependencyGraphOpen;
 
   // Initial load
   useEffect(() => {
@@ -192,6 +202,7 @@ export const App: React.FC = () => {
       <HotspotScatterModal />
       <TerminalLogDrawer />
       <RepoComparisonModal />
+      <DependencyGraphModal />
     </div>
   );
 };

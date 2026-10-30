@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, LayoutGrid as ScatterIcon, Layers, Info, Filter } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
@@ -9,6 +9,17 @@ import { FileNode } from '../types';
 export const HotspotScatterModal: React.FC = () => {
   const { isScatterPlotOpen, toggleScatterPlot, currentRepo, selectedFile, selectFile } = useCityStore();
   const [hoveredNode, setHoveredNode] = useState<FileNode | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isScatterPlotOpen) {
+        soundFx.playClick();
+        toggleScatterPlot(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isScatterPlotOpen, toggleScatterPlot]);
 
   if (!isScatterPlotOpen || !currentRepo) return null;
 
@@ -60,7 +71,7 @@ export const HotspotScatterModal: React.FC = () => {
                   </span>
                 </h2>
                 <p className="text-xs text-slate-400 font-mono">
-                  Complexity vs. 90-Day Churn | Bubble Size = LOC | Color = Defect Risk
+                  Code Complexity vs. Recent Edits | Bubble Size = File Length | Color = Bug Risk
                 </p>
               </div>
             </div>
@@ -119,7 +130,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.8"
                 >
-                  DANGER ZONE (High Churn & High CC)
+                  DANGER ZONE (Complex & Frequently Edited)
                 </text>
                 <text
                   x={padding + 14}
@@ -130,7 +141,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.7"
                 >
-                  FRESH CHURN (Volatile)
+                  RECENT CHANGES (Simple Code, Actively Edited)
                 </text>
                 <text
                   x={padding + plotWidth - 12}
@@ -141,7 +152,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.7"
                 >
-                  LEGACY STABLE (High CC, Low Churn)
+                  STABLE LEGACY (Complex Code, Rarely Touched)
                 </text>
                 <text
                   x={padding + 14}
@@ -152,7 +163,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.7"
                 >
-                  SIMPLE MODULAR
+                  SAFE & CLEAN (Simple Code, Low Risk)
                 </text>
 
                 {/* Grid ticks */}
@@ -222,7 +233,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontSize="11"
                   fontWeight="bold"
                 >
-                  Cyclomatic Complexity &rarr;
+                  Code Complexity (Branching Logic) &rarr;
                 </text>
                 <text
                   x={14}

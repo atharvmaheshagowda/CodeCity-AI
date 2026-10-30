@@ -75,9 +75,9 @@ export const PlanTab: React.FC = () => {
               <Clock className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-semibold text-white text-sm">Review Budget Optimizer</h3>
+              <h3 className="font-semibold text-white text-sm">Code Review Priority Planner</h3>
               <p className="text-[11px] text-slate-400">
-                Greedy knapsack scheduling maximizing defect risk mitigated given available review hours.
+                Calculates the smartest code review plan: picks the riskiest files to review first within your team's available hours.
               </p>
             </div>
           </div>

@@ -181,7 +181,7 @@ diff --git a/src/flask/helpers.py b/src/flask/helpers.py
             <div>
               <h3 className="font-semibold text-white text-sm">Traceback-to-Blast-Radius</h3>
               <p className="text-[11px] text-slate-400">
-                Paste a Python stack trace to locate the crashed frame and simulate cascade failure.
+                Paste a Python error stack trace to pinpoint the crashed line and see all files affected.
               </p>
             </div>
           </div>
@@ -264,7 +264,7 @@ diff --git a/src/flask/helpers.py b/src/flask/helpers.py
 
             {/* Cascade Hops Breakdown */}
             <div className="space-y-1.5 pt-1">
-              <div className="text-[11px] font-medium text-slate-300">Cascading Ripple Propagation:</div>
+              <div className="text-[11px] font-medium text-slate-300">Connected Files Affected (Ripple Effect):</div>
               <div className="grid grid-cols-3 gap-2">
                 {[1, 2, 3].map((hop) => {
                   const items = (tracebackResult.cascade.hops as any)[hop] || [];
@@ -311,7 +311,7 @@ diff --git a/src/flask/helpers.py b/src/flask/helpers.py
             <div>
               <h3 className="font-semibold text-white text-sm">Simulate Failure Cascade</h3>
               <p className="text-[11px] text-slate-400">
-                Instantly simulate a failure on any selected building to inspect downstream callers.
+                Simulate what happens if any file breaks, to see which connected files are affected.
               </p>
             </div>
           </div>
@@ -376,7 +376,7 @@ diff --git a/src/flask/helpers.py b/src/flask/helpers.py
           <div>
             <h3 className="font-semibold text-white text-sm">Dependency Path Explorer</h3>
             <p className="text-[11px] text-slate-400">
-              Compute the shortest directional route connecting any two files in the codebase.
+              Find the shortest route connecting any two files in the codebase.
             </p>
           </div>
         </div>
@@ -487,7 +487,7 @@ diff --git a/src/flask/helpers.py b/src/flask/helpers.py
             <div>
               <h3 className="font-semibold text-white text-sm">Breaking-Change Signature Tester</h3>
               <p className="text-[11px] text-slate-400">
-                Deterministic AST diffing: re-parses call sites and identifies broken callers across the repo.
+                Test changing a function's parameters before saving, and see which files across the project would break.
               </p>
             </div>
           </div>
@@ -642,7 +642,7 @@ diff --git a/src/flask/helpers.py b/src/flask/helpers.py
             <div>
               <h3 className="font-semibold text-white text-sm">Commit / PR Diff Risk Checker</h3>
               <p className="text-[11px] text-slate-400">
-                Paste unified git diff: calculates aggregate PR defect probability and union blast radius.
+                Paste a Git diff or Pull Request to calculate its bug risk and see what files might be impacted before merging.
               </p>
             </div>
           </div>

@@ -84,10 +84,10 @@ export const ReportTab: React.FC = () => {
         <div>
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>0-100 Code Health Score & Executive Report</span>
+            <span>Code Health Score & Summary Report (0-100)</span>
           </h3>
           <p className="text-[11px] text-slate-400">
-            Transparently computed from defect probability, cyclic imports, god modules, and complexity.
+            Overall grade computed from bug risk, code complexity, circular imports, and file sizes.
           </p>
         </div>
 

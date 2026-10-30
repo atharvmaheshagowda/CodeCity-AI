@@ -34,7 +34,7 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     {
       id: 'skybridges',
       label: 'Dependency Skybridges',
-      desc: 'AST import conduits between modules',
+      desc: 'Glowing bridges showing which files import each other',
       icon: GitBranch,
       enabled: activeLayers.skybridges,
       toggle: () => toggleLayer('skybridges'),
@@ -42,8 +42,8 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     },
     {
       id: 'coupling',
-      label: 'Hidden Coupling Tunnels',
-      desc: 'Git co-change links without imports',
+      label: 'Hidden Co-Changes',
+      desc: 'Files frequently edited together in Git commits',
       icon: Link2,
       enabled: activeLayers.coupling,
       toggle: () => toggleLayer('coupling'),
@@ -51,8 +51,8 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     },
     {
       id: 'smells',
-      label: 'Architecture Smell Arcs',
-      desc: 'Circular dependency cycles overhead',
+      label: 'Circular Import Loops',
+      desc: 'Red arches showing loops where files depend on each other',
       icon: ShieldAlert,
       enabled: activeLayers.smells,
       toggle: () => toggleLayer('smells'),
@@ -61,7 +61,7 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     {
       id: 'path',
       label: 'Path Explorer Beam',
-      desc: 'Active route between source & target',
+      desc: 'Light beam showing the shortest route between two files',
       icon: Route,
       enabled: activeLayers.path,
       toggle: () => toggleLayer('path'),
@@ -70,7 +70,7 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     {
       id: 'dangerZones',
       label: 'Untested Danger Zones',
-      desc: 'Hazard highlight on risk > 0.7 without tests',
+      desc: 'Highlights high-risk files that have zero automated tests',
       icon: AlertTriangle,
       enabled: activeLayers.dangerZones,
       toggle: () => toggleLayer('dangerZones'),
@@ -78,8 +78,8 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     },
     {
       id: 'busFactor',
-      label: 'Bus-Factor Concentration',
-      desc: 'Files where 1 author has >80% share',
+      label: 'Single-Developer Risk',
+      desc: 'Highlights files where 1 person wrote over 80% of code',
       icon: Users,
       enabled: activeLayers.busFactor,
       toggle: () => toggleLayer('busFactor'),
@@ -88,7 +88,7 @@ export const LayersMenu: React.FC<LayersMenuProps> = ({ isOpen, onClose }) => {
     {
       id: 'skyline',
       label: 'Skyline Backdrop',
-      desc: 'Distant metropolitan silhouettes',
+      desc: 'Distant cyberpunk buildings in the background',
       icon: Building2,
       enabled: showDecorativeSkyline,
       toggle: () => toggleDecorativeSkyline(),

@@ -1,32 +1,30 @@
-# CodeCity AI — Miniature Cyber-Metropolis Redesign Plan
+# CodeCity AI — Cinematic Redesign Architecture & Implementation Plan
 
-## 1. Vision & Architecture Overview
+## 1. Executive Summary & Goals
+Transform the functional CodeCity AI codebase into a world-class, cinematic developer tool that delivers the core promise: **"See where your code will break next, and what breaks with it."**
+The application will feature an immersive 3D metropolis (Blade Runner 2049 / Tron: Legacy meets Linear / visionOS), ultra-refined glass chrome, full-screen canvas hero layout, a signature shockwave + particle conduit blast-radius effect, a top-down minimap, a `Ctrl+K` Command Palette, and an exhibition presentation mode with inactivity attract triggers.
 
-Transform CodeCity AI into a high-fidelity miniature futuristic smart city / industrial software simulation diorama viewed from an elevated isometric perspective.
+---
+
+## 2. Existing Architecture Overview
 
 ```mermaid
 graph TD
     subgraph Frontend [React 18 + Vite + TypeScript]
-        Main[main.tsx: Fonts & Styling] --> App[App.tsx: Layout Orchestrator]
-        App --> Nav[Navbar.tsx: Compact Floating Bar]
-        App --> Canvas3D[CityScene.tsx: Isometric Three.js Canvas]
-        Canvas3D --> InstMetropolis[10 Procedural Archetype InstancedMeshes]
-        Canvas3D --> Ground[CyberCityGround.tsx: Wet Asphalt & Cyan Paths]
-        Canvas3D --> EnvDetails[EnvironmentalDetails.tsx: Transformers, Streetlights, Masts]
-        Canvas3D --> Skybridges[DependencySkybridges.tsx: AST Conduits & Flowing Particles]
-        Canvas3D --> BlastArcs[BlastRadiusArcs.tsx: Shockwave Ring & Parabolic Arcs]
-        Canvas3D --> Beacons[LandmarkBeacons.tsx: Vertical Cyan Light Beams]
-        Canvas3D --> Districts[DistrictPlates: Frosted Zones & Elevated Badges]
-        Canvas3D --> Atmosphere[AtmosphericParticles & Volumetric Searchlights]
-        Canvas3D --> PostProc[EffectComposer: Selective Bloom & Tone Mapping]
-        App --> Left[LeftPanel.tsx: 280px Collapsible Intelligence Panel]
-        App --> Right[RightDrawer.tsx: Slide-In File Drawer & SHAP]
-        App --> BottomHUD[BottomHUD.tsx: 2D Minimap & Sliding Mode Pills]
-        App --> PinnedDock[PinnedDock.tsx: Comparison Dock]
-        App --> Modals[ModelCardModal.tsx, CommandPalette.tsx, OnboardingModal.tsx]
-        App --> PresHUD[PresentationHUD.tsx: Exhibition Projector Overlay]
+        Main[main.tsx: Fontsource & Root] --> App[App.tsx: Layout Orchestrator]
+        App --> Nav[Navbar.tsx: Top Bar Chrome]
+        App --> Canvas3D[CityScene.tsx: Three.js Canvas & Shaders]
+        Canvas3D --> InstMesh[InstancedMesh: Buildings & Facades]
+        Canvas3D --> BlastArcs[BlastRadiusArcs.tsx: Conduits & Particles]
+        Canvas3D --> Districts[DistrictPlates: Zones & Billboards]
+        Canvas3D --> PostProc[EffectComposer: Selective Bloom]
+        App --> Left[LeftPanel.tsx: Telemetry, Scanner, KPIs, Hotspots]
+        App --> Right[RightDrawer.tsx: File Detail, SHAP, Blast Trajectory]
+        App --> Modals[ModelCardModal.tsx, OnboardingModal.tsx, CmdPalette.tsx]
+        App --> PresHUD[PresentationHUD.tsx: Exhibition Kiosk Overlay]
+        App --> BottomHUD[BottomHUD.tsx: Minimap, Mode Legend, Controls]
         
-        Store[useCityStore.ts: Global State] --> App
+        Store[useCityStore.ts: Zustand Global State] --> App
         Store --> Canvas3D
         Store --> Left
         Store --> Right
@@ -34,10 +32,10 @@ graph TD
 
     subgraph Backend [FastAPI 3.12+ Server]
         API[main.py: REST Endpoints]
-        API --> Mining[git_miner.py: PyDriller Historical Mining]
-        API --> Graph[dep_graph.py: AST Dependency Extraction & BFS]
+        API --> Mining[git_miner.py: PyDriller Feature Mining]
+        API --> Graph[dep_graph.py: AST Dependency Blast Radius BFS]
         API --> ML[train.py / shap_explainer.py: XGBoost + TreeExplainer]
-        API --> Cache[cached_demos/*.json: Offline Snapshots]
+        API --> Cache[cached_demos/*.json: Offline Precomputed Cities]
     end
 
     Frontend -->|HTTP REST /api/*| Backend
@@ -45,36 +43,82 @@ graph TD
 
 ---
 
-## 2. Milestone Execution Plan
+## 3. Files Targeted for Modification & Creation
 
-### Milestone 1: 10 Procedural Architectural Archetypes & Facade Shader
-- 10 distinct, richly detailed architectural archetypes constructed with merged compound `BufferGeometry` (sharp rectangular prisms, chamfered stepped setbacks, cantilevered sections, roof cooling chillers/HVAC units, communication masts, equipment bulkheads, and flat roof decks with parapets).
-- Custom procedural facade shader with dual-temperature lighting (warm golden interior lights + cool cyan workstation lighting), dark tinted glass spandrels, crisp vertical mullions, subtle window flicker, slow crimson pulse on high-risk files, Fresnel edge rim lighting, and vertical luminance gradients.
+| File | Status | Planned Architectural Enhancements |
+| :--- | :--- | :--- |
+| **`frontend/src/index.css`** | Modify | Modern glassmorphism tokens, cyber neon utilities, animated scanlines, radial void background, custom scrollbars |
+| **`frontend/tailwind.config.js`** | Modify | Extended color tokens (`bg-void`, `surface-glass`, `accent-teal`, `hop-1/2/3`), animation keyframes, backdrop blur classes |
+| **`frontend/src/store/useCityStore.ts`** | Modify | Add low-power mode state, command palette toggle, left panel collapse toggle, camera reset trigger, last user activity tracking |
+| **`frontend/src/components/City3D/CityScene.tsx`** | Modify | Procedural facade window material, wet reflective asphalt ground, layered atmospheric fog, dynamic sparse-city scaling, camera establishing intro fly-in, smooth selection framing |
+| **`frontend/src/components/City3D/BlastRadiusArcs.tsx`** | Modify | Parabolic 3D tubes + animated glowing packet particles flowing along conduits + expanding ground shockwave ring + staggered hop illumination |
+| **`frontend/src/components/Navbar.tsx`** | Modify | Streamlined single-row floating bar, compact repo dropdown, Low-Power toggle, Command Palette trigger (`Ctrl+K`), Exhibition toggle |
+| **`frontend/src/components/LeftPanel.tsx`** | Modify | Slimmer collapsible floating glass panel (`320px`), compact KPI cards with visual distribution pills, real-time hotspot hover-synchronization |
+| **`frontend/src/components/RightDrawer.tsx`** | Modify | Sleek slide-in glass drawer, glowing SVG risk gauge, animated SHAP horizontal bars with positive/negative bifurcation, interactive hop drilldown |
+| **`frontend/src/components/BottomHUD.tsx`** | Create | Floating bottom HUD with interactive 2D top-down minimap, active color mode legend pills, and view controls |
+| **`frontend/src/components/CommandPalette.tsx`** | Create | Fast searchable action modal (`Ctrl+K` / `Cmd+K`) for switching repos, color modes, searching files, toggling panels and low-power mode |
+| **`frontend/src/components/PresentationHUD.tsx`** | Modify | Cinematic projector overlay, cycling top hotspot highlights, auto-blast radius demo, and inactivity attract timer |
+| **`frontend/src/components/ModelCardModal.tsx`** | Modify | Animated SVG ROC curve drawing, XGBoost vs Churn baseline comparison, training specs, honest methodology |
+| **`frontend/src/utils/cityLayout.ts`** | Modify | Intelligent scaling and centering for sparse repositories ($< 15$ files), improved district padding, refined building proportions |
 
-### Milestone 2: City Environment, Ground, Illuminated Pathways & Environmental Details
-- Deep midnight-navy wet reflective ground plane (`CyberCityGround.tsx`) with subtle procedural roughness, puddles, glowing cyan illuminated road/circuit pathways, district boundaries, and metallic service plates.
-- `EnvironmentalDetails.tsx`: Small decorative industrial structures, electrical transformer cabinets, miniature streetlights with soft cyan light pools, and communication masts at district edges.
-- Atmospheric depth: Layered exponential fog, distant context skyline silhouettes, glowing drifting dust/firefly particles, and volumetric searchlights.
+---
 
-### Milestone 3: Cyan Dependency Pathways, Camera Rig & Living Interactions
-- Realistic AST dependency pathways (`DependencySkybridges.tsx`) with glowing connection nodes and animated cyan data particles streaming along conduits.
-- Elevated isometric camera framing (narrower FOV 32–34°, angled diorama vantage point) with damped inertial orbit controls and smooth fly-to focusing.
-- Interactive hover spring lift ($+0.4\text{m}$), cursor-following spring lag card, right-click radial quick-action menu, double-click district zoom, and signature blast-radius shockwave + parabolic arcs.
+## 4. Implementation Milestones
 
-### Milestone 4: Motion-Driven UI Chrome & Spatial Panels
-- Compact single-row top navigation bar with brand badge, repository selector, `⌘K` command palette trigger, camera reset, WebAudio toggle, Eco mode toggle, Exhibition mode toggle, and Model Card button.
-- Floating collapsible left panel (280px) with animated SVG sparklines on KPI cards, scanner, and ranked hotspots with bidirectional 3D hover sync.
-- Slide-in right drawer with animated circular risk gauge, plain-English SHAP explanation, feature contribution bars, and blast radius trajectory drilldown.
-- Bottom HUD with real-time 2D radar minimap, sliding mode pills (`layoutId="activeColorModePill"`), and skyline toggle.
-- Pinned comparison dock, self-drawing animated SVG ROC curve in Model Card modal, and Command Palette.
+### Milestone 1: Audit and Baseline (Completed)
+- Full inventory of all components, shaders, routes, stores, and backend endpoints.
+- Baseline verification: Vitest passes (3/3), Frontend build passes (0 errors), Pytest passes (11/11).
+- Inspected demo data: identified sparse repo (`atharvmaheshagowda_ecotrace-ai`, 4 files) and dense repos (`pallets_flask`, `pallets_click`, `psf_requests`).
 
-### Milestone 5: Motion Polish, Procedural WebAudio & Exhibition Mode
-- 100% offline WebAudio sound synthesizer for micro-ticks, clicks, whooshes, and blast waves.
-- Exhibition mode with automatic camera orbit, rotating hotspot showcase, large projector typography, and 45-second inactivity attract restart.
+### Milestone 2: Design System & Tokens
+- Write `DESIGN_SYSTEM.md`, `REDESIGN_PLAN.md`, update `TODO.md`.
+- Update `tailwind.config.js` and `index.css` with the complete cyber-metropolis color scale, glassmorphism tokens, and micro-interaction animations.
 
-### Milestone 6: Performance Optimization, Testing & 5-Round Screenshot Critique Loop
-- 60+ FPS performance via InstancedMesh batching, shared geometries, and procedural shaders.
-- Comprehensive testing: pytest backend suites (11/11), vitest frontend tests (3/3), TypeScript typecheck, and production build.
-- 5-Round Screenshot Critique Loop across 1920×1080 and 1366×768 on dense (`flask`, `requests`) and sparse (`ecotrace-ai`) repositories.
-- Updated documentation in `README.md`.
+### Milestone 3: 3D City & Visual Ambiance
+- Implement procedural window facade system on `InstancedMesh`.
+- Build wet reflective asphalt ground with cyber coordinate grid.
+- Add dynamic sparse-city layout scaling in `cityLayout.ts`.
+- Implement camera intro fly-in and smooth selection framing.
+- Upgrade `BlastRadiusArcs.tsx` with parabolic glowing tubes, animated data pulses, ground shockwave ring, and hop color coding.
+- Add Low-Power rendering mode toggle.
 
+### Milestone 4: Interface Chrome Redesign
+- Redesign `Navbar.tsx` into a single-row floating header.
+- Transform `LeftPanel.tsx` into a collapsible floating glass panel with compact KPI cards and interactive hotspot ranking.
+- Build `BottomHUD.tsx` with real-time 2D minimap and color mode legend.
+- Build `CommandPalette.tsx` with full keyboard shortcuts (`Ctrl+K`).
+- Redesign `RightDrawer.tsx` with animated circular gauge and SHAP bars.
+- Refine `ModelCardModal.tsx` with animated ROC curve.
+
+### Milestone 5: Exhibition & Attract Mode
+- Enhance `PresentationHUD.tsx` with large projector typography and cycling hotspot previews.
+- Implement inactivity detection timer (45 seconds) that triggers attract mode and cleanly cancels on user interaction.
+
+### Milestone 6: Mandatory Screenshot Critique Loop (4+ Rounds)
+- Launch the application dev server.
+- Run browser subagent at 1920×1080 and 1366×768 on both dense and sparse repositories.
+- Document Top 10 weaknesses per round, fix them in source code, and re-verify until pristine.
+
+---
+
+## 5. Performance Risks & Mitigations
+
+1. **Draw Call Explosion**:
+   - *Risk*: Rendering hundreds of individual meshes or point lights will degrade frame rates.
+   - *Mitigation*: Strictly maintain single `InstancedMesh` for all buildings. Geometry and materials are shared. Conduits reuse instanced / pooled tube geometries. Single directional light + hemisphere light + ambient.
+2. **Postprocessing Overhead**:
+   - *Risk*: Heavy multi-pass bloom can reduce FPS on laptops.
+   - *Mitigation*: Limit postprocessing to a single selective Bloom pass. Provide an immediate Low-Power mode toggle that shuts down postprocessing when needed.
+3. **Window Facade Shader Memory**:
+   - *Risk*: High-resolution textures or per-vertex calculations.
+   - *Mitigation*: Procedural shader computation in fragment stage using UV coordinates and instance ID hash. No texture memory required.
+
+---
+
+## 6. Verification Strategy
+
+- **Build & Types**: `npm run build` (`tsc -b && vite build`) must pass without errors or warnings.
+- **Unit Tests**: `npm run test` (Vitest) must pass.
+- **Backend Tests**: `pytest backend/tests` must pass.
+- **Offline Guarantee**: Grep entire codebase for `http://` / `https://` / CDN links to confirm zero external runtime dependencies.
+- **Critique Rounds**: Minimum 4 documented rounds with screenshots at 1080p and 1366x768 across dense and sparse repositories.

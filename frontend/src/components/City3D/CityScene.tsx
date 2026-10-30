@@ -610,8 +610,34 @@ function createSunsetSkyTexture(): THREE.CanvasTexture {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 512);
 
-  const tex = new THREE.CanvasTexture(canvas);
-  return tex;
+  return new THREE.CanvasTexture(canvas);
+}
+
+function createNeonSkyTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
+
+  const grad = ctx.createLinearGradient(0, 512, 0, 0);
+  grad.addColorStop(0.00, '#020514');
+  grad.addColorStop(0.28, '#081734');
+  grad.addColorStop(0.44, '#06b6d4');
+  grad.addColorStop(0.54, '#7c3aed');
+  grad.addColorStop(0.72, '#1e1b4b');
+  grad.addColorStop(1.00, '#040718');
+
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 512);
+
+  ctx.fillStyle = '#67e8f9';
+  for (let i = 0; i < 90; i++) {
+    const x = (i * 79) % 512;
+    const y = (i * 37) % 240;
+    ctx.fillRect(x, y, 1.5, 1.5);
+  }
+
+  return new THREE.CanvasTexture(canvas);
 }
 
 export const CityScene: React.FC<CitySceneProps> = ({
@@ -631,7 +657,19 @@ export const CityScene: React.FC<CitySceneProps> = ({
   onSelectFile,
   onHoverFile,
 }) => {
-  const skyTexture = useMemo(() => createSunsetSkyTexture(), []);
+  const {
+    pinnedFiles,
+    togglePinFile,
+    showDecorativeSkyline,
+    simulateFailure,
+    activeLayers,
+    couplingResult,
+    smellsResult,
+    shortestPathResult,
+    theme,
+  } = useCityStore();
+
+  const skyTexture = useMemo(() => (theme === 'neon' ? createNeonSkyTexture() : createSunsetSkyTexture()), [theme]);
   const { buildings, districts, bounds, isSparse } = useMemo(() => computeCityLayout(files), [files]);
   const [isIntroActive, setIsIntroActive] = useState(true);
   const [focusedDistrict, setFocusedDistrict] = useState<DistrictZone | null>(null);
@@ -646,17 +684,6 @@ export const CityScene: React.FC<CitySceneProps> = ({
     pos: null,
     file: null,
   });
-
-  const {
-    pinnedFiles,
-    togglePinFile,
-    showDecorativeSkyline,
-    simulateFailure,
-    activeLayers,
-    couplingResult,
-    smellsResult,
-    shortestPathResult,
-  } = useCityStore();
 
   const handleSkipIntro = useCallback(() => {
     setIsIntroActive(false);
@@ -701,18 +728,18 @@ export const CityScene: React.FC<CitySceneProps> = ({
         }}
       >
         <primitive object={skyTexture} attach="background" />
-        <fog attach="fog" args={['#050e22', 130, 340]} />
+        <fog attach="fog" args={[theme === 'neon' ? '#091533' : '#050e22', theme === 'neon' ? 100 : 130, 340]} />
 
         {/* Directional, Ambient, & Hemisphere Lighting */}
-        <ambientLight intensity={0.65} color="#fed7aa" />
+        <ambientLight intensity={theme === 'neon' ? 1.1 : 0.65} color={theme === 'neon' ? '#67e8f9' : '#fed7aa'} />
         <directionalLight
           position={[70, 110, 60]}
-          intensity={1.45}
+          intensity={theme === 'neon' ? 2.2 : 1.45}
           color="#f8fafc"
           castShadow={false}
         />
-        <hemisphereLight args={['#38bdf8', '#010308', 0.55]} />
-        <pointLight position={[0, 50, 0]} intensity={0.85} color="#06b6d4" distance={220} />
+        <hemisphereLight args={[theme === 'neon' ? '#a855f7' : '#38bdf8', '#010308', theme === 'neon' ? 0.85 : 0.55]} />
+        <pointLight position={[0, 50, 0]} intensity={theme === 'neon' ? 1.8 : 0.85} color={theme === 'neon' ? '#38bdf8' : '#06b6d4'} distance={theme === 'neon' ? 260 : 220} />
 
         {/* Dark Glossy Ground with Soft Reflections & Fading Grid (Zero Stray Dashes) */}
         <CyberCityGround lowPowerMode={lowPowerMode} />

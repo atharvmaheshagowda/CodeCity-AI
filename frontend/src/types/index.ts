@@ -34,6 +34,18 @@ export interface ShapExplanation {
   explanation_text: string;
 }
 
+export interface LineFailureDiagnostic {
+  line: number;
+  function_name: string;
+  snippet: string;
+  failure_type: string;
+  severity: 'critical' | 'high' | 'warning' | 'info';
+  root_cause: string;
+  why_it_fails: string;
+  suggested_fix: string;
+  cascade_impact?: string;
+}
+
 export interface FileNode {
   id: string;
   path: string;
@@ -60,6 +72,7 @@ export interface FileNode {
   archetype?: string;
   blast_radius: BlastRadiusData;
   shap: ShapExplanation;
+  line_failure?: LineFailureDiagnostic;
 
   // Layout coordinates in 3D scene (computed by district/building layouter)
   x?: number;

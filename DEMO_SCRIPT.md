@@ -1,89 +1,73 @@
-# CodeCity AI — 3-Minute Live Demonstration Script (`DEMO_SCRIPT.md`)
+# CodeCity AI: 2-Minute Exhibition Booth Demo Script
 
-> **Elevator Pitch**: *"CodeCity AI transforms any Python Git repository into a cinematic 3D cyber-metropolis, illuminating where code will break next and what upstream callers break with it."*
-
----
-
-## ⏱️ Minute 0:00 – 0:30 • The Cyber-Metropolis & Core Hotspot
-
-1. **Open the App**:
-   - Navigate to `http://127.0.0.1:5173`.
-   - The default view loads `atharvmaheshagowda/AGENTA-WORKSPACE` (7 files), reproducing the pixel-perfect 1:1 cyber diorama:
-     - Obsidian wet asphalt terrain with reflective cyan coordinate grid.
-     - Central towering hero skyscraper `seed_db.py` pulsing with crimson warning beacon (`91% Defect Risk`).
-     - Floating in-scene 3D billboard pins for `seed_db.py`, `models.py`, `schemas.py`, `test.py`, `utils.py`, `tenfo.py`, and the floating district badge `root / 7 files`.
-     - Luminous parabolic cyan skybridges flowing energy packets to dependent buildings.
-
-2. **File Drawer Deep Dive**:
-   - Notice the right drawer automatically focused on `seed_db.py`:
-     - **Circular Defect Gauge**: 91% Defect Risk with $\pm 4.2\%$ tree uncertainty band.
-     - **90-Day Risk Trajectory**: 4-point SVG sparkline with pulsing `RAPID RISE (+32%)` badge.
-     - **TreeSHAP Attribution**: Horizontal bars showing that cyclomatic complexity (+0.42), recent churn (+0.28), and LOC (+0.17) drive the risk, while file age (-0.06) mitigates it.
-     - **Uncovered Danger Zone Alert**: Flags high risk with 0 covering tests.
+**Target Audience**: Software Engineers, Engineering Managers, Conference Judges  
+**Core Value Proposition**: *"See where your code will break next, and what breaks with it."*  
+**Duration**: 120 Seconds  
 
 ---
 
-## ⏱️ Minute 0:30 – 1:15 • Traceback-to-Blast-Radius & Breaking Changes
+### Phase 1: The Hook & 3D Spatial Overview (0:00 – 0:25)
 
-1. **Trigger Traceback Analysis (P0)**:
-   - Click the **"Insights"** button in the top navbar (or press `I`) to open the analytical dock.
-   - On the **Impact** tab, click **"Load Crash Sample"** and click **"Trace Impact"**.
-   - *Visual Event*: The crashed module flashes vivid alarm red (`#ef4444`) with an expanding shockwave ring; dependent callers flash in staggered sequence by hop depth.
+**Action**:
+- Ensure the application is open at `http://127.0.0.1:5173`.
+- Press `P` to begin in **Presentation Mode** (camera is slowly orbiting the illuminated cyber city of `pallets/click`).
 
-2. **Breaking-Change Signature Tester (P1)**:
-   - In the same Impact tab, scroll to **"Breaking-Change Signature Tester"**.
-   - Click **"Preset: Add Required Arg"** (`def init_app(app, db, strict=True) -> def init_app(app, db, engine, strict=True)`).
-   - Click **"Simulate Signature Change"**.
-   - *Visual Event*: Instantly parses the AST, identifies calling modules lacking the new argument, lists broken call sites, and highlights callers in strobing orange (`#f97316`) in the 3D city!
+**Spoken Script**:
+> *"Welcome to CodeCity AI. Most developer tooling treats source code as flat text files and dry dashboards. We asked a simple question: What if you could explore your entire repository as a living 3D metropolis—where building footprint is lines of code, building height is cyclomatic complexity, and building color is an ML prediction of where your next bug will appear?"*
 
----
-
-## ⏱️ Minute 1:15 – 1:45 • Hidden Co-Change Coupling & Architectural Smells
-
-1. **Switch to Multi-Month Repository**:
-   - In the top navbar repo selector, choose **`pallets/flask`** (15 modules, 180-day history).
-   - The 3D metropolis expands into an intricate multi-district skyline with distinct architectural archetypes (Gateways, Tests, Data Vaults, Fortified Configs).
-
-2. **Hidden Coupling Tunnels**:
-   - In the Insights dock, click the **"Coupling"** tab.
-   - Examine pairs of files that frequently co-change in Git commits despite lacking direct AST import statements.
-   - Toggle the **"Hidden Coupling Tunnels"** layer: glowing violet arches connect building basements across districts!
-
-3. **Architecture Smells & Circular Dependencies**:
-   - Switch to the **"Smells"** tab.
-   - Highlights circular dependency cycles (Tarjan SCCs) with looped crimson arcs overhead, and points out god files and architectural debt.
+**Action**:
+- Press `P` or click `Exit Presentation` to reveal the mission-control HUD.
 
 ---
 
-## ⏱️ Minute 1:45 – 2:30 • 4D Time-Lapse & Knapsack Review Planner
+### Phase 2: Defect Risk & Hotspot Ranking (0:25 – 0:50)
 
-1. **4D History Time-Lapse Player (P1)**:
-   - In the Insights dock, click the **"Time"** tab.
-   - Drag the month scrubber or click **"Play Time-Lapse"**:
-     - Month 1 (Scaffold): Only initial modules exist; unborn buildings appear as dark wireframe foundations.
-     - Month 3 (Feature Expansion): Blueprints and context towers grow in real-time.
-     - Month 6 (Today): Full architecture stands tall with flaring defect hotspots!
+**Action**:
+- Direct attention to the Left Panel: **High-Risk Defect Hotspots**.
+- Point out the top-ranked hotspot: `src/click/core.py` (98% risk).
 
-2. **Knapsack Review Budget Planner (P1)**:
-   - Click the **"Plan"** tab.
-   - Adjust the **Review Budget** slider to `16 Hours` with a team of `2 Reviewers`.
-   - The knapsack algorithm maximizes defect risk mitigated given review reading speeds ($\approx 140$ LOC/hr).
-   - View the prioritized checklist, check off completed reviews, or click **"Focus 3D"** to fly directly to any target module.
+**Spoken Script**:
+> *"On the left, our XGBoost classifier has analyzed the temporal commit history of the repository strictly up to a cutoff time T, predicting defect likelihood over the subsequent 90 days. Notice that this isn't just counting recent churn—our pipeline extracts radon cyclomatic complexity, author entropy, past defect fixes, and architectural fan-in. In the hotspot ranking, `core.py` lights up as an urgent 98% defect risk."*
 
 ---
 
-## ⏱️ Minute 2:30 – 3:00 • Privacy Bus-Factor & Autonomous Exhibition Attract Mode
+### Phase 3: The Blast Radius & 3D Parabolic Conduits (0:50 – 1:20)
 
-1. **Privacy-Preserving Bus Factor (P2)**:
-   - Open the right file drawer and click the **"Metrics"** tab.
-   - Observe the **Bus-Factor Concentration Card**:
-     - *"Primary contributor authored 88% of revisions across 24 commits."*
-     - Strictly complies with the **Privacy Rule**: File-level concentration only; zero individual names, emails, or personal scores.
-   - In the bottom HUD, click **Layers** and toggle **"Bus-Factor Concentration"**: files where 1 author has $>80\%$ share AND risk $>0.50$ pulse in rose-amber!
+**Action**:
+- Click on `core.py` in the hotspot list.
+- Watch the camera smoothly fly to `core.py`.
+- Observe the glowing parabolic cyan tube conduits arcing through 3D space to `decorators.py` and `__init__.py`. Unrelated buildings dim to dark navy.
 
-2. **Exhibition Attract Mode (P2)**:
-   - In the top navbar, click **"Exhibition"** (or press `P`).
-   - The camera begins a continuous cinematic 3D orbit around the software metropolis.
-   - The projector HUD spotlights the repository's top hotspots, auto-cycling every 7.5 seconds with an animated countdown timer and interactive stepper pills.
-   - Conclude: *"100% offline, zero data leakage, zero API keys—deterministic software intelligence engineered for modern engineering organizations."*
+**Spoken Script**:
+> *"Watch what happens when I click `core.py`. The camera flies to the building, but more importantly, look at the glowing cyan conduits arcing across the city. This is our AST Dependency Graph calculating the file's **Blast Radius** via reverse Breadth-First Search. If an engineer introduces a bug in `core.py`, it doesn't fail in isolation—everything that imports or calls it breaks transitively.
+> We calculate an Impact Score: defect probability weighted by logarithmic dependent fan-in. So even if a small utility has high defect probability, a core module with 10 dependents has a far higher blast radius."*
 
+**Action**:
+- In the Right Drawer, click the **Hop Depth** buttons (`1`, `2`, `3`) to demonstrate filtering by dependency distance.
+
+---
+
+### Phase 4: Explainable AI & Model Honesty (1:20 – 1:45)
+
+**Action**:
+- Scroll down the Right Drawer to highlight the **AI Defect Diagnosis** card and the **SHAP Feature Contribution** bars.
+- Click the **Model Card** button in the top navbar.
+
+**Spoken Script**:
+> *"Engineers don't trust black boxes. In the right drawer, we compute SHAP values for each individual file and translate them into a plain-English diagnosis—without calling any external LLM or cloud API.
+> Now look at our Model Card: we report our numbers with complete scientific honesty. The model was evaluated on a strictly held-out repository that it never saw during training (`httpie/cli`), achieving an ROC-AUC of 0.667 and Precision@10 of 0.200—doubling the naive churn baseline. We enforce strict temporal boundaries with automated regression tests to guarantee zero data leakage."*
+
+**Action**:
+- Close the Model Card modal with `Esc` or the `Close` button.
+
+---
+
+### Phase 5: Live Scanning, Switching & Zero-Telemetry Guarantee (1:45 – 2:00)
+
+**Action**:
+- Use the navbar repository dropdown to switch from `pallets/click` to `psf/requests` or `pallets/flask` to demonstrate instant (< 500ms) offline caching.
+- Point to the Left Panel "Analyze Python Repository" input.
+
+**Spoken Script**:
+> *"CodeCity AI runs 100% offline with zero cloud APIs, zero telemetry, and self-hosted fonts. You can analyze any public GitHub Python repository on the fly with live progress feedback, or load our pre-mined offline caches instantly.
+> CodeCity AI gives engineering teams the superpower to see where their code will break next—and what breaks with it. Thank you!"*

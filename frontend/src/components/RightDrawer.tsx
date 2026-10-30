@@ -16,10 +16,16 @@ import {
   Layers,
   History,
   CheckCircle,
+  Info,
 } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { soundFx } from '../utils/soundEffects';
 import { WhatIfPanel } from './WhatIfPanel';
+import {
+  getLineFailureDiagnostic,
+  getDynamicRiskExplanation,
+  getDynamicContributingFactors,
+} from '../utils/fileDiagnostics';
 
 export const RightDrawer: React.FC = () => {
   const {
@@ -45,6 +51,11 @@ export const RightDrawer: React.FC = () => {
   const uncertainty = uncertaintyResult?.uncertainty?.[selectedFile.path] || null;
   const coveringTests = testImpactResult?.file_to_tests?.[selectedFile.path] || [];
   const isUncoveredDangerZone = Boolean(testImpactResult?.uncovered_danger_zones?.includes(selectedFile.path));
+
+  // Dynamic file-specific failure diagnostics and explanations
+  const diagnostic = React.useMemo(() => getLineFailureDiagnostic(selectedFile), [selectedFile]);
+  const dynamicExplanation = React.useMemo(() => getDynamicRiskExplanation(selectedFile), [selectedFile]);
+  const dynamicFactors = React.useMemo(() => getDynamicContributingFactors(selectedFile), [selectedFile]);
 
   // Circular Gauge SVG parameters
   const radius = 38;
@@ -161,12 +172,12 @@ export const RightDrawer: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="font-bold text-slate-200 flex items-center gap-1.5 font-sans">
                   <Users className="w-4 h-4 text-rose-400" />
-                  <span>Bus-Factor Concentration</span>
+                  <span>Single-Developer Risk (Bus Factor)</span>
                 </span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                   dominantSharePct >= 80 ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-slate-800 text-slate-300'
                 }`}>
-                  {dominantSharePct}% Dominant
+                  {dominantSharePct}% One Author
                 </span>
               </div>
 
@@ -181,13 +192,13 @@ export const RightDrawer: React.FC = () => {
               </div>
 
               <p className="text-slate-300 text-[11px] font-sans leading-relaxed">
-                Primary contributor authored <strong className="text-white">{dominantSharePct}%</strong> of revisions across {selectedFile.commit_count} commits ({selectedFile.distinct_authors} total contributors).
+                One developer wrote <strong className="text-white">{dominantSharePct}%</strong> of revisions across {selectedFile.commit_count} commits ({selectedFile.distinct_authors} total contributors).
               </p>
 
               {isHighBusFactor && (
                 <div className="p-2 rounded-xl bg-rose-900/40 border border-rose-500/40 text-[10px] text-rose-200 flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                  <span>High knowledge silo on a critical defect hotspot (Risk &ge; 50%).</span>
+                  <span>Warning: Almost all code was written by one person on a high-risk file.</span>
                 </div>
               )}
             </div>
@@ -196,96 +207,134 @@ export const RightDrawer: React.FC = () => {
             <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2.5">
               <span className="font-bold text-slate-200 text-xs font-sans flex items-center gap-1.5">
                 <BarChart3 className="w-4 h-4 text-cyan-400" />
-                <span>Codebase Architecture</span>
+                <span>Code Statistics & Branching</span>
               </span>
 
               <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Total number of lines in this file">
                   <div className="text-slate-400 text-[10px]">Lines of Code</div>
                   <div className="text-white font-bold text-sm mt-0.5">{selectedFile.loc}</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">Max Complexity</div>
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Most complex function: how many if/else/loop branches it has">
+                  <div className="text-slate-400 text-[10px]">Max Branching (CC)</div>
                   <div className="text-amber-300 font-bold text-sm mt-0.5">{selectedFile.max_complexity.toFixed(1)}</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">Mean Complexity</div>
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Average branching complexity across all functions in this file">
+                  <div className="text-slate-400 text-[10px]">Average Branching</div>
                   <div className="text-slate-200 font-bold text-sm mt-0.5">{selectedFile.mean_complexity.toFixed(2)}</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">90-Day Churn</div>
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Lines added, modified, or deleted in the last 90 days">
+                  <div className="text-slate-400 text-[10px]">Recent Edits (90d)</div>
                   <div className="text-rose-400 font-bold text-sm mt-0.5">{selectedFile.churn_90d} LOC</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">Total Churn</div>
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Total lines changed across the entire Git history of this file">
+                  <div className="text-slate-400 text-[10px]">Total Lines Edited</div>
                   <div className="text-slate-300 font-bold text-sm mt-0.5">{selectedFile.total_churn} LOC</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Number of past commits mentioning bug/fix for this file">
                   <div className="text-slate-400 text-[10px]">Past Bug Fixes</div>
                   <div className="text-amber-400 font-bold text-sm mt-0.5">{selectedFile.past_bug_fixes}</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">Fan-In (Callers)</div>
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Other files in the repository that import or call this file">
+                  <div className="text-slate-400 text-[10px]">Used By (Incoming)</div>
                   <div className="text-cyan-400 font-bold text-sm mt-0.5">{selectedFile.fan_in}</div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
-                  <div className="text-slate-400 text-[10px]">Fan-Out (Imports)</div>
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Other files in the repository that this file imports">
+                  <div className="text-slate-400 text-[10px]">Imports (Outgoing)</div>
                   <div className="text-cyan-400 font-bold text-sm mt-0.5">{selectedFile.fan_out}</div>
                 </div>
               </div>
             </div>
           </div>
         ) : activeTab === 'shap' ? (
-          /* SHAP TAB: Deep TreeSHAP Feature Attribution */
+          /* SHAP TAB: Deep TreeSHAP Feature Attribution & Line Failure */
           <div className="space-y-3 font-mono text-xs">
             <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2">
               <span className="font-bold text-slate-200 text-xs font-sans flex items-center gap-1.5">
                 <Activity className="w-4 h-4 text-cyan-400" />
-                <span>TreeSHAP Risk Attribution</span>
+                <span>AI Risk Factor Breakdown</span>
               </span>
               <p className="text-slate-300 text-[11px] font-sans leading-relaxed">
-                Deterministic marginal contributions computed from random forest estimators trained on historical git commits.
+                Why our AI flagged this file, calculated using machine learning patterns from past bug fixes and code history.
+              </p>
+            </div>
+
+            {/* Line Failure Diagnostic inside SHAP tab */}
+            <div className={`p-3 rounded-2xl border space-y-2 ${
+              diagnostic.severity === 'critical' ? 'bg-rose-950/40 border-rose-500/40' :
+              diagnostic.severity === 'high' ? 'bg-amber-950/40 border-amber-500/40' :
+              'bg-slate-900/70 border-white/10'
+            }`}>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="font-bold text-rose-300 flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                  <span>Line {diagnostic.line} Vulnerability</span>
+                </span>
+                <span className="text-cyan-300 font-bold">{diagnostic.function_name}</span>
+              </div>
+              <div className="bg-slate-950/90 rounded p-1.5 font-mono text-[11px] text-rose-300 border border-white/5">
+                {diagnostic.line} | {diagnostic.snippet}
+              </div>
+              <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+                {diagnostic.why_it_fails}
               </p>
             </div>
 
             {/* Top Drivers */}
             <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2.5">
               <span className="text-[11px] font-bold text-rose-300 uppercase tracking-wide">
-                Risk Escalating Factors (+SHAP)
+                Factors Increasing Risk (+)
               </span>
               <div className="space-y-2">
-                {(selectedFile.shap?.top_drivers || []).map((d) => (
-                  <div key={d.feature} className="space-y-1">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-200 truncate">{d.label || d.feature}</span>
-                      <span className="text-rose-400 font-bold">+{d.shap_value.toFixed(2)}</span>
+                {(selectedFile.shap?.top_drivers && selectedFile.shap.top_drivers.length > 0) ? (
+                  selectedFile.shap.top_drivers.map((d) => (
+                    <div key={d.feature} className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="text-slate-200 truncate">{d.label || d.feature}</span>
+                        <span className="text-rose-400 font-bold">+{d.shap_value.toFixed(2)}</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]"
+                          style={{ width: `${Math.min(100, Math.abs(d.shap_value) * 160)}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]"
-                        style={{ width: `${Math.min(100, Math.abs(d.shap_value) * 160)}%` }}
-                      />
+                  ))
+                ) : (
+                  dynamicFactors.filter(f => f.isPositive).map((f, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="text-slate-200 truncate">{f.label}</span>
+                        <span className="text-rose-400 font-bold">{f.value}</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]"
+                          style={{ width: `${f.pct}%` }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
 
             {/* Mitigators */}
             <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2.5">
               <span className="text-[11px] font-bold text-blue-300 uppercase tracking-wide">
-                Risk Mitigating Factors (-SHAP)
+                Factors Lowering Risk (-)
               </span>
               <div className="space-y-2">
-                {(selectedFile.shap?.mitigators || []).length > 0 ? (
-                  (selectedFile.shap?.mitigators || []).map((d) => (
+                {(selectedFile.shap?.mitigators && selectedFile.shap.mitigators.length > 0) ? (
+                  selectedFile.shap.mitigators.map((d) => (
                     <div key={d.feature} className="space-y-1">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="text-slate-200 truncate">{d.label || d.feature}</span>
@@ -300,16 +349,20 @@ export const RightDrawer: React.FC = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-300">File age stability</span>
-                      <span className="text-blue-400 font-bold">-0.06</span>
+                  dynamicFactors.filter(f => !f.isPositive).map((f, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="text-slate-200 truncate">{f.label}</span>
+                        <span className="text-blue-400 font-bold">{f.value}</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-blue-500 rounded-full shadow-[0_0_6px_rgba(59,130,246,0.8)]"
+                          style={{ width: `${f.pct}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-300">Contributor diversity</span>
-                      <span className="text-blue-400 font-bold">-0.08</span>
-                    </div>
-                  </div>
+                  ))
                 )}
               </div>
             </div>
@@ -321,21 +374,21 @@ export const RightDrawer: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="font-bold text-slate-200 text-xs font-sans flex items-center gap-1.5">
                   <GitBranch className="w-4 h-4 text-cyan-400" />
-                  <span>Cascade Blast Radius</span>
+                  <span>Chain Reaction (Blast Radius)</span>
                 </span>
                 <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">
-                  {selectedFile.blast_radius?.total_count || dependentsList.length} Affected Modules
+                  {selectedFile.blast_radius?.total_count || dependentsList.length} Connected Files
                 </span>
               </div>
               <p className="text-slate-300 text-[11px] font-sans leading-relaxed">
-                If this file breaks or undergoes an unverified signature change, failures cascade along direct and transitive AST import conduits.
+                If you change or break this file, any code that imports it directly or indirectly can break too. Here is the chain of affected files:
               </p>
             </div>
 
             {/* Hop 1 Direct Dependents */}
             <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2">
               <span className="text-[11px] font-bold text-cyan-300 uppercase tracking-wide">
-                Hop 1 • Direct Dependents ({dependentsList.length})
+                Direct Dependents • Files Importing This Directly ({dependentsList.length})
               </span>
               <div className="space-y-1.5">
                 {dependentsList.map((dep) => (
@@ -513,85 +566,115 @@ export const RightDrawer: React.FC = () => {
               <div className="p-3 rounded-2xl bg-rose-950/40 border border-rose-500/40 text-xs shadow-[0_0_12px_rgba(244,63,94,0.15)]">
                 <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-rose-400 mb-1">
                   <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
-                  <span>High risk file</span>
+                  <span>High Risk File</span>
                 </div>
                 <p className="text-slate-300 text-[11px] leading-relaxed">
-                  This file is likely to contain a bug in the next 90 days and is widely depended upon.
+                  This file is likely to contain bugs and many other files depend on it.
                 </p>
               </div>
             )}
 
-            {/* 5. "Why this file is risky?" Explanation Paragraph */}
+            {/* 5. Dynamic "Why this file is risky?" Explanation Paragraph */}
             <div className="space-y-1.5">
-              <h3 className="text-xs font-bold text-slate-200 font-sans">
-                Why this file is risky?
-              </h3>
-              <p className="text-slate-400 text-xs leading-relaxed font-sans">
-                This file has high cyclomatic complexity, frequent recent changes, and is imported by multiple other files. Similar files in the training data have a higher chance of requiring bug fixes.
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-slate-200 font-sans">
+                  {riskPct >= 50 ? 'Why is this file risky?' : riskPct >= 25 ? 'Risk & Maintenance Assessment' : 'Code Stability Assessment'}
+                </h3>
+                <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold border ${
+                  riskPct >= 50 ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' :
+                  riskPct >= 25 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' :
+                  'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                }`}>
+                  {riskPct >= 50 ? 'Critical Hotspot' : riskPct >= 25 ? 'Moderate Risk' : 'Low Risk / Stable'}
+                </span>
+              </div>
+              <p className="text-slate-300 text-xs leading-relaxed font-sans bg-slate-900/50 p-2.5 rounded-xl border border-white/5">
+                {dynamicExplanation}
               </p>
             </div>
 
-            {/* 6. "Top contributing factors" SHAP Horizontal Bars */}
+            {/* 5B. Exact Line Failure Diagnostic Card */}
+            <div className={`p-3 rounded-2xl border space-y-2.5 ${
+              diagnostic.severity === 'critical' ? 'bg-rose-950/40 border-rose-500/40 shadow-[0_0_14px_rgba(244,63,94,0.18)]' :
+              diagnostic.severity === 'high' ? 'bg-amber-950/40 border-amber-500/40' :
+              diagnostic.severity === 'warning' ? 'bg-amber-950/25 border-amber-500/30' :
+              'bg-slate-900/70 border-white/10'
+            }`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold">
+                  {diagnostic.severity === 'critical' || diagnostic.severity === 'high' ? (
+                    <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-pulse" />
+                  ) : (
+                    <Info className="w-4 h-4 text-cyan-400 shrink-0" />
+                  )}
+                  <span className={diagnostic.severity === 'critical' ? 'text-rose-300' : 'text-slate-200'}>
+                    {diagnostic.severity === 'critical' ? 'Crash Failure Point' : 'Primary Failure Risk'}
+                  </span>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-slate-950 border border-white/10 text-[10px] font-mono text-cyan-300 font-bold">
+                  Line {diagnostic.line} • {diagnostic.function_name}
+                </span>
+              </div>
+
+              {/* Code snippet line */}
+              <div className="bg-slate-950/90 rounded-xl p-2 font-mono text-xs border border-white/10 overflow-x-auto">
+                <div className="flex items-center gap-2 text-slate-300">
+                  <span className="text-slate-500 select-none text-[10px] w-6 shrink-0">{diagnostic.line}</span>
+                  <span className="text-rose-300 font-semibold">{diagnostic.snippet}</span>
+                </div>
+              </div>
+
+              {/* Why it fails & root cause */}
+              <div className="space-y-1 text-[11px] font-sans">
+                <div className="text-slate-400 font-mono text-[10px] uppercase tracking-wider font-semibold">
+                  Why It Fails:
+                </div>
+                <p className="text-slate-300 leading-relaxed text-xs">
+                  {diagnostic.why_it_fails}
+                </p>
+              </div>
+
+              {/* Suggested Fix */}
+              <div className="pt-2 border-t border-white/10 text-[11px] font-sans flex items-start gap-1.5">
+                <span className="text-cyan-400 font-mono text-[10px] font-bold shrink-0">Suggested Fix:</span>
+                <span className="text-cyan-200 text-[10px] font-mono leading-tight">{diagnostic.suggested_fix}</span>
+              </div>
+
+              {/* Cascade Impact */}
+              {diagnostic.cascade_impact && (
+                <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                  <span className="text-slate-500">Cascade:</span>
+                  <span className="text-slate-300">{diagnostic.cascade_impact}</span>
+                </div>
+              )}
+            </div>
+
+            {/* 6. Dynamic Contributing Factors (SHAP Bars tailored to this specific file) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span className="font-semibold text-slate-300 font-sans">Top contributing factors</span>
-                <span className="text-[10px] text-slate-500">SHAP value</span>
+                <span className="text-[10px] text-slate-500" title="Importance score from machine learning">AI Impact</span>
               </div>
 
               <div className="space-y-1.5 font-mono text-xs">
-                {/* Factor 1: Complexity */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-300 text-[11px] truncate flex-1">Complexity (cyclomatic)</span>
-                  <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
-                    <div className="w-[85%] h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
+                {dynamicFactors.map((f, i) => (
+                  <div key={i} className="flex items-center justify-between gap-2" title={f.tooltip}>
+                    <span className="text-slate-300 text-[11px] truncate flex-1">{f.label}</span>
+                    <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
+                      <div
+                        className={`h-full rounded-full ${
+                          f.isPositive
+                            ? 'bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.8)]'
+                            : 'bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.8)]'
+                        }`}
+                        style={{ width: `${f.pct}%` }}
+                      />
+                    </div>
+                    <span className={`${f.isPositive ? 'text-rose-400' : 'text-blue-400'} font-bold text-[11px] w-12 text-right`}>
+                      {f.value}
+                    </span>
                   </div>
-                  <span className="text-rose-400 font-bold text-[11px] w-9 text-right">+0.42</span>
-                </div>
-
-                {/* Factor 2: Recent changes */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-300 text-[11px] truncate flex-1">Recent changes (90 days)</span>
-                  <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
-                    <div className="w-[60%] h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
-                  </div>
-                  <span className="text-rose-400 font-bold text-[11px] w-9 text-right">+0.28</span>
-                </div>
-
-                {/* Factor 3: Lines of code */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-300 text-[11px] truncate flex-1">Lines of code</span>
-                  <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
-                    <div className="w-[45%] h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
-                  </div>
-                  <span className="text-rose-400 font-bold text-[11px] w-9 text-right">+0.17</span>
-                </div>
-
-                {/* Factor 4: Number of dependents */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-300 text-[11px] truncate flex-1">Number of dependents</span>
-                  <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
-                    <div className="w-[30%] h-full bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
-                  </div>
-                  <span className="text-rose-400 font-bold text-[11px] w-9 text-right">+0.11</span>
-                </div>
-
-                {/* Factor 5: File age (mitigator) */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-300 text-[11px] truncate flex-1">File age</span>
-                  <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
-                    <div className="w-[20%] h-full bg-blue-500 rounded-full shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
-                  </div>
-                  <span className="text-blue-400 font-bold text-[11px] w-9 text-right">-0.06</span>
-                </div>
-
-                {/* Factor 6: Number of authors */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-300 text-[11px] truncate flex-1">Number of authors</span>
-                  <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden flex items-center">
-                    <div className="w-[25%] h-full bg-blue-500 rounded-full shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
-                  </div>
-                  <span className="text-blue-400 font-bold text-[11px] w-9 text-right">-0.08</span>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -600,10 +683,10 @@ export const RightDrawer: React.FC = () => {
               <div className="p-3 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-xs shadow-[0_0_14px_rgba(245,158,11,0.2)] space-y-1.5">
                 <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-amber-400">
                   <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
-                  <span>UNCOVERED DANGER ZONE</span>
+                  <span>RISKY CODE WITH ZERO TESTS</span>
                 </div>
                 <p className="text-slate-300 text-[11px] leading-relaxed">
-                  This module has high defect risk ({riskPct}%) and <strong className="text-amber-300">ZERO automated test coverage</strong> in the repository.
+                  This file has high bug risk ({riskPct}%) and <strong className="text-amber-300">zero automated test suites</strong> testing it.
                 </p>
               </div>
             )}
@@ -613,10 +696,10 @@ export const RightDrawer: React.FC = () => {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-200 flex items-center gap-1.5">
                   <TestTube2 className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Covering Tests ({coveringTests.length})</span>
+                  <span>Automated Tests ({coveringTests.length})</span>
                 </span>
                 <span className="text-[10px] font-mono text-slate-400">
-                  {coveringTests.length === 0 ? '0% Coverage' : 'Import verified'}
+                  {coveringTests.length === 0 ? '0% Coverage' : 'Tested via imports'}
                 </span>
               </div>
 
@@ -633,7 +716,7 @@ export const RightDrawer: React.FC = () => {
                 </div>
               ) : (
                 <p className="text-[11px] text-slate-500 font-mono">
-                  No test suites import this file directly.
+                  No automated test files test this code directly.
                 </p>
               )}
             </div>
@@ -648,15 +731,14 @@ export const RightDrawer: React.FC = () => {
                   id="drawer-view-in-graph-btn"
                   onClick={() => {
                     soundFx.playBlastWave();
-                    setActiveTab('dependents');
                     const store = useCityStore.getState();
                     if (!store.activeLayers.skybridges) {
                       store.toggleLayer('skybridges');
                     }
-                    store.triggerCameraReset();
+                    store.openDependencyGraph();
                   }}
                   className="flex items-center gap-1 text-[10px] text-cyan-400 hover:text-cyan-300 font-mono bg-cyan-950/40 px-2 py-0.5 rounded-lg border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-900/60 transition-all cursor-pointer"
-                  title="Inspect blast radius and dependents in graph"
+                  title="Open interactive dependency architecture graph"
                 >
                   <Eye className="w-3 h-3 text-cyan-400" />
                   <span>View in graph</span>
@@ -693,14 +775,14 @@ export const RightDrawer: React.FC = () => {
       <div className="p-3.5 border-t border-white/10 bg-slate-900/40 space-y-2">
         <button
           id="drawer-show-blast-radius-btn"
+          title="Highlight all files in 3D that depend on this file"
           onClick={() => {
             soundFx.playBlastWave();
-            setActiveTab('dependents');
             const store = useCityStore.getState();
             if (!store.activeLayers.skybridges) {
               store.toggleLayer('skybridges');
             }
-            store.triggerCameraReset();
+            store.openDependencyGraph();
           }}
           className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-xs font-mono flex items-center justify-center gap-2 shadow-glow-cyan transition-all border border-cyan-400/50 cursor-pointer"
         >
@@ -709,6 +791,7 @@ export const RightDrawer: React.FC = () => {
         </button>
 
         <button
+          title="Test if changing function arguments breaks any calling code"
           onClick={() => {
             soundFx.playClick();
             setInsightsTab('impact');

@@ -11,6 +11,7 @@ import {
 import { useCityStore } from '../store/useCityStore';
 import { FileNode } from '../types';
 import { soundFx } from '../utils/soundEffects';
+import { getLineFailureDiagnostic } from '../utils/fileDiagnostics';
 
 export const PresentationHUD: React.FC = () => {
   const {
@@ -140,7 +141,7 @@ export const PresentationHUD: React.FC = () => {
           <div className="flex items-center justify-between gap-3 mb-3 pb-2.5 border-b border-white/10">
             <div className="flex items-center gap-1.5 font-mono text-[11px]">
               <Flame className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
-              <span className="text-rose-300 font-bold">Autonomous Hotspot Tour</span>
+              <span className="text-rose-300 font-bold">Tour of Riskiest Code Files</span>
             </div>
 
             <div className="flex items-center gap-1.5">
@@ -171,7 +172,7 @@ export const PresentationHUD: React.FC = () => {
             <div>
               <div className="flex items-center gap-2 text-xs font-mono text-accent-cyan uppercase tracking-wider mb-1">
                 <AlertTriangle className="w-4 h-4 text-accent-rose" />
-                <span>Critical Hotspot #{activeHotspotIndex + 1} of {topHotspots.length}</span>
+                <span>High-Risk File #{activeHotspotIndex + 1} of {topHotspots.length}</span>
               </div>
               <h3 className="text-lg font-bold font-mono text-white truncate max-w-md flex items-center gap-2">
                 <FileCode className="w-4 h-4 text-cyan-400" />
@@ -193,15 +194,32 @@ export const PresentationHUD: React.FC = () => {
           </div>
 
           {/* Architectural Explanation Narration */}
-          <p className="mt-3 text-xs text-slate-300 leading-relaxed font-sans bg-slate-950/40 p-2.5 rounded-xl border border-white/5">
-            Primary defect epicenter with <span className="text-amber-300 font-mono font-bold">{activeNode.max_complexity}</span> cyclomatic complexity, <span className="text-cyan-300 font-mono font-bold">{activeNode.loc}</span> LOC, and <span className="text-rose-300 font-mono font-bold">{activeNode.churn_90d}</span> lines churned recently.
-          </p>
+          {(() => {
+            const diag = getLineFailureDiagnostic(activeNode);
+            return (
+              <>
+                <p className="mt-3 text-xs text-slate-300 leading-relaxed font-sans bg-slate-950/40 p-2.5 rounded-xl border border-white/5">
+                  Key risk file with <span className="text-amber-300 font-mono font-bold">{activeNode.max_complexity}</span> branching decisions, <span className="text-cyan-300 font-mono font-bold">{activeNode.loc}</span> lines of code, and <span className="text-rose-300 font-mono font-bold">{activeNode.churn_90d}</span> lines edited recently.
+                </p>
+
+                <div className="mt-2 text-[11px] font-mono text-rose-300 bg-rose-950/50 p-2 rounded-xl border border-rose-500/40 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 font-bold">
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                    <span>Line {diag.line} in {diag.function_name}: {diag.failure_type}</span>
+                  </span>
+                  <span className="text-[10px] text-cyan-300 bg-slate-900 px-1.5 py-0.5 rounded border border-white/10">
+                    Fix: {diag.suggested_fix}
+                  </span>
+                </div>
+              </>
+            );
+          })()}
 
           <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-300">
             <div className="flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-accent-cyan" />
               <span>
-                Blast Radius: <b className="text-accent-cyan font-bold">{activeNode.blast_radius?.total_count || 0} dependent files</b>
+                Connected Files (Blast Radius): <b className="text-accent-cyan font-bold">{activeNode.blast_radius?.total_count || 0} dependent files</b>
               </span>
             </div>
             <div className="text-[11px] text-slate-400 flex items-center gap-1.5">

@@ -84,7 +84,7 @@ export const WhatIfPanel: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-1.5">
           <Sparkles className="w-4 h-4 text-cyan-400" />
-          <h3 className="font-semibold text-white">Counterfactual What-If</h3>
+          <h3 className="font-semibold text-white">Interactive "What-If" Simulator</h3>
         </div>
         {whatIfResult && (
           <button
@@ -98,7 +98,7 @@ export const WhatIfPanel: React.FC = () => {
       </div>
 
       <p className="text-[11px] text-slate-400 leading-normal">
-        Simulate refactoring scenarios by adjusting code metrics. Observe live ML risk re-inference and SHAP attribution shifts.
+        See how cleaning up or refactoring this file would lower its bug risk. Move the sliders to test ideas!
       </p>
 
       {/* Before / After Risk Card */}
@@ -146,7 +146,7 @@ export const WhatIfPanel: React.FC = () => {
         {/* 1. Cyclomatic Complexity */}
         <div className="space-y-1">
           <div className="flex justify-between text-[11px]">
-            <span className="text-slate-300">Max Complexity (CC)</span>
+            <span className="text-slate-300">Code Complexity (Branching Logic)</span>
             <span className="text-cyan-300 font-bold">{complexity}</span>
           </div>
           <input
@@ -168,7 +168,7 @@ export const WhatIfPanel: React.FC = () => {
         {/* 2. 90-day Churn */}
         <div className="space-y-1">
           <div className="flex justify-between text-[11px]">
-            <span className="text-slate-300">90-Day Churn (LOC)</span>
+            <span className="text-slate-300">Recent Edits (90-Day Churn)</span>
             <span className="text-cyan-300 font-bold">{churn}</span>
           </div>
           <input
@@ -190,7 +190,7 @@ export const WhatIfPanel: React.FC = () => {
         {/* 3. Lines of Code */}
         <div className="space-y-1">
           <div className="flex justify-between text-[11px]">
-            <span className="text-slate-300">Lines of Code (LOC)</span>
+            <span className="text-slate-300">File Length (Lines of Code)</span>
             <span className="text-cyan-300 font-bold">{loc}</span>
           </div>
           <input

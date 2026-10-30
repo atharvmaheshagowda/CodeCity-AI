@@ -14,6 +14,17 @@ export const TerminalLogDrawer: React.FC = () => {
     }
   }, [terminalLogs]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isTerminalLogOpen) {
+        soundFx.playClick();
+        toggleTerminalLog(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isTerminalLogOpen, toggleTerminalLog]);
+
   if (!isTerminalLogOpen) return null;
 
   return (
@@ -23,7 +34,7 @@ export const TerminalLogDrawer: React.FC = () => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 240, opacity: 0 }}
         transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-        className="fixed bottom-0 inset-x-4 md:inset-x-24 h-56 glass-panel rounded-t-2xl border-t border-x border-white/15 bg-slate-950/95 backdrop-blur-2xl shadow-2xl z-40 flex flex-col font-mono text-xs select-none"
+        className="fixed bottom-0 inset-x-4 md:inset-x-24 h-56 glass-panel rounded-t-2xl border-t border-x border-cyan-500/30 bg-slate-950/95 backdrop-blur-2xl shadow-2xl z-[80] flex flex-col font-mono text-xs select-none"
       >
         {/* Terminal Header */}
         <div className="px-4 py-2 bg-slate-900/80 border-b border-white/10 flex items-center justify-between text-slate-400">

@@ -164,8 +164,8 @@ export const LeftPanel: React.FC = () => {
       {/* 3. 2x2 KPI Metrics Cards with Sparklines */}
       {currentRepo && (
         <div className="p-3 border-b border-white/10 grid grid-cols-2 gap-2 bg-slate-900/40">
-          {/* Card 1: Total Files */}
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10 relative overflow-hidden">
+          {/* Card 1: Workspace Files */}
+          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10 relative overflow-hidden" title="Total Python files in this workspace">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[9px] text-slate-400 font-mono uppercase tracking-wider">Total Files</div>
@@ -186,8 +186,8 @@ export const LeftPanel: React.FC = () => {
             </div>
           </div>
 
-          {/* Card 2: Avg Defect Risk */}
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10 relative overflow-hidden">
+          {/* Card 2: Average Risk */}
+          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10 relative overflow-hidden" title="Total Python files in this workspace">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[9px] text-slate-400 font-mono uppercase tracking-wider">Avg Defect Risk</div>
@@ -209,7 +209,7 @@ export const LeftPanel: React.FC = () => {
           </div>
 
           {/* Card 3: Critical Files */}
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10">
+          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10" title="Files with 50%+ risk of containing bugs">
             <div className="text-[9px] text-slate-400 font-mono uppercase tracking-wider">Critical Files</div>
             <div className="text-lg font-bold text-amber-400 font-mono mt-0.5 flex items-center gap-1.5">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
@@ -218,7 +218,7 @@ export const LeftPanel: React.FC = () => {
           </div>
 
           {/* Card 4: Model ROC-AUC */}
-          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10">
+          <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10" title="Files with 50%+ risk of containing bugs">
             <div className="text-[9px] text-slate-400 font-mono uppercase tracking-wider">Model ROC-AUC</div>
             <div className="text-lg font-bold text-cyan-400 font-mono mt-0.5 flex items-center gap-1.5">
               <BarChart2 className="w-4 h-4 text-cyan-400" />
@@ -317,7 +317,7 @@ export const LeftPanel: React.FC = () => {
                 <div className="flex items-center gap-1.5">
                   <span>Impact: <b className="text-slate-300">{file.impact_score.toFixed(1)}</b></span>
                   <span className="text-slate-600">|</span>
-                  <span>Depends on: <b className="text-slate-300">{file.blast_radius?.total_count || 0}</b></span>
+                  <span title="Number of other files depending on this file">Used by: <b className="text-slate-300">{file.blast_radius?.total_count || 0}</b></span>
                 </div>
               </div>
 

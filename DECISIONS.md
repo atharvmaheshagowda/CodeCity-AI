@@ -1,97 +1,123 @@
-# CodeCity AI — Architectural Decision Log (`DECISIONS.md`)
+# Architectural & Engineering Decisions (DECISIONS.md)
 
-This log documents key architectural, engineering, and product decisions made during the autonomous expansion of CodeCity AI.
-
----
-
-### Decision 1: Offline Data Synthesis & Demo Repositories
-- **Context**: The existing reference repository (`atharvmaheshagowda_agenta-workspace`) contains 7 files and is designed as a miniature diorama. While ideal for establishing visual 1:1 fidelity with the reference UI, history-based mining (co-change coupling, time-lapse, temporal backtesting) requires rich multi-month commit histories with co-change and test structures.
-- **Decision**: Extend `backend/mining/synthetic_repo.py` to generate rich, deterministic Git histories modeled after real architectures (`pallets/flask`, `psf/requests`, `pallets/click`) spanning 180 days with multiple authors, bug-fix commits, test suites (`tests/test_*.py`), web routes, and database models. Precompute full analysis JSON into `backend/data/cached_demos/` so the application runs with sub-50ms offline loading and zero external network requests.
-- **Graceful Degradation**: On the 7-file reference repo, features requiring multi-commit history (e.g. Backtest, Hidden Coupling, Trajectory) display a clean, designed "Not Enough History (< 5 commits)" state with an explanation and recommendation to select a multi-month repository.
+This log documents all technical, architectural, and design decisions made for **CodeCity AI**, ensuring complete transparency and rationale.
 
 ---
 
-### Decision 2: Spatial UI Integration via Collapsible "Insights" Dock & "Layers" Menu
-- **Context**: The master prompt specifies numerous new analytical tools (Traceback, Failure Simulation, Breaking Changes, Test Impact, Path Explorer, Coupling Tunnels, Contagion, Smells, What-If, Budget Planner, Reports). Adding multiple floating windows or sidebars would clutter the 3D viewport.
-- **Decision**: 
-  1. Introduce a single, sleek collapsible **"Insights" Dock** anchored at the bottom-left/center-bottom with tabs:
-     - `Impact`: Traceback analysis, failure simulation, breaking change detector, test impact, and path explorer.
-     - `Coupling`: Hidden co-change coupling table with explanations and 3D tunnel layer.
-     - `Smells`: Architectural debt, circular dependency SCCs, god files, and orphans.
-     - `Time`: Monthly commit-by-commit time-lapse player and commit diff risk checker.
-     - `Plan`: Review budget optimizer (knapsack on risk reduction per hour).
-     - `Report`: 0–100 Code Health Score, printable HTML / Markdown export.
-  2. Introduce a **"Layers" Menu** in the bottom HUD action bar to toggle visual layers in the 3D scene (Coupling Tunnels, Contagion Heat, Architecture Smells, Test Coverage, Uncertainty, Bus-Factor).
-  3. Expand the Navbar/HUD Color Mode pills to include `Contagion` and `Bus-Factor`.
+### Decision 1: Python Runtime & Package Management
+- **Decision**: Target Python 3.12 using `uv` for lightning-fast virtual environment management and package resolution on Windows.
+- **Rationale**: Python 3.12 satisfies the "Python 3.11+" constraint, has robust pre-built Windows binary wheels for PyDriller, radon, scikit-learn, xgboost, shap, and networkx, and avoids C++ compilation bottlenecks on Windows.
+
+### Decision 2: API-Free & Strict Offline Architecture
+- **Decision**: Zero reliance on external cloud services, LLMs, or CDN assets.
+- **Rationale**:
+  - Fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) are bundled and self-hosted locally via `@fontsource`.
+  - Explanations for SHAP feature contributions are generated deterministically using a rich rule-based templating engine that translates SHAP values and feature z-scores into lucid engineering narratives.
+  - Cached repositories (`pallets/flask`, `pallets/click`, `psf/requests`, `atharvmaheshagowda/ecotrace-ai`, etc.) are bundled as complete offline JSON snapshots in `backend/data/cached_demos/`, allowing full application operation and sub-second load times even without internet access.
+  - All procedural textures, audio synthesis, and materials run natively on the client GPU and WebAudio API.
+
+### Decision 3: Fallback Synthetic Git Mining Pipeline
+- **Decision**: Implement a high-fidelity synthetic Python Git repository generator (`generate_synthetic_repo`) with realistic commit histories, bug-fix patterns, refactorings, and dependency graphs.
+- **Rationale**: Guarantees that model training, evaluation, and end-to-end integration tests always pass deterministically, regardless of local network conditions, GitHub rate limits, or corporate firewalls.
+
+### Decision 4: ML Architecture & Temporal Split Protocol
+- **Decision**: Use XGBoost Classifier with `scale_pos_weight` to address bug-fix class imbalance, trained strictly on temporal splits with a cutoff date $T$.
+- **Rationale**: Commit history before $T$ provides historical features (LOC, churn, complexity, author diversity, past bug fixes, graph fan-in/fan-out); commits in $(T, T + 90\text{ days}]$ provide ground truth labels. This prevents future information leakage. Held-out repo evaluation strictly benchmarks against a naive churn baseline with honest reporting in `metrics.json`.
+
+### Decision 5: Complete Visual Reset to "Nocturne Glass" Architectural Towers
+- **Decision**: Eliminate all tapered barrels, rings, spires, and ornamental clutter. Replace them with clean, modern architectural towers:
+  - Sharp-beveled rectangular prisms with chamfered corners.
+  - Stepped setbacks for taller, more complex buildings (podium base -> setback mid-shaft -> penthouse crown).
+  - Flat roofs with subtle perimeter emissive trim.
+  - Vertical beacon light beams and floating holographic labels for top-impact landmark files.
+- **Rationale**: Eliminates the previous visual clutter and un-architectural geometry, creating a breathtaking, legible, game-quality cityscape inspired by *Blade Runner 2049* and modern high-end architectural visualization.
+
+### Decision 6: Procedural Window Grid Shader with Fresnel & Vertical Gradients
+- **Decision**: Rebuild the building facade shader with a clean, ordered procedural window matrix:
+  - Stable pseudo-random window activation per file path.
+  - Dual-temperature lighting: warm-white interior illumination and cool-cyan terminal lighting separated by dark tinted glass spandrels and mullions.
+  - High-risk buildings receive a slow crimson pulse and occasional subtle flicker.
+  - Soft vertical luminance gradient (darker at base, brighter toward crown) and Fresnel edge rim lighting so building silhouettes read instantly against the dark background.
+- **Rationale**: Replaces blurry, coarse window textures with sharp, architectural micro-detail while remaining in a single instanced shader pass for 60 FPS performance.
+
+### Decision 7: Dark Glossy Ground & Frosted Glass District Plates
+- **Decision**: Replace the ground plane with a dark glossy floor (`#020409`) featuring smooth distance-fading coordinate lines and soft specular reflection. Remove all stray dashes and random black blobs. Districts are elevated frosted-glass platforms with glowing boundary borders. District labels float strictly ABOVE the buildings, billboarded, legible, and guaranteed never to occlude architectural silhouettes.
+- **Rationale**: Resolves the previous visual confusion of yellow checkerboard grids and overlapping labels, providing grounded spatial organization.
+
+### Decision 8: Motion Library Integration & Spring Physics (`motion/react`)
+- **Decision**: Add `motion` (imported from `"motion/react"`) for all UI animations, adopting a unified motion spec:
+  - Presets: `snappy` (stiffness: 400, damping: 28), `smooth` (stiffness: 260, damping: 25), `bouncy` (stiffness: 300, damping: 18).
+  - Cursor-following mini info card with spring lag.
+  - Shared-element transition for file drawer opening.
+  - Staggered entrances for list items and SHAP bars.
+  - Sliding pill indicators for segmented controls.
+- **Rationale**: Imbues the application with the tactile, fluid responsiveness of Linear, Arc, and Apple visionOS.
+
+### Decision 9: Radial Quick-Action Menu & Pinned Comparison Dock
+- **Decision**: Implement a right-click radial context menu on buildings offering 4 instant actions:
+  1. *Inspect Blast Radius*
+  2. *Simulate Failure Cascade*
+  3. *Copy File Path*
+  4. *Pin to Dock*
+  Pinned files sit in a dedicated bottom-floating comparison dock.
+- **Rationale**: Elevates CodeCity AI from a passive viewing tool into an interactive spatial IDE and defect triaging command center.
+
+### Decision 10: Hero Small-Repo Composition (<30 files) & Context Skyline
+- **Decision**: When analyzing small repositories (<30 files, e.g., 4-file scripts):
+  - Automatically center the city and apply proportional scaling ($1.4\times - 2.2\times$).
+  - Adjust default camera framing to a heroic low-angle cinematic pitch.
+  - Render an optional background ring of dim, non-interactive "context skyline" buildings, clearly marked as decorative and toggleable in the HUD legend.
+- **Rationale**: Solves the "sparse and cramped" look of small codebases while strictly ensuring data integrity.
+
+### Decision 11: Procedural WebAudio Sound Engine (Offline & Optional)
+- **Decision**: Implement a 100% offline procedural WebAudio sound synthesizer generating soft micro-ticks (for button hovers and list navigation) and smooth resonant whooshes (for camera transitions and drawer slides). Disabled by default with a clear audio toggle in the top navigation bar.
+- **Rationale**: Provides immersive haptic feedback without requiring external audio asset downloads.
+
+### Decision 12: In-Scene Landmark Badge Occlusion & Distance Factor Clamping
+- **Decision**: Suppress floating HTML landmark badges (`!selectedFile`) whenever a building is selected, and clamp Drei's `<Html>` `distanceFactor` to 45 with a `scale-90` CSS limit.
+- **Rationale**: When zooming or dollying into focused buildings, 3D HTML tags scaled excessively, occluding the primary building facade and the 3D blast radius conduits. Clamping and contextual hiding ensures pristine visibility of the architecture during inspection.
+
+### Decision 13: Ground Platform Edge Positioning & Elevated District Labels
+- **Decision**: Elevate district billboard badges to `y = maxBuildingHeight + 5.5` with clean glowing borders.
+- **Rationale**: Guarantees a minimum 3.5m vertical clearance between district labels, building roofs, and rooftop landmark beacons, permanently resolving label collisions across dense and sparse codebases.
+
+### Decision 14: Sliding LayoutId Segmented Color Modes
+- **Decision**: Implement `motion.div` with `layoutId="activeColorModePill"` across the 5 color mode triggers (Risk, Complexity, Churn, Age, Impact).
+- **Rationale**: Matches the fluid, physical segmented controls seen in Linear and visionOS, providing immediate spatial continuity when switching between architectural telemetry dimensions.
+
+### Decision 15: Environmental Details Instancing (`EnvironmentalDetails.tsx`)
+- **Decision**: Implemented small decorative industrial and environmental elements using GPU `InstancedMesh`:
+  - Slender perimeter streetlights with cantilever arms.
+  - Soft circular cyan light pools cast onto the wet asphalt beneath streetlights via additive procedural gradient discs.
+  - Electrical transformer cabinets with cooling vent plates and green status indicator LEDs.
+  - Perimeter communications and telemetry relay masts along district entrance points.
+- **Rationale**: Elevates the environment from a standalone collection of buildings into a living miniature smart metropolis matching the reference diorama aesthetic, while maintaining 60+ FPS via zero-overhead instancing.
+
+### Decision 16: Complete Migration to 10 Procedural Archetypes in `CityScene.tsx`
+- **Decision**: Wired all 10 architectural archetypes from `architecturalArchetypes.ts` into `CityScene.tsx` using `createArchetypeGeometries` and `createArchitecturalFacadeMaterial`:
+  - `glass_skyscraper`, `corporate_tower`, `stepped_industrial`, `brutalist_tech`, `research_facility`, `compact_residential`, `datacenter`, `multisection_complex`, `telecom_spire`, `monumental_landmark`.
+  - Configured elevated isometric camera angle (`position: [46, 52, 46]`, `fov: 34`) with smooth multi-stage cinematic establishing intro.
+- **Rationale**: Completely replaces all legacy and simplified fallback meshes with AAA-grade compound geometries featuring multi-tiered setbacks, HVAC chillers, server louvers, lab pods, and rooftop trim.
+
+### Decision 17: Visual Verification via 7-Point Screenshot Suite across Multiple Resolutions
+- **Decision**: Verified application aesthetics and layout responsiveness across both 1920×1080 and 1366×768 using automated Puppeteer capture scripts:
+  - Dense repositories (`psf/requests`, `pallets/flask`).
+  - Sparse repositories (`atharvmaheshagowda/ecotrace-ai`).
+  - Active selection with blast radius shockwave and parabolic arcs.
+  - Fullscreen exhibition booth mode (`P`).
+  - Model evaluation card with self-drawing SVG ROC curve.
+  - Command palette (`⌘K`).
+- **Rationale**: Ensures every screen complies strictly with "Nocturne Glass" design tokens, eliminates label collision, verifies zero frame drops, and confirms full offline operational integrity.
 
 ---
 
-### Decision 3: 3D Visualization of Advanced Features
-- **Coupling Tunnels**: Rendered as glowing curved arches connecting building bases in electric violet (`#c084fc`), distinct from import dependency skybridges.
-- **Contagion Diffusion**: Implemented using Personalized PageRank on the reversed dependency graph with damping factor $\alpha=0.85$, spreading heat glow shaders to direct and indirect dependents.
-- **Architecture Smells**: Circular dependencies highlighted with looped crimson arcs; God files marked with towering holographic warning beacons; Orphan files subtly dimmed.
-- **Test Impact & Danger Zones**: Files covered by tests render with a subtle emerald shield base; high-impact files with zero covering tests display amber hazard hatching.
-
----
-
-### Decision 4: Deterministic AST & Git Mining (Strict Privacy & Honesty Rules)
-- **Privacy Rule Compliance**: Knowledge concentration is computed strictly at the file level ("Dominant Contributor Share", e.g. "Single author wrote 82% of lines"). Individual author names, contributor rankings, and per-person metrics are never surfaced.
-- **Honesty Rule Compliance**: All ML numbers and risk probabilities derive from real AST features and Scikit-Learn models. No numbers are hardcoded or fabricated. All metrics carry an "(Estimated)" label.
-
----
-
-### Decision 5: Performance & 55+ FPS Guarantee
-- All 3D layers use `InstancedMesh` with shared procedural geometries and custom GLSL shader uniforms.
-- Heavy computations (graph centrality, Tarjan SCCs, PageRank diffusion, co-change mining) are precomputed during analysis and cached in the JSON payload, ensuring 60 FPS rendering in the frontend.
-
----
-
-### Decision 6: In-Scene Architectural Node-Type Badges (A6)
-- **Context**: Users need immediate spatial comprehension of building functions (tests, configs, entrypoints, models) directly in the 3D viewport.
-- **Decision**: 
-  - Enhance `InSceneBuildingBadges.tsx` to compute archetype classifications (`🧪 Test`, `⚙️ Config`, `🚀 Gateway`, `🏛️ Vault`, `📦 Module`).
-  - Maintain the exact reference diorama layout and appearance for `atharvmaheshagowda_agenta-workspace` (100% pixel fidelity with the reference image).
-  - For standard and multi-module repositories (Flask, Click, Requests), render distinct architectural badge halos (teal for tests, amber for configs, electric cyan for entrypoints, indigo for data vaults).
-  - Clicking any in-scene badge smoothly triggers the Selection Fly-To camera animation and opens the right drawer for deep inspection.
-
----
-
-### Decision 7: Autonomous Exhibition Attract Tour Engine (C8)
-- **Context**: CodeCity AI must operate as an exhibition showpiece during demo rotations or idle terminal periods.
-- **Decision**:
-  - `PresentationHUD.tsx` and `useCityStore.ts` synchronize `presentationMode` with continuous 3D camera orbital rotation (`autoRotate={true}`).
-  - Automatically identifies top 5 defect hotspots in the repository and cycles the camera focus every 7.5 seconds with an interactive countdown progress bar.
-  - Displays an architectural narration card detailing why each file is critical (cyclomatic complexity, LOC, recent churn, blast radius reach).
-  - Includes interactive step pills `[1] [2] [3]...` allowing presenters to jump directly to any hotspot during live demonstrations.
-  - Automatically activates after 45 seconds of user inactivity and exits instantly upon mouse movement, touch, or pressing `P`.
-
----
-
-### Decision 8: Privacy-Preserving Bus-Factor Concentration Layer (B8)
-- **Context**: Software organizations require visibility into single-contributor dependencies without creating harmful employee surveillance or surfacing individual names.
-- **Decision**:
-  - `git_miner.py` computes `dominant_contributor_share` strictly as the fraction of commits authored by the primary contributor:
-    $$\text{Dominant Share} = \frac{\max_{a} \text{commits}(a)}{\sum_{a} \text{commits}(a)}$$
-  - In `CityScene.tsx`, when the `busFactor` layer is toggled, modules where `dominant_contributor_share >= 0.80` AND `risk_probability >= 0.50` highlight in a pulsing rose-amber shader (`#fb7185`).
-  - In `RightDrawer.tsx`, the Metrics tab displays a progress bar and label: `"Primary contributor authored 88% of revisions across N commits"` with zero personal names or email addresses.
-
----
-
-### Decision 9: Multi-Tab Drawer Segmentation (Overview, SHAP, Metrics, Dependents, What-If)
-- **Context**: The right file drawer was previously rendering an overview card regardless of which sub-tab was selected.
-- **Decision**:
-  - Fully implement all 5 sub-tabs in `RightDrawer.tsx`:
-    1. `Overview`: 100% faithful reproduction of the reference screenshot (Circular Risk Gauge, Impact Bar, LOC, Trajectory Sparkline, High Risk Alert, Explanation, Top SHAP Bars, Covering Tests, Dependents list).
-    2. `SHAP`: Complete TreeSHAP breakdown of risk-escalating factors (+SHAP, crimson) and risk-mitigating factors (-SHAP, cyan/blue) with raw values.
-    3. `Metrics`: Deep architectural and software engineering metrics (Max/Mean Cyclomatic Complexity, LOC, 90-day & Total Churn, Past Bug Fixes, Fan-In/Fan-Out) and the Privacy-Preserving Bus-Factor card.
-    4. `Dependents`: Multi-hop blast radius breakdown (Hop 1, Hop 2, Hop 3) with caller impact scores and 3D focus triggers.
-    5. `What-If`: Interactive counterfactual simulator (sliders for LOC, complexity, churn, dependents) with live delta calculation.
-
----
-
-### Decision 10: Complete Verification Suite & Offline Artifacts
-- **Decision**:
-  - 32 backend tests (`backend/tests/`) covering AST extraction, blast radius BFS, temporal leakage prevention, P0 APIs, and P1 APIs.
-  - 7 frontend vitest unit tests (`frontend/src/tests/`) covering city layout math and Zustand intelligence store actions.
-  - Puppeteer automated suites (`capture_p0_suite.js`, `capture_p1_suite.js`, `capture_p2_suite.js`) capturing 15+ comprehensive full-HD screenshots of every view, tab, and modal.
-  - 100% self-hosted offline fonts, procedural audio synthesizers, and zero external network calls.
+### Decision 18: Full Restoration & Polish of Core Controls (View in Graph, Theme, Matrix, Compare, Terminal)
+- **Problem**: User reported that certain buttons were unresponsive or lacked visual feedback:
+  1. "View in graph" in the Right Drawer: previously only toggled the internal drawer tab without opening an actual graph.
+  2. The Moon/Theme button in the Navbar: toggled a CSS class that lacked CSS definitions and did not change 3D lighting or atmosphere.
+  3. "Matrix", "Compare", and ">_" (Terminal) buttons: lacked robust keyboard escape handlers, comparison modal hung if secondary repo fetch was delayed, and terminal drawer had lower z-index.
+- **Solution & Implementation**:
+  1. **Interactive Architecture Dependency & Blast Radius Graph Modal (`DependencyGraphModal.tsx`)**: Created a dedicated, full-screen interactive SVG node-link graph triggered by "View in graph" and "Show Blast Radius". Shows upstream callers (Hop 1 blast radius victims), target module with 91% risk halo, and downstream imports, with click-to-select and direct "Fly Camera in 3D City" action.
+  2. **True Visual Cyber Theme Engine**: Connected the Moon/Zap button directly to `CityScene.tsx` lighting, sky texture, and fog. `theme === 'neon'` swaps the sunset sky to an electric cyber-neon aurora texture (`createNeonSkyTexture`), doubles ambient/directional lighting, activates high-contrast indigo fog, and applies glowing borders via `.neon-theme` in `index.css`.
+  3. **Robust Compare Modal**: `toggleRepoComparison` immediately opens with an automated high-fidelity clean architecture baseline fallback (`Industry Clean Baseline P90`), guaranteeing it never hangs even offline or on 1-repo workspaces.
+  4. **Matrix & Terminal Upgrades**: Added universal `Escape` key handlers and backdrop dismiss to `HotspotScatterModal`, `RepoComparisonModal`, and `TerminalLogDrawer`, elevated terminal z-index to `z-[80]`, and updated `isModalOpen` in `App.tsx` to automatically suppress 3D HTML label bleed-through during modal inspection.

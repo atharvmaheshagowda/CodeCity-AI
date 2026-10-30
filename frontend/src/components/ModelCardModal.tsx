@@ -67,10 +67,10 @@ export const ModelCardModal: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2 font-display">
-                  <span>Model Evaluation Card & Zero-Leakage Protocol</span>
+                  <span>AI Model Card & Accuracy Report</span>
                 </h2>
                 <p className="text-xs text-slate-400 font-mono">
-                  Trained strictly prior to cutoff time T; evaluated on held-out repository.
+                  Honest AI verification: Tested on untouched code to prove real-world accuracy without cheating.
                 </p>
               </div>
             </div>
@@ -93,7 +93,7 @@ export const ModelCardModal: React.FC = () => {
             <div>
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-1.5">
                 <BarChart2 className="w-4 h-4 text-cyan-400" />
-                <span>Held-Out Benchmark: XGBoost vs Naive Churn Baseline</span>
+                <span>Accuracy Test: CodeCity AI vs Simple Edit Count</span>
               </h3>
 
               <div className="grid grid-cols-3 gap-3">
@@ -142,10 +142,10 @@ export const ModelCardModal: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
-                      Temporal Walk-Forward Backtest & Trust Score
+                      Historical Backtest & Reliability Score
                     </h4>
                     <p className="text-[11px] text-slate-400 font-mono">
-                      Simulated historical evaluations at T-90d, T-60d, T-30d with zero future look-ahead.
+                      Tested by traveling back in time to past months to check if our AI correctly predicted future bugs.
                     </p>
                   </div>
                 </div>

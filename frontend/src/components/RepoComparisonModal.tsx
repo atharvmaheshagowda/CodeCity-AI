@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, GitCompare, ArrowRight, ShieldCheck, Layers, AlertTriangle, FileCode } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
@@ -14,6 +14,17 @@ export const RepoComparisonModal: React.FC = () => {
   } = useCityStore();
 
   const [selectedSecondaryId, setSelectedSecondaryId] = useState<string>('');
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isRepoComparisonOpen) {
+        soundFx.playClick();
+        toggleRepoComparison(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isRepoComparisonOpen, toggleRepoComparison]);
 
   if (!isRepoComparisonOpen || !currentRepo) return null;
 
