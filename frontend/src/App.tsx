@@ -81,7 +81,12 @@ export const App: React.FC = () => {
       }
 
       if (e.key === 'Escape') {
-        selectFile(null);
+        const store = useCityStore.getState();
+        if (store.simulatedFailedFile) {
+          store.simulateFailure(null);
+        } else {
+          selectFile(null);
+        }
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
         const searchInput = document.getElementById('city-search-input');

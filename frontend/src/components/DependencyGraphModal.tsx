@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, GitBranch, ArrowRight, ShieldAlert, Sparkles, Navigation, AlertOctagon, Layers, FileCode } from 'lucide-react';
+import { X, GitBranch, ArrowRight, ShieldAlert, Sparkles, Navigation, AlertOctagon, Layers, FileCode, Package } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { soundFx } from '../utils/soundEffects';
 import { getBuildingColorHex } from '../utils/cityLayout';
@@ -50,6 +50,18 @@ export const DependencyGraphModal: React.FC = () => {
     return edgeTargets
       .map((t) => files.find((f) => f.id === t || f.path === t || f.filename === t))
       .filter(Boolean) as FileNode[];
+  }, [selectedFile, currentRepo, files]);
+
+  // External packages and standard library modules (not existing as repo building files)
+  const externalDependencies = useMemo(() => {
+    if (!selectedFile || !currentRepo?.graph_edges) return [];
+    const edgeTargets = currentRepo.graph_edges
+      .filter((e) => e.source === selectedFile.id || e.source === selectedFile.path)
+      .map((e) => e.target);
+    const external = edgeTargets.filter(
+      (t) => !files.some((f) => f.id === t || f.path === t || f.filename === t)
+    );
+    return Array.from(new Set(external));
   }, [selectedFile, currentRepo, files]);
 
   if (!isDependencyGraphOpen || !selectedFile) return null;
@@ -291,6 +303,30 @@ export const DependencyGraphModal: React.FC = () => {
                     ))
                   )}
                 </div>
+
+                {/* Graceful External Package Handling (Standard Library / Third-Party) */}
+                {externalDependencies.length > 0 && (
+                  <div className="pt-3 border-t border-white/10 space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                      <span className="flex items-center gap-1.5 font-bold text-slate-300 font-sans">
+                        <Package className="w-3.5 h-3.5 text-slate-400" />
+                        External Packages ({externalDependencies.length})
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-mono">Not in 3D City</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                      {externalDependencies.map((pkg) => (
+                        <span
+                          key={pkg}
+                          className="px-2 py-0.5 rounded-lg bg-slate-900/90 border border-white/10 text-slate-400 font-mono text-[10px]"
+                          title="External third-party or standard library module (no corresponding 3D building in workspace)"
+                        >
+                          {pkg}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

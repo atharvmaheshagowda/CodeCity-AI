@@ -77,6 +77,17 @@
   - [x] Authored `PHASE2_ENVIRONMENT_DESIGN.md` and `PHASE2_ENVIRONMENT_NOTES.md`.
   - [x] Verified zero console errors, 7/7 frontend unit tests, 32/32 backend pytest tests, clean production build in 15.76s, and benchmarked 143-145 FPS across 11 visual test scenarios.
 
+- [x] **Phase 3: Advanced Interactions, Dependency Visualization & Failure Simulation (Completed)**
+  - [x] Integrated cascading failure simulation engine: pulsing crimson origin beacon, multi-hop failure dependents (Hop 1 amber, Hop 2 crimson, Hop 3 ruby), and clean background attenuation.
+  - [x] Added top-center holographic failure simulation banner with live broken dependents count, at-risk tests, and one-click/Escape dismissal (`Exit Simulation [Esc]`).
+  - [x] Upgraded multi-wave blast radius with hop depth color coding (Hop 1 cyan, Hop 2 violet, Hop 3 rose) and staggered temporal wave reveals (Hop 1 at 0s, Hop 2 at 0.25s, Hop 3 at 0.50s).
+  - [x] Refined dependency skybridges with hover highlighting, directional data flow, and distance-aware opacity attenuation ($>40\text{m}$).
+  - [x] Connected 3D city to `DependencyGraphModal` with bidirectional selection, camera fly-to, and graceful handling for external standard library / third-party dependencies.
+  - [x] Quick actions in diagnostic drawer: "Blast Radius" (focuses 3D conduits and opens dependents tab) and "Simulate Failure" (launches 3D cascade).
+  - [x] Escape key hierarchy: dismisses failure simulation first, then deselects active building. Empty canvas click (`onPointerMissed`) clears simulation and selection.
+  - [x] Authored `PHASE3_INTERACTION_DESIGN.md` and `PHASE3_INTERACTION_NOTES.md`.
+  - [x] Verified zero console errors, 7/7 frontend tests, 32/32 backend tests, clean production build in 15.27s, and benchmarked 143-145 FPS across 12 visual test scenarios.
+
 
   - [x] Designed states: scanning radar loading effect, skeleton shimmer for loading panels, empty/error states, toast notifications.
   - [x] Guided onboarding tour spotlight on first run (skippable).

@@ -456,7 +456,16 @@ export const useCityStore = create<CityState>((set, get) => ({
 
   clearPinnedFiles: () => set({ pinnedFiles: [] }),
   toggleDecorativeSkyline: () => set((state) => ({ showDecorativeSkyline: !state.showDecorativeSkyline })),
-  simulateFailure: (file: FileNode | null) => set({ simulatedFailedFile: file, lastUserActivity: Date.now() }),
+  simulateFailure: (file: FileNode | null) => {
+    if (!file) {
+      set({ simulatedFailedFile: null, simulateResult: null, lastUserActivity: Date.now() });
+      return;
+    }
+    set({ simulatedFailedFile: file, selectedFile: file, lastUserActivity: Date.now() });
+    get().simulateFileFailure(file.path).catch((e) => {
+      console.warn('Simulate failure call notification:', e);
+    });
+  },
 
   // Intelligence Dock Actions
   toggleInsights: (open) =>

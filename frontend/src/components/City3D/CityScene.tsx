@@ -374,7 +374,39 @@ function ProceduralArchitecturalMetropolis({
     testImpactResult,
     timelapseResult,
     timelapseMonthIndex,
+    simulatedFailedFile,
+    simulateResult,
   } = useCityStore();
+
+  // Map cascading failure dependents by hop
+  const failureHopsMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (!simulatedFailedFile) return map;
+    if (simulateResult?.hops) {
+      for (let h = 1; h <= 3; h++) {
+        const steps = (simulateResult.hops as any)[h] || (simulateResult.hops as any)[String(h)] || [];
+        for (const step of steps) {
+          const p = step.file || step.file_path;
+          if (p) {
+            map.set(p, h);
+            map.set(p.replace(/^\//, ''), h);
+            map.set(`/${p}`, h);
+          }
+        }
+      }
+    } else {
+      const hops = simulatedFailedFile.blast_radius?.hops || {};
+      for (let h = 1; h <= 3; h++) {
+        const list = (hops as any)[h] || (hops as any)[String(h)] || [];
+        for (const p of list) {
+          map.set(p, h);
+          map.set(p.replace(/^\//, ''), h);
+          map.set(`/${p}`, h);
+        }
+      }
+    }
+    return map;
+  }, [simulatedFailedFile, simulateResult]);
   const tempColor = useMemo(() => new THREE.Color(), []);
 
   // Shared Procedural Geometries for 10 Architectural Archetypes
@@ -504,6 +536,20 @@ function ProceduralArchitecturalMetropolis({
         if (isUnborn) {
           // Unborn module at this git history milestone: flat wireframe foundation
           tempColor.set('#060b18');
+        } else if (simulatedFailedFile) {
+          // CASCADING FAILURE SIMULATION OVERLAY
+          if (b.id === simulatedFailedFile.id || b.path === simulatedFailedFile.path) {
+            // Failed origin building: pulsing warning crimson hazard
+            tempColor.set('#ef4444');
+          } else if (failureHopsMap.has(b.id) || failureHopsMap.has(b.path)) {
+            const hop = failureHopsMap.get(b.id) ?? failureHopsMap.get(b.path) ?? 1;
+            if (hop === 1) tempColor.set('#f97316'); // Direct failure dependent: Amber
+            else if (hop === 2) tempColor.set('#e11d48'); // Indirect failure: Crimson
+            else tempColor.set('#be123c'); // Transitive failure: Ruby
+          } else {
+            // Unrelated buildings dim cleanly
+            tempColor.lerp(new THREE.Color('#030712'), 0.90);
+          }
         } else if (breakingChangeResult && breakingChangeResult.broken_callers?.some((c) => c.caller_file === b.path)) {
           // Broken caller: strobing orange highlight
           tempColor.set('#f97316');
@@ -570,6 +616,9 @@ function ProceduralArchitecturalMetropolis({
     testImpactResult,
     timelapseResult,
     timelapseMonthIndex,
+    simulatedFailedFile,
+    simulateResult,
+    failureHopsMap,
   ]);
 
   return (
@@ -748,6 +797,8 @@ export const CityScene: React.FC<CitySceneProps> = ({
     pinnedFiles,
     togglePinFile,
     showDecorativeSkyline,
+    simulatedFailedFile,
+    simulateResult,
     simulateFailure,
     activeLayers,
     couplingResult,
@@ -812,6 +863,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
           onSelectFile(null);
           setFocusedDistrict(null);
           setContextMenu((prev) => ({ ...prev, isOpen: false }));
+          if (simulatedFailedFile) simulateFailure(null);
         }}
       >
         <primitive object={skyTexture} attach="background" />
@@ -879,6 +931,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
             graphEdges={graphEdges}
             allBuildingsMap={allBuildingsMap}
             selectedFile={selectedFile}
+            hoveredFile={hoveredFile}
             lowPowerMode={lowPowerMode}
           />
         )}
@@ -930,15 +983,24 @@ export const CityScene: React.FC<CitySceneProps> = ({
         {/* Ground Selection Reticle & Holographic Column */}
         <SelectionMarker selectedFile={selectedFile} />
 
-        {/* Signature Blast Radius: Shockwave Ring, Arcs, & Data Particles */}
-        {selectedFile && (
+        {/* Signature Blast Radius or Cascading Failure Arcs */}
+        {simulatedFailedFile ? (
+          <BlastRadiusArcs
+            selectedFile={simulatedFailedFile}
+            allBuildingsMap={allBuildingsMap}
+            maxHopDepth={maxHopDepth}
+            isFailureSimulation={true}
+            lowPowerMode={lowPowerMode}
+          />
+        ) : selectedFile ? (
           <BlastRadiusArcs
             selectedFile={selectedFile}
             allBuildingsMap={allBuildingsMap}
             maxHopDepth={maxHopDepth}
+            isFailureSimulation={false}
             lowPowerMode={lowPowerMode}
           />
-        )}
+        ) : null}
 
         {/* Cinematic Camera Controller */}
         <CameraController
@@ -971,6 +1033,51 @@ export const CityScene: React.FC<CitySceneProps> = ({
           </EffectComposer>
         )}
       </Canvas>
+
+      {/* Cascading Failure Simulation Top Banner */}
+      <AnimatePresence>
+        {simulatedFailedFile && (
+          <motion.div
+            initial={{ opacity: 0, y: -24, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -24, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+            className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 px-4 py-2 rounded-2xl glass-panel border border-rose-500/50 bg-slate-950/95 shadow-[0_0_24px_rgba(244,63,94,0.35)] backdrop-blur-2xl"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+              <span className="text-xs font-bold font-mono text-rose-400 uppercase tracking-wider">
+                Failure Simulation Active
+              </span>
+            </div>
+            <div className="h-4 w-px bg-white/15" />
+            <div className="text-xs font-mono text-slate-300">
+              Origin: <strong className="text-white font-semibold">{simulatedFailedFile.filename}</strong>
+              <span className="text-slate-500 mx-1.5">•</span>
+              <span className="text-rose-300">
+                {simulateResult?.total_dependents ?? simulatedFailedFile.blast_radius?.total_count ?? 0} Broken Dependents
+              </span>
+              {simulateResult?.at_risk_tests_count !== undefined && simulateResult.at_risk_tests_count > 0 && (
+                <>
+                  <span className="text-slate-500 mx-1.5">•</span>
+                  <span className="text-amber-300">{simulateResult.at_risk_tests_count} Tests at Risk</span>
+                </>
+              )}
+            </div>
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                simulateFailure(null);
+              }}
+              className="ml-2 px-2.5 py-1 rounded-xl bg-rose-500/20 text-rose-200 hover:bg-rose-500/30 border border-rose-500/40 text-[11px] font-mono transition-all flex items-center gap-1.5 cursor-pointer"
+              title="Exit failure simulation (Esc)"
+            >
+              <span>Exit Simulation</span>
+              <kbd className="text-[9px] bg-black/40 px-1 py-0.5 rounded text-rose-300">Esc</kbd>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Skip Cinematic Intro Pill */}
       {isIntroActive && (

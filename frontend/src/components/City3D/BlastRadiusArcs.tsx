@@ -7,6 +7,7 @@ interface BlastRadiusArcsProps {
   selectedFile: FileNode;
   allBuildingsMap: Map<string, FileNode>;
   maxHopDepth: number;
+  isFailureSimulation?: boolean;
   lowPowerMode?: boolean;
 }
 
@@ -14,6 +15,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
   selectedFile,
   allBuildingsMap,
   maxHopDepth,
+  isFailureSimulation = false,
   lowPowerMode = false,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -22,11 +24,20 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
   const shockwaveStartTime = useRef<number>(performance.now());
 
   // Vibrant Hop Color Definitions
-  const HOP_COLORS: { [hop: number]: THREE.Color } = useMemo(() => ({
-    1: new THREE.Color('#38bdf8'), // Sky Cyan (Hop 1: Direct)
-    2: new THREE.Color('#c084fc'), // Electric Violet (Hop 2: Indirect)
-    3: new THREE.Color('#fb7185'), // Rose Crimson (Hop 3: Transitive)
-  }), []);
+  const HOP_COLORS: { [hop: number]: THREE.Color } = useMemo(() => {
+    if (isFailureSimulation) {
+      return {
+        1: new THREE.Color('#f97316'), // Amber / Orange (Direct Failure)
+        2: new THREE.Color('#e11d48'), // Crimson / Rose (Indirect Failure)
+        3: new THREE.Color('#be123c'), // Deep Ruby (Transitive Failure)
+      };
+    }
+    return {
+      1: new THREE.Color('#38bdf8'), // Sky Cyan (Hop 1: Direct)
+      2: new THREE.Color('#c084fc'), // Electric Violet (Hop 2: Indirect)
+      3: new THREE.Color('#fb7185'), // Rose Crimson (Hop 3: Transitive)
+    };
+  }, [isFailureSimulation]);
 
   // Compute Bezier Curves & Arc Meshes
   const { arcCurves, tubeMeshes, sourcePos } = useMemo(() => {
@@ -61,7 +72,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
 
     for (let hop = 1; hop <= Math.min(3, maxHopDepth); hop++) {
       const targets = (hops as any)[hop] || (hops as any)[String(hop)] || [];
-      const col = new THREE.Color('#38bdf8');
+      const col = HOP_COLORS[hop] || new THREE.Color('#38bdf8');
 
       for (const rawTargetPath of targets) {
         const targetNode =
@@ -79,17 +90,17 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
           // Control point for arc midpoint arched high in Y
           const midPos = new THREE.Vector3().addVectors(srcPos, tgtPos).multiplyScalar(0.5);
           const dist = srcPos.distanceTo(tgtPos);
-          midPos.y += Math.max(4.0, Math.min(26.0, dist * 0.65));
+          midPos.y += Math.max(3.5, Math.min(24.0, dist * 0.55));
 
           const curve = new THREE.QuadraticBezierCurve3(srcPos, midPos, tgtPos);
           curves.push({ curve, hop, targetId: rawTargetPath, color: col });
 
           // 3D Tube geometry with thickness
-          const tubeGeo = new THREE.TubeGeometry(curve, 28, 0.14, 8, false);
+          const tubeGeo = new THREE.TubeGeometry(curve, 28, 0.13, 8, false);
           const tubeMat = new THREE.MeshStandardMaterial({
             color: col,
             emissive: col,
-            emissiveIntensity: 3.4,
+            emissiveIntensity: isFailureSimulation ? 3.8 : 3.2,
             roughness: 0.15,
             metalness: 0.85,
             transparent: true,
@@ -103,7 +114,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
     }
 
     return { arcCurves: curves, tubeMeshes: meshes, sourcePos: srcPos };
-  }, [selectedFile, allBuildingsMap, maxHopDepth, HOP_COLORS]);
+  }, [selectedFile, allBuildingsMap, maxHopDepth, HOP_COLORS, isFailureSimulation]);
 
   // Particle instances setup
   const particleDummy = useMemo(() => new THREE.Object3D(), []);
@@ -115,10 +126,10 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
   // Frame animation loop
   useFrame(({ clock }) => {
     const elapsed = clock.getElapsedTime();
+    const shockwaveAge = (performance.now() - shockwaveStartTime.current) / 1000;
 
     // 1. Expanding Ground Shockwave Animation
     if (shockwaveRef.current) {
-      const shockwaveAge = (performance.now() - shockwaveStartTime.current) / 1000;
       const duration = 1.6;
       if (shockwaveAge < duration) {
         const t = shockwaveAge / duration;
@@ -126,26 +137,44 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
         shockwaveRef.current.scale.set(scale, scale, 1);
         shockwaveRef.current.visible = true;
         const mat = shockwaveRef.current.material as THREE.MeshBasicMaterial;
-        mat.opacity = Math.max(0, (1 - t) * 0.75);
+        mat.opacity = Math.max(0, (1 - t) * 0.85);
       } else {
         shockwaveRef.current.visible = false;
       }
     }
 
-    // 2. Animate Tube Pulses
+    // 2. Animate Tube Pulses & Staggered Wave Fade-in
     tubeMeshes.forEach((item, idx) => {
       const mat = item.mesh.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = 1.5 + Math.sin(elapsed * 4.5 + idx * 0.7) * 0.8;
+      // Staggered wave delay per hop: hop 1 = 0s, hop 2 = 0.25s, hop 3 = 0.50s
+      const hopDelay = (item.hop - 1) * 0.25;
+      const waveAlpha = Math.max(0.05, Math.min(1.0, (shockwaveAge - hopDelay) / 0.35));
+
+      const pulseBase = isFailureSimulation ? 2.4 : 1.6;
+      const pulseSpeed = isFailureSimulation ? 6.5 : 4.5;
+      mat.emissiveIntensity = (pulseBase + Math.sin(elapsed * pulseSpeed + idx * 0.7) * 0.8) * waveAlpha;
+      mat.opacity = 0.92 * waveAlpha;
     });
 
     // 3. Flowing Data Packet Particles Along Arcs
     if (particlesRef.current && totalParticles > 0) {
       let pIdx = 0;
       for (let cIdx = 0; cIdx < totalConduits; cIdx++) {
-        const { curve, color } = arcCurves[cIdx];
+        const { curve, color, hop } = arcCurves[cIdx];
+        const hopDelay = (hop - 1) * 0.25;
+        const waveProgress = Math.max(0, Math.min(1.0, (shockwaveAge - hopDelay) / 0.35));
+
         for (let pSub = 0; pSub < particlesPerConduit; pSub++) {
+          if (waveProgress <= 0.05) {
+            particleDummy.scale.set(0, 0, 0);
+            particleDummy.updateMatrix();
+            particlesRef.current.setMatrixAt(pIdx, particleDummy.matrix);
+            pIdx++;
+            continue;
+          }
+
           // Staggered speed and phase
-          const speed = 0.55;
+          const speed = isFailureSimulation ? 0.75 : 0.55;
           const phaseOffset = pSub * (1.0 / particlesPerConduit);
           const t = (elapsed * speed + cIdx * 0.15 + phaseOffset) % 1.0;
 
@@ -154,7 +183,8 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
           particleDummy.position.copy(pt);
           particleDummy.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
           const pPulse = 0.8 + Math.sin(t * Math.PI) * 0.3;
-          particleDummy.scale.set(0.36 * pPulse, 0.36 * pPulse, 0.36 * pPulse);
+          const currentScale = 0.36 * pPulse * waveProgress;
+          particleDummy.scale.set(currentScale, currentScale, currentScale);
           particleDummy.updateMatrix();
 
           particlesRef.current.setMatrixAt(pIdx, particleDummy.matrix);
@@ -179,9 +209,9 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
       >
         <ringGeometry args={[0.8, 1.4, 48]} />
         <meshBasicMaterial
-          color="#38bdf8"
+          color={isFailureSimulation ? '#ef4444' : '#38bdf8'}
           transparent
-          opacity={0.8}
+          opacity={0.85}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -198,7 +228,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
           args={[undefined, undefined, totalParticles]}
         >
           <sphereGeometry args={[1, 12, 12]} />
-          <meshBasicMaterial color="#e0f2fe" toneMapped={false} />
+          <meshBasicMaterial color={isFailureSimulation ? '#fecdd3' : '#e0f2fe'} toneMapped={false} />
         </instancedMesh>
       )}
     </group>

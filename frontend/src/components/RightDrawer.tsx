@@ -17,6 +17,7 @@ import {
   History,
   CheckCircle,
   Info,
+  AlertOctagon,
 } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { soundFx } from '../utils/soundEffects';
@@ -38,6 +39,7 @@ export const RightDrawer: React.FC = () => {
     testImpactResult,
     toggleInsights,
     setInsightsTab,
+    simulateFailure,
   } = useCityStore();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'shap' | 'metrics' | 'dependents' | 'whatif'>('overview');
@@ -771,24 +773,39 @@ export const RightDrawer: React.FC = () => {
         )}
       </div>
 
-      {/* 8. Bottom Action Buttons: Show Blast Radius & Simulate Signature */}
+      {/* 8. Bottom Action Buttons: Show Blast Radius, Simulate Failure & Breaking Change */}
       <div className="p-3.5 border-t border-white/10 bg-slate-900/40 space-y-2">
-        <button
-          id="drawer-show-blast-radius-btn"
-          title="Highlight all files in 3D that depend on this file"
-          onClick={() => {
-            soundFx.playBlastWave();
-            const store = useCityStore.getState();
-            if (!store.activeLayers.skybridges) {
-              store.toggleLayer('skybridges');
-            }
-            store.openDependencyGraph();
-          }}
-          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-xs font-mono flex items-center justify-center gap-2 shadow-glow-cyan transition-all border border-cyan-400/50 cursor-pointer"
-        >
-          <GitBranch className="w-4 h-4 text-white" />
-          <span>Show Blast Radius ({dependentsList.length} files)</span>
-        </button>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            id="drawer-show-blast-radius-btn"
+            title="Highlight direct and indirect dependencies in 3D city"
+            onClick={() => {
+              soundFx.playBlastWave();
+              const store = useCityStore.getState();
+              if (!store.activeLayers.skybridges) {
+                store.toggleLayer('skybridges');
+              }
+              setActiveTab('dependents');
+            }}
+            className="py-2 px-2 rounded-xl bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-[11px] font-mono flex items-center justify-center gap-1.5 shadow-glow-cyan transition-all border border-cyan-400/50 cursor-pointer"
+          >
+            <GitBranch className="w-3.5 h-3.5 text-white shrink-0" />
+            <span className="truncate">Blast Radius</span>
+          </button>
+
+          <button
+            id="drawer-simulate-failure-btn"
+            title="Simulate cascading failure propagation from this file"
+            onClick={() => {
+              soundFx.playBlastWave();
+              simulateFailure(selectedFile);
+            }}
+            className="py-2 px-2 rounded-xl bg-rose-600/30 hover:bg-rose-600/45 text-rose-200 font-medium text-[11px] font-mono flex items-center justify-center gap-1.5 transition-all border border-rose-500/50 shadow-[0_0_12px_rgba(244,63,94,0.25)] cursor-pointer"
+          >
+            <AlertOctagon className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+            <span className="truncate">Simulate Failure</span>
+          </button>
+        </div>
 
         <button
           title="Test if changing function arguments breaks any calling code"
@@ -797,7 +814,7 @@ export const RightDrawer: React.FC = () => {
             setInsightsTab('impact');
             toggleInsights(true);
           }}
-          className="w-full py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-medium text-xs font-mono flex items-center justify-center gap-1.5 transition-all border border-amber-500/40"
+          className="w-full py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-medium text-[11px] font-mono flex items-center justify-center gap-1.5 transition-all border border-amber-500/40"
         >
           <Code2 className="w-3.5 h-3.5 text-amber-400" />
           <span>Simulate Breaking Change</span>
