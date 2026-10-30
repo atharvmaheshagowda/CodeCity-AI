@@ -20,6 +20,9 @@ import { InSceneBuildingBadges } from './InSceneBuildingBadges';
 import { CyberCityGround } from './CyberCityGround';
 import { SkylineBackdrop } from './SkylineBackdrop';
 import { DependencySkybridges } from './DependencySkybridges';
+import { CouplingTunnels } from './CouplingTunnels';
+import { SmellArcs } from './SmellArcs';
+import { ActivePathBeam } from './ActivePathBeam';
 import { SelectionMarker } from './SelectionMarker';
 import { BlastRadiusArcs } from './BlastRadiusArcs';
 import { VolumetricSearchlights } from './VolumetricSearchlights';
@@ -283,6 +286,14 @@ function ProceduralArchitecturalMetropolis({
   onContextMenuFile: (e: any, file: FileNode) => void;
 }) {
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const {
+    activeLayers,
+    breakingChangeResult,
+    commitRiskResult,
+    testImpactResult,
+    timelapseResult,
+    timelapseMonthIndex,
+  } = useCityStore();
   const tempColor = useMemo(() => new THREE.Color(), []);
 
   // Shared Procedural Geometries for 10 Architectural Archetypes
@@ -364,10 +375,27 @@ function ProceduralArchitecturalMetropolis({
         const b = list[i];
         const isHovered = hoveredFile && (b.id === hoveredFile.id || b.path === hoveredFile.path);
 
+        // Dynamic Timelapse Height Scaling & Wireframe Foundation
+        let targetHeight = b.height || 1;
+        let isUnborn = false;
+
+        if (timelapseResult && timelapseResult.snapshots && timelapseResult.snapshots.length > 0) {
+          const snapshot = timelapseResult.snapshots[timelapseMonthIndex];
+          if (snapshot && snapshot.active_files) {
+            const historical = snapshot.active_files[b.path];
+            if (historical) {
+              targetHeight = Math.max(1.2, Math.min(18.0, (historical.loc / 80.0) * 2.2));
+            } else {
+              targetHeight = 0.18;
+              isUnborn = true;
+            }
+          }
+        }
+
         // Hover spring lift: building lifts +0.4m smoothly
         const yOffset = isHovered ? 0.40 : 0.0;
-        dummy.position.set(b.x || 0, yOffset, b.z || 0);
-        dummy.scale.set(b.width || 1, b.height || 1, b.depth || 1);
+        dummy.position.set(b.x || 0, isUnborn ? 0.04 : yOffset, b.z || 0);
+        dummy.scale.set(b.width || 1, targetHeight, b.depth || 1);
         dummy.updateMatrix();
         mesh.setMatrixAt(i, dummy.matrix);
 
@@ -380,7 +408,26 @@ function ProceduralArchitecturalMetropolis({
         const baseHex = getBuildingColorHex(b, colorMode);
         tempColor.set(baseHex);
 
-        if (selectedFile) {
+        if (isUnborn) {
+          // Unborn module at this git history milestone: flat wireframe foundation
+          tempColor.set('#060b18');
+        } else if (breakingChangeResult && breakingChangeResult.broken_callers?.some((c) => c.caller_file === b.path)) {
+          // Broken caller: strobing orange highlight
+          tempColor.set('#f97316');
+        } else if (commitRiskResult && commitRiskResult.touched_files?.includes(b.path)) {
+          // PR touched file: pulsing violet
+          tempColor.set('#c084fc');
+        } else if (activeLayers.dangerZones && testImpactResult?.uncovered_danger_zones?.includes(b.path)) {
+          // Untested danger zone: hazard amber
+          tempColor.set('#f59e0b');
+        } else if (
+          activeLayers.busFactor &&
+          (b.dominant_contributor_share ?? (b.distinct_authors === 1 ? 1.0 : 0.8)) >= 0.80 &&
+          b.risk_probability >= 0.50
+        ) {
+          // Bus factor danger layer: pulsing rose-amber
+          tempColor.set('#fb7185');
+        } else if (selectedFile) {
           if (b.id === selectedFile.id || b.path === selectedFile.path) {
             // High risk selected building stays vibrant neon crimson red, otherwise cyber cyan
             if (b.risk_probability >= 0.5 || b.is_hotspot) {
@@ -423,6 +470,13 @@ function ProceduralArchitecturalMetropolis({
     dependentHopsMap,
     dummy,
     tempColor,
+    activeLayers.dangerZones,
+    activeLayers.busFactor,
+    breakingChangeResult,
+    commitRiskResult,
+    testImpactResult,
+    timelapseResult,
+    timelapseMonthIndex,
   ]);
 
   return (
@@ -598,6 +652,10 @@ export const CityScene: React.FC<CitySceneProps> = ({
     togglePinFile,
     showDecorativeSkyline,
     simulateFailure,
+    activeLayers,
+    couplingResult,
+    smellsResult,
+    shortestPathResult,
   } = useCityStore();
 
   const handleSkipIntro = useCallback(() => {
@@ -699,12 +757,42 @@ export const CityScene: React.FC<CitySceneProps> = ({
         />
 
         {/* Ambient Real Dependency Skybridges & Conduits */}
-        <DependencySkybridges
-          graphEdges={graphEdges}
-          allBuildingsMap={allBuildingsMap}
-          selectedFile={selectedFile}
-          lowPowerMode={lowPowerMode}
-        />
+        {activeLayers.skybridges && (
+          <DependencySkybridges
+            graphEdges={graphEdges}
+            allBuildingsMap={allBuildingsMap}
+            selectedFile={selectedFile}
+            lowPowerMode={lowPowerMode}
+          />
+        )}
+
+        {/* Hidden Co-Change Coupling Tunnels (B1) */}
+        {activeLayers.coupling && couplingResult?.pairs && (
+          <CouplingTunnels
+            pairs={couplingResult.pairs}
+            allBuildingsMap={allBuildingsMap}
+            selectedFile={selectedFile}
+            lowPowerMode={lowPowerMode}
+          />
+        )}
+
+        {/* Architecture Smell Loops (C3) */}
+        {activeLayers.smells && smellsResult?.smells && (
+          <SmellArcs
+            smells={smellsResult.smells}
+            allBuildingsMap={allBuildingsMap}
+            lowPowerMode={lowPowerMode}
+          />
+        )}
+
+        {/* Shortest Path Routing Beam (A5) */}
+        {activeLayers.path && shortestPathResult && (
+          <ActivePathBeam
+            result={shortestPathResult}
+            allBuildingsMap={allBuildingsMap}
+            lowPowerMode={lowPowerMode}
+          />
+        )}
 
         {/* Procedural Architectural Metropolis (All 10 Architectural Archetypes) */}
         <ProceduralArchitecturalMetropolis

@@ -14,6 +14,11 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  ShieldAlert,
+  Sparkles,
+  LayoutGrid,
+  GitCompare,
+  Terminal,
 } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { ColorMode } from '../types';
@@ -26,12 +31,23 @@ export const Navbar: React.FC = () => {
     colorMode,
     presentationMode,
     isLeftPanelCollapsed,
+    isInsightsOpen,
+    smellsResult,
     loadRepo,
     setColorMode,
     togglePresentationMode,
     toggleLeftPanel,
+    toggleInsights,
     openModelCard,
     toggleOnboarding,
+    toggleScatterPlot,
+    toggleTerminalLog,
+    toggleRepoComparison,
+    isScatterPlotOpen,
+    isTerminalLogOpen,
+    isRepoComparisonOpen,
+    theme,
+    toggleTheme,
   } = useCityStore();
 
   const colorModes: Array<{ id: ColorMode; label: string; icon: any; key: string }> = [
@@ -40,6 +56,7 @@ export const Navbar: React.FC = () => {
     { id: 'churn', label: 'Churn', icon: Flame, key: '3' },
     { id: 'age', label: 'Age', icon: Clock, key: '4' },
     { id: 'impact', label: 'Impact', icon: Zap, key: '5' },
+    { id: 'contagion', label: 'Contagion', icon: ShieldAlert, key: '6' },
   ];
 
   return (
@@ -132,8 +149,88 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Right: Action Controls (Exhibition, Model Card, Settings, Dark Theme) */}
+      {/* 3. Right: Action Controls (Insights, Matrix, Compare, Terminal, Exhibition, Model Card, Settings, Dark Theme) */}
       <div className="flex items-center space-x-2">
+        {/* Insights Dock Toggle Button */}
+        <button
+          id="nav-insights-btn"
+          onClick={() => {
+            soundFx.playClick();
+            toggleInsights();
+          }}
+          onMouseEnter={soundFx.playHoverTick}
+          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+            isInsightsOpen
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50 shadow-glow-cyan'
+              : 'bg-slate-900/80 text-slate-300 border-white/15 hover:border-cyan-500/40 hover:text-white'
+          }`}
+          title="Open Intelligence & Impact Dock"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="font-sans">Insights</span>
+          {smellsResult && smellsResult.total_smells > 0 && (
+            <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-rose-500/30 text-rose-300 font-mono">
+              {smellsResult.total_smells}
+            </span>
+          )}
+        </button>
+
+        {/* Hotspot Scatter Matrix Toggle */}
+        <button
+          id="nav-matrix-btn"
+          onClick={() => {
+            soundFx.playClick();
+            toggleScatterPlot();
+          }}
+          onMouseEnter={soundFx.playHoverTick}
+          className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+            isScatterPlotOpen
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50 shadow-glow-cyan'
+              : 'bg-slate-900/80 text-slate-300 border-white/15 hover:border-cyan-500/40 hover:text-white'
+          }`}
+          title="2D Complexity vs Churn Hotspot Scatter Matrix"
+        >
+          <LayoutGrid className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="font-sans hidden md:inline">Matrix</span>
+        </button>
+
+        {/* Dual Repo Comparison */}
+        <button
+          id="nav-compare-btn"
+          onClick={() => {
+            soundFx.playClick();
+            toggleRepoComparison();
+          }}
+          onMouseEnter={soundFx.playHoverTick}
+          className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+            isRepoComparisonOpen
+              ? 'bg-violet-500/20 text-violet-300 border-violet-400/60 shadow-[0_0_12px_rgba(167,139,250,0.5)]'
+              : 'bg-slate-900/80 text-slate-300 border border-white/15 hover:border-violet-500/40 hover:text-white'
+          }`}
+          title="Compare with another repository"
+        >
+          <GitCompare className="w-3.5 h-3.5 text-violet-400" />
+          <span className="font-sans hidden md:inline">Compare</span>
+        </button>
+
+        {/* Live Analysis Terminal */}
+        <button
+          id="nav-terminal-btn"
+          onClick={() => {
+            soundFx.playClick();
+            toggleTerminalLog();
+          }}
+          onMouseEnter={soundFx.playHoverTick}
+          className={`p-2 rounded-xl text-xs font-medium border transition-all ${
+            isTerminalLogOpen
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/50 shadow-[0_0_8px_rgba(16,185,129,0.4)]'
+              : 'bg-slate-900/80 text-slate-400 hover:text-slate-200 border-white/15 hover:border-emerald-500/40'
+          }`}
+          title="Toggle Deterministic Analysis Terminal"
+        >
+          <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+        </button>
+
         {/* Exhibition Mode Toggle */}
         <button
           id="nav-exhibition-btn"
@@ -170,6 +267,7 @@ export const Navbar: React.FC = () => {
 
         {/* Settings Button */}
         <button
+          id="nav-settings-btn"
           onClick={() => {
             soundFx.playClick();
             toggleOnboarding();
@@ -183,11 +281,20 @@ export const Navbar: React.FC = () => {
 
         {/* Theme / Moon Button */}
         <button
-          onClick={() => soundFx.playHoverTick()}
-          className="p-2 rounded-xl bg-slate-900/80 text-slate-400 hover:text-cyan-400 border border-white/10 hover:border-cyan-500/30 transition-all"
-          title="Theme Toggle"
+          id="nav-theme-btn"
+          onClick={() => {
+            soundFx.playClick();
+            toggleTheme();
+          }}
+          onMouseEnter={soundFx.playHoverTick}
+          className={`p-2 rounded-xl transition-all border ${
+            theme === 'neon'
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/60 shadow-[0_0_12px_rgba(6,182,212,0.5)]'
+              : 'bg-slate-900/80 text-slate-400 hover:text-cyan-400 border-white/10 hover:border-cyan-500/30'
+          }`}
+          title={theme === 'neon' ? 'Switch to Cyber Midnight Theme' : 'Switch to High-Contrast Neon Theme'}
         >
-          <Moon className="w-4 h-4" />
+          {theme === 'neon' ? <Zap className="w-4 h-4 text-cyan-300 animate-pulse" /> : <Moon className="w-4 h-4" />}
         </button>
       </div>
     </header>

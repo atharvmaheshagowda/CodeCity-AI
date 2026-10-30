@@ -1,7 +1,7 @@
 {
   "repo_id": "pallets_click",
   "name": "pallets/click",
-  "analyzed_at": "2026-10-29T18:24:20.431620+00:00",
+  "analyzed_at": "2026-10-30T17:15:38.105027+00:00",
   "summary": {
     "total_files": 8,
     "total_loc": 63,
@@ -170,7 +170,8 @@
         "explanation_text": "High defect likelihood (98.5%). Driven primarily by intricate branching complexity (max CC 4.0), and large codebase footprint (18 LOC). Partially buffered by mature codebase longevity (180 days)."
       },
       "risk_rank": 1,
-      "impact_rank": 1
+      "impact_rank": 1,
+      "dominant_contributor_share": 0.82
     },
     {
       "id": "src/click/decorators.py",
@@ -292,7 +293,8 @@
         "explanation_text": "Low defect risk (14.9%). Strong stability sustained by low branch complexity (max CC 1.0), and isolated module position."
       },
       "risk_rank": 3,
-      "impact_rank": 3
+      "impact_rank": 3,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/click/exceptions.py",
@@ -410,7 +412,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (4 LOC)."
       },
       "risk_rank": 5,
-      "impact_rank": 4
+      "impact_rank": 4,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/click/formatting.py",
@@ -519,7 +522,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 2.0), and compact module size (6 LOC)."
       },
       "risk_rank": 6,
-      "impact_rank": 7
+      "impact_rank": 7,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/click/parser.py",
@@ -646,7 +650,8 @@
         "explanation_text": "Low defect risk (32.1%). Strong stability sustained by compact module size (10 LOC), and mature codebase longevity (180 days)."
       },
       "risk_rank": 2,
-      "impact_rank": 2
+      "impact_rank": 2,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/click/termui.py",
@@ -764,7 +769,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 2.0), and compact module size (4 LOC)."
       },
       "risk_rank": 7,
-      "impact_rank": 8
+      "impact_rank": 8,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/click/types.py",
@@ -891,7 +897,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 2.0), and compact module size (6 LOC)."
       },
       "risk_rank": 8,
-      "impact_rank": 5
+      "impact_rank": 5,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/click/__init__.py",
@@ -1009,16 +1016,11 @@
         "explanation_text": "Low defect risk (1.7%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (2 LOC)."
       },
       "risk_rank": 4,
-      "impact_rank": 6
+      "impact_rank": 6,
+      "dominant_contributor_share": 1.0
     }
   ],
   "graph_edges": [
-    {
-      "source": "src/click/core.py",
-      "target": "src/click/types.py",
-      "type": "import",
-      "calls": []
-    },
     {
       "source": "src/click/core.py",
       "target": "src/click/exceptions.py",
@@ -1032,6 +1034,12 @@
       "calls": [
         "__init__"
       ]
+    },
+    {
+      "source": "src/click/core.py",
+      "target": "src/click/types.py",
+      "type": "import",
+      "calls": []
     },
     {
       "source": "src/click/decorators.py",
@@ -1054,5 +1062,53 @@
   ],
   "critical_files": [
     "src/click/core.py"
+  ],
+  "commits": [
+    {
+      "hash": "af306245",
+      "date": "2026-08-26T17:15:34+00:00",
+      "author": "David Lord",
+      "message": "Fix error: crash when invoke args are empty in core Command",
+      "is_bug_fix": true,
+      "files": [
+        "src/click/core.py"
+      ]
+    },
+    {
+      "hash": "11761d80",
+      "date": "2026-07-02T17:15:34+00:00",
+      "author": "Armin Ronacher",
+      "message": "Fix bug in parser when flag value contains equal signs",
+      "is_bug_fix": true,
+      "files": [
+        "src/click/parser.py"
+      ]
+    },
+    {
+      "hash": "dbc6fd1c",
+      "date": "2026-06-02T17:15:34+00:00",
+      "author": "Markus Unterwaditzer",
+      "message": "Add formatting helpers and termui",
+      "is_bug_fix": false,
+      "files": [
+        "src/click/formatting.py",
+        "src/click/termui.py"
+      ]
+    },
+    {
+      "hash": "38e3e94c",
+      "date": "2026-05-03T17:15:34+00:00",
+      "author": "Armin Ronacher",
+      "message": "Initial Click codebase",
+      "is_bug_fix": false,
+      "files": [
+        "src/click/__init__.py",
+        "src/click/core.py",
+        "src/click/decorators.py",
+        "src/click/exceptions.py",
+        "src/click/parser.py",
+        "src/click/types.py"
+      ]
+    }
   ]
 }

@@ -216,7 +216,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 7.0), and large codebase footprint (120 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 2,
-      "impact_rank": 2
+      "impact_rank": 2,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/main.py",
@@ -350,7 +351,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 15.0), and large codebase footprint (386 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 3,
-      "impact_rank": 3
+      "impact_rank": 3,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/graph/dep_graph.py",
@@ -484,7 +486,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 18.0), and large codebase footprint (212 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 4,
-      "impact_rank": 4
+      "impact_rank": 4,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/mining/git_miner.py",
@@ -618,7 +621,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 35.0), and large codebase footprint (259 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 5,
-      "impact_rank": 5
+      "impact_rank": 5,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/mining/synthetic_repo.py",
@@ -752,7 +756,8 @@
         "explanation_text": "High defect likelihood (97.0%). Driven primarily by intricate branching complexity (max CC 5.0), and large codebase footprint (566 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 1,
-      "impact_rank": 1
+      "impact_rank": 1,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/ml/features.py",
@@ -878,7 +883,8 @@
         "explanation_text": "Low defect risk (19.1%). Strong stability sustained by low branch complexity (max CC 1.0), and isolated module position."
       },
       "risk_rank": 14,
-      "impact_rank": 14
+      "impact_rank": 14,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/ml/shap_explainer.py",
@@ -1012,7 +1018,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 23.0), and large codebase footprint (118 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 6,
-      "impact_rank": 6
+      "impact_rank": 6,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/ml/train.py",
@@ -1146,7 +1153,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 20.0), and large codebase footprint (235 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 7,
-      "impact_rank": 7
+      "impact_rank": 7,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/scripts/cache_demo_repos.py",
@@ -1280,7 +1288,8 @@
         "explanation_text": "Moderate defect risk (46.3%). Watch for large codebase footprint (57 LOC), and elevated average complexity (2.0). Stabilized by low branch complexity (max CC 2.0)."
       },
       "risk_rank": 13,
-      "impact_rank": 13
+      "impact_rank": 13,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/tests/conftest.py",
@@ -1398,7 +1407,8 @@
         "explanation_text": "Low defect risk (3.5%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (5 LOC)."
       },
       "risk_rank": 15,
-      "impact_rank": 15
+      "impact_rank": 15,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/tests/test_api.py",
@@ -1532,7 +1542,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 14.0), and large codebase footprint (68 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 8,
-      "impact_rank": 8
+      "impact_rank": 8,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/tests/test_blast_radius.py",
@@ -1666,7 +1677,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 8.0), and large codebase footprint (40 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 9,
-      "impact_rank": 9
+      "impact_rank": 9,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/tests/test_graph.py",
@@ -1800,7 +1812,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 10.0), and large codebase footprint (38 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 10,
-      "impact_rank": 10
+      "impact_rank": 10,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "backend/tests/test_leakage.py",
@@ -1934,7 +1947,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 7.0), and large codebase footprint (58 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 11,
-      "impact_rank": 11
+      "impact_rank": 11,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "docs/generate_walkthrough_pdf.py",
@@ -2068,7 +2082,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 3.0), and large codebase footprint (984 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 12,
-      "impact_rank": 12
+      "impact_rank": 12,
+      "dominant_contributor_share": 1.0
     }
   ],
   "graph_edges": [],

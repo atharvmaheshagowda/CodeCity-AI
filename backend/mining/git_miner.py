@@ -121,6 +121,7 @@ class RepoFeatureMiner:
                                     "last_seen": c_date,
                                     "commit_count": 0,
                                     "authors": set(),
+                                    "author_counts": {},
                                     "churn_90d": 0,
                                     "total_churn": 0,
                                     "past_bug_fixes": 0,
@@ -133,6 +134,8 @@ class RepoFeatureMiner:
                             entry["first_seen"] = c_date
                             entry["commit_count"] += 1
                             entry["authors"].add(author)
+                            entry.setdefault("author_counts", {})
+                            entry["author_counts"][author] = entry["author_counts"].get(author, 0) + 1
 
                             churn = (mod.added_lines or 0) + (mod.deleted_lines or 0)
                             entry["total_churn"] += churn
@@ -183,6 +186,13 @@ class RepoFeatureMiner:
             # Label: 1 if file was touched by a bug fix commit in (T, T + 90 days], else 0
             label = 1 if rel_f in future_bug_files else 0
 
+            author_counts = data.get("author_counts", {})
+            total_author_commits = sum(author_counts.values())
+            if total_author_commits > 0:
+                dominant_share = round(max(author_counts.values()) / total_author_commits, 3)
+            else:
+                dominant_share = 1.0 if len(data["authors"]) <= 1 else round(1.0 / len(data["authors"]), 3)
+
             rows.append({
                 "file_path": rel_f,
                 "loc": loc,
@@ -190,6 +200,7 @@ class RepoFeatureMiner:
                 "max_complexity": round(max_cc, 3),
                 "commit_count": data["commit_count"],
                 "distinct_authors": len(data["authors"]),
+                "dominant_contributor_share": dominant_share,
                 "file_age_days": round(file_age_days, 2),
                 "days_since_last_change": round(days_since_last_change, 2),
                 "churn_90d": data["churn_90d"],
@@ -230,6 +241,7 @@ def extract_features_at_head(repo_path: str) -> Tuple[pd.DataFrame, nx.DiGraph]:
             "last_seen": None,
             "commit_count": 0,
             "authors": set(),
+            "author_counts": {},
             "churn_90d": 0,
             "total_churn": 0,
             "past_bug_fixes": 0,
@@ -266,6 +278,8 @@ def extract_features_at_head(repo_path: str) -> Tuple[pd.DataFrame, nx.DiGraph]:
                         entry["first_seen"] = c_date
                         entry["commit_count"] += 1
                         entry["authors"].add(author)
+                        entry.setdefault("author_counts", {})
+                        entry["author_counts"][author] = entry["author_counts"].get(author, 0) + 1
                         churn = (mod.added_lines or 0) + (mod.deleted_lines or 0)
                         entry["total_churn"] += churn
                         if c_date >= ninety_days_ago:
@@ -293,6 +307,14 @@ def extract_features_at_head(repo_path: str) -> Tuple[pd.DataFrame, nx.DiGraph]:
         days_since_last_change = max(0, (now - last_seen).total_seconds() / 86400.0)
         graph_metrics = compute_graph_metrics(G, rel_f)
 
+        author_counts = stats.get("author_counts", {})
+        total_author_commits = sum(author_counts.values())
+        if total_author_commits > 0:
+            dominant_share = round(max(author_counts.values()) / total_author_commits, 3)
+        else:
+            distinct = max(1, len(stats["authors"]))
+            dominant_share = 1.0 if distinct <= 1 else round(1.0 / distinct, 3)
+
         rows.append({
             "file_path": rel_f,
             "loc": loc,
@@ -300,6 +322,7 @@ def extract_features_at_head(repo_path: str) -> Tuple[pd.DataFrame, nx.DiGraph]:
             "max_complexity": round(max_cc, 3),
             "commit_count": stats["commit_count"],
             "distinct_authors": max(1, len(stats["authors"])),
+            "dominant_contributor_share": dominant_share,
             "file_age_days": round(file_age_days, 2),
             "days_since_last_change": round(days_since_last_change, 2),
             "churn_90d": stats["churn_90d"],

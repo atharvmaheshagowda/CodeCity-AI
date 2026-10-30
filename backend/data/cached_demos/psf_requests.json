@@ -1,7 +1,7 @@
 {
   "repo_id": "psf_requests",
   "name": "psf/requests",
-  "analyzed_at": "2026-10-29T18:24:17.081798+00:00",
+  "analyzed_at": "2026-10-30T17:15:42.659604+00:00",
   "summary": {
     "total_files": 9,
     "total_loc": 66,
@@ -174,7 +174,8 @@
         "explanation_text": "Low defect risk (32.1%). Strong stability sustained by compact module size (7 LOC), and mature codebase longevity (180 days)."
       },
       "risk_rank": 3,
-      "impact_rank": 3
+      "impact_rank": 3,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/requests/api.py",
@@ -287,7 +288,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (8 LOC)."
       },
       "risk_rank": 6,
-      "impact_rank": 8
+      "impact_rank": 8,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/requests/auth.py",
@@ -414,7 +416,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 2.0), and compact module size (4 LOC)."
       },
       "risk_rank": 7,
-      "impact_rank": 6
+      "impact_rank": 6,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/requests/cookies.py",
@@ -541,7 +544,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 2.0), and compact module size (2 LOC)."
       },
       "risk_rank": 8,
-      "impact_rank": 7
+      "impact_rank": 7,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/requests/exceptions.py",
@@ -673,7 +677,8 @@
         "explanation_text": "Low defect risk (2.7%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (4 LOC)."
       },
       "risk_rank": 4,
-      "impact_rank": 4
+      "impact_rank": 4,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/requests/models.py",
@@ -810,7 +815,8 @@
         "explanation_text": "High defect likelihood (98.5%). Driven primarily by large codebase footprint (18 LOC), and intricate branching complexity (max CC 3.0). Partially buffered by mature codebase longevity (180 days)."
       },
       "risk_rank": 1,
-      "impact_rank": 1
+      "impact_rank": 1,
+      "dominant_contributor_share": 0.82
     },
     {
       "id": "src/requests/sessions.py",
@@ -950,7 +956,8 @@
         "explanation_text": "Moderate defect risk (41.9%). Watch for large codebase footprint (16 LOC), and broad dependency coupling (4 external imports). Stabilized by low branch complexity (max CC 2.0)."
       },
       "risk_rank": 2,
-      "impact_rank": 2
+      "impact_rank": 2,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "src/requests/utils.py",
@@ -1082,7 +1089,8 @@
         "explanation_text": "Low defect risk (1.1%). Strong stability sustained by low branch complexity (max CC 2.0), and compact module size (4 LOC)."
       },
       "risk_rank": 9,
-      "impact_rank": 5
+      "impact_rank": 5,
+      "dominant_contributor_share": 0.82
     },
     {
       "id": "src/requests/__init__.py",
@@ -1200,7 +1208,8 @@
         "explanation_text": "Low defect risk (1.7%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (3 LOC)."
       },
       "risk_rank": 5,
-      "impact_rank": 9
+      "impact_rank": 9,
+      "dominant_contributor_share": 1.0
     }
   ],
   "graph_edges": [
@@ -1226,25 +1235,25 @@
     },
     {
       "source": "src/requests/models.py",
-      "target": "src/requests/exceptions.py",
-      "type": "import",
-      "calls": []
-    },
-    {
-      "source": "src/requests/models.py",
       "target": "src/requests/utils.py",
       "type": "import",
       "calls": []
     },
     {
-      "source": "src/requests/sessions.py",
-      "target": "src/requests/auth.py",
+      "source": "src/requests/models.py",
+      "target": "src/requests/exceptions.py",
       "type": "import",
       "calls": []
     },
     {
       "source": "src/requests/sessions.py",
       "target": "src/requests/cookies.py",
+      "type": "import",
+      "calls": []
+    },
+    {
+      "source": "src/requests/sessions.py",
+      "target": "src/requests/auth.py",
       "type": "import",
       "calls": []
     },
@@ -1264,13 +1273,13 @@
     },
     {
       "source": "src/requests/__init__.py",
-      "target": "src/requests/models.py",
+      "target": "src/requests/api.py",
       "type": "import",
       "calls": []
     },
     {
       "source": "src/requests/__init__.py",
-      "target": "src/requests/api.py",
+      "target": "src/requests/models.py",
       "type": "import",
       "calls": []
     },
@@ -1284,5 +1293,45 @@
   "critical_files": [
     "src/requests/models.py",
     "src/requests/sessions.py"
+  ],
+  "commits": [
+    {
+      "hash": "45fb5012",
+      "date": "2026-08-23T17:15:39+00:00",
+      "author": "Cory Benfield",
+      "message": "Fix crash: handle unicode decoding failure in Response.text and connection error patch",
+      "is_bug_fix": true,
+      "files": [
+        "src/requests/models.py"
+      ]
+    },
+    {
+      "hash": "12a22c12",
+      "date": "2026-06-07T17:15:39+00:00",
+      "author": "Cory Benfield",
+      "message": "Fix issue #2104: handle non-dict objects in dict_to_sequence",
+      "is_bug_fix": true,
+      "files": [
+        "src/requests/utils.py"
+      ]
+    },
+    {
+      "hash": "44f1dbb0",
+      "date": "2026-05-03T17:15:39+00:00",
+      "author": "Kenneth Reitz",
+      "message": "Initial Requests release",
+      "is_bug_fix": false,
+      "files": [
+        "src/requests/__init__.py",
+        "src/requests/adapters.py",
+        "src/requests/api.py",
+        "src/requests/auth.py",
+        "src/requests/cookies.py",
+        "src/requests/exceptions.py",
+        "src/requests/models.py",
+        "src/requests/sessions.py",
+        "src/requests/utils.py"
+      ]
+    }
   ]
 }

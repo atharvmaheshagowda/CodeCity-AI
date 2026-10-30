@@ -48,6 +48,11 @@ export const CommandPalette: React.FC = () => {
     toggleLowPowerMode,
     toggleLeftPanel,
     triggerCameraReset,
+    toggleInsights,
+    setInsightsTab,
+    toggleScatterPlot,
+    toggleTerminalLog,
+    toggleRepoComparison,
   } = useCityStore();
 
   const [query, setQuery] = useState('');
@@ -154,6 +159,63 @@ export const CommandPalette: React.FC = () => {
         detail: 'Inspect ROC curve, Precision@10, and training leakage proof',
         icon: Award,
         onSelect: () => openModelCard(),
+      },
+      {
+        id: 'open-review-planner',
+        category: 'System',
+        label: 'Open Review Budget Planner (Knapsack)',
+        detail: 'Optimize review allocation maximizing defect risk mitigated',
+        icon: Clock,
+        onSelect: () => {
+          setInsightsTab('plan');
+          toggleInsights(true);
+        },
+      },
+      {
+        id: 'open-timelapse',
+        category: 'System',
+        label: 'Open Git History Time-Lapse (4D Replay)',
+        detail: 'Choreographed month scrubber with dynamic building heights',
+        icon: Play,
+        onSelect: () => {
+          setInsightsTab('time');
+          toggleInsights(true);
+        },
+      },
+      {
+        id: 'open-scatter-matrix',
+        category: 'System',
+        label: 'Open 2D Hotspot Scatter Matrix',
+        detail: 'Complexity vs Churn 4-quadrant interactive plot',
+        icon: Layers,
+        onSelect: () => toggleScatterPlot(),
+      },
+      {
+        id: 'open-analysis-terminal',
+        category: 'System',
+        label: 'Open Live Analysis Engine Terminal',
+        detail: 'View deterministic AST parsing, SHAP values, and PageRank events',
+        icon: Activity,
+        onSelect: () => toggleTerminalLog(),
+      },
+      {
+        id: 'open-repo-comparison',
+        category: 'System',
+        label: 'Benchmark with Another Repository',
+        detail: 'Dual side-by-side KPI and defect risk profile comparison',
+        icon: FolderGit2,
+        onSelect: () => toggleRepoComparison(),
+      },
+      {
+        id: 'open-breaking-change',
+        category: 'System',
+        label: 'Simulate Breaking Change (AST Diffing)',
+        detail: 'Identify broken call sites across repository without running code',
+        icon: Zap,
+        onSelect: () => {
+          setInsightsTab('impact');
+          toggleInsights(true);
+        },
       },
     ];
 

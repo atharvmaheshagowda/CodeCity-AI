@@ -44,7 +44,7 @@ def _commit_at(repo_path: str, base_date: datetime, days_offset: int, author: st
         with open(full, "w", encoding="utf-8") as f:
             f.write(content)
         _run_git(["add", rel_f], cwd=repo_path)
-    _run_git(["commit", "-m", message], cwd=repo_path, env=env)
+    _run_git(["commit", "--allow-empty", "-m", message], cwd=repo_path, env=env)
 
 def create_synthetic_flask_repo(dest_path: str) -> str:
     if os.path.exists(dest_path):

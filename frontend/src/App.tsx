@@ -11,6 +11,10 @@ import { ModelCardModal } from './components/ModelCardModal';
 import { OnboardingModal } from './components/OnboardingModal';
 import { PresentationHUD } from './components/PresentationHUD';
 import { PinnedDock } from './components/PinnedDock';
+import { InsightsDock } from './components/InsightsDock/InsightsDock';
+import { HotspotScatterModal } from './components/HotspotScatterModal';
+import { TerminalLogDrawer } from './components/TerminalLogDrawer';
+import { RepoComparisonModal } from './components/RepoComparisonModal';
 import { ColorMode } from './types';
 
 export const App: React.FC = () => {
@@ -184,6 +188,10 @@ export const App: React.FC = () => {
       <CommandPalette />
       <ModelCardModal />
       <OnboardingModal />
+      <InsightsDock />
+      <HotspotScatterModal />
+      <TerminalLogDrawer />
+      <RepoComparisonModal />
     </div>
   );
 };

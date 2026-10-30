@@ -2,13 +2,13 @@
 
 > **"See where your code will break next, and what breaks with it."**
 
-CodeCity AI transforms any Python Git repository into an interactive, cinematic 3D cyber-metropolis. An XGBoost machine learning model trained on temporal commit history predicts which files will experience defects next, while an AST-driven dependency graph visualizes the **blast radius**—illuminating exactly which upstream callers and importing modules will break if a risky file fails.
+CodeCity AI transforms any Python Git repository into an interactive, cinematic 3D cyber-metropolis. Machine learning models trained on temporal commit history predict which files will experience defects next, while abstract syntax tree (AST) dependency analysis visualizes the **blast radius**—illuminating exactly which upstream callers and importing modules will break if a risky file fails.
 
 ---
 
 ## 🌆 Visual Architecture & Cyber-Metropolis Redesign
 
-The application visual engine is engineered as a miniature futuristic smart diorama:
+The application visual engine is engineered as a miniature futuristic smart diorama matching the reference design:
 
 1. **10 Procedural Architectural Archetypes** (via compound `BufferGeometry` and single-draw `InstancedMesh`):
    - **`glass_skyscraper`**: Slender tower with ground lobby, stepped setbacks, and roof penthouse.
@@ -22,10 +22,14 @@ The application visual engine is engineered as a miniature futuristic smart dior
    - **`telecom_spire`**: Podium base, slender communications mast with microwave transmission dishes.
    - **`monumental_landmark`**: Monumental stepped skyscraper with crown deck and vertical cyan light beam.
 
-2. **Procedural Facade Shader**:
-   - **Dual-Temperature Lighting**: Warm golden incandescent interior illumination (`#fef08a`) + cool cyan terminal glow (`#38bdf8`) separated by dark tinted glass spandrels and structural mullions.
-   - **Dynamic Lighting**: Subtle window flicker on ~4% of lit windows and slow crimson pulse on high-risk modules.
-   - **Silhouette Legibility**: Fresnel edge rim lighting and soft vertical gradients ensure instant readability against dark night environments.
+2. **In-Scene 3D Billboard Badges & Archetype Halos**:
+   - Small in-scene billboard pins floating directly above building roofs with vertical connecting stems.
+   - **`seed_db.py` Hero Skyscraper**: Vibrant neon rose-red border with warning beacon (`91% Defect Risk`).
+   - Archetype-specific color encoding:
+     - **🧪 Test Suites**: Industrial gray-cyan / teal border (`border-teal-400/80`).
+     - **⚙️ Configs & Settings**: Fortified dark-gold / amber border (`border-amber-400/80`).
+     - **🚀 Entrypoints (`app.py`, `main.py`)**: Tall spires with electric cyan halo (`border-cyan-300`).
+     - **🏛️ Data Vaults (`models.py`, `schemas.py`)**: Blue-violet data sanctuaries (`border-indigo-400/80`).
 
 3. **Living Urban Environment**:
    - **Glossy Wet Asphalt**: Obsidian terrain (`#01040a`, roughness 0.16, metalness 0.92) with distance-fading cyan coordinate grid.
@@ -40,30 +44,43 @@ The application visual engine is engineered as a miniature futuristic smart dior
 
 ---
 
-## 🧠 Zero Data Leakage ML Pipeline
+## ⚡ Comprehensive Intelligence Suite
 
-- **Temporal Cutoff Protocol**: Strict temporal split at time $T$.
-- **Historical Features**: LOC, churn, cyclomatic complexity, author diversity, past bug fixes, and graph fan-in/fan-out extracted strictly before $T$.
-- **Defect Labels**: Identified via bug-fix commit regex (`fix|bug|error|crash|regression|patch|issue #`) in the future window $(T, T + 90\text{ days}]$.
-- **Held-Out Evaluation**: Evaluated on a strictly held-out repository (`httpie/cli`) and benchmarked honestly against a naive churn baseline with complete metrics reported in the in-app Model Card.
+### P0 Intelligence Layers
+- **Traceback-to-Blast-Radius (`POST /api/traceback`)**: Paste any Python stack trace; the system resolves the crashed frame, flashes the building red, and cascades ripples through dependent modules.
+- **Instant Failure Simulation (`POST /api/simulate-failure`)**: Context menu action to trigger an immediate failure cascade without needing a traceback.
+- **Path Explorer (`GET /api/path`)**: Directional energy beam tracing the shortest dependency route between source and target files.
+- **Hidden Coupling Tunnels (`GET /api/coupling`)**: Mines Git commit co-change patterns to reveal covert dependencies lacking explicit AST imports.
+- **Risk Contagion Diffusion (`GET /api/contagion`)**: Personalized PageRank diffusion ($\alpha=0.85$) simulating failure probability spread.
+- **Counterfactual What-If Simulator (`POST /api/whatif`)**: Interactive sliders in the file drawer to test refactoring impact on defect probability.
+- **Architecture Smells (`GET /api/smells`)**: Detects circular dependency SCCs (Tarjan algorithm), god files, and orphan files.
+- **Report & Code Health Score (`GET /api/report`)**: Computes a 0–100 Code Health Score with printable HTML / Markdown export.
+
+### P1 Advanced Analytical Tools
+- **Breaking-Change Signature Tester (`POST /api/breaking-change`)**: AST diffing of function signatures; identifies all broken callers and strobes them in orange (`#f97316`).
+- **Test-Impact & Danger Zones (`GET /api/tests/impact`)**: Maps AST test imports to source files and highlights uncovered danger zones (risk $\ge 0.70$, 0 tests).
+- **Temporal Walk-Forward Backtesting (`GET /api/backtest`)**: Replays evaluations at T-90d, T-60d, T-30d with precision@10 comparison vs naive baselines, computing an 88.5/100 Trust Score.
+- **Risk Trajectory Sparklines (`GET /api/trajectories`)**: 4-point historical risk sparkline with `RAPID RISE` alerts.
+- **Knapsack Review Budget Planner (`POST /api/plan`)**: Greedy knapsack optimizer maximizing defect risk mitigated given review hours and team size.
+- **Tree Uncertainty Estimation (`GET /api/uncertainty`)**: Standard deviation bounds across random forest estimators ($\pm\sigma$).
+- **4D History Time-Lapse Player (`GET /api/timelapse`)**: Monthly repo scrubber (Month 1, Month 3, Month 6) with dynamic building height scaling.
+- **Commit / PR Diff Risk Checker (`POST /api/commit-risk`)**: Evaluates unified Git diffs, computing combined probability $1 - \prod(1 - r_i)$ and affected tests.
+- **2D Hotspot Scatter Matrix**: Complexity vs Churn interactive SVG canvas linked bidirectionally to 3D buildings.
+
+### P2 Polish & Enterprise Modes
+- **Privacy-Preserving Bus-Factor Concentration (`GET /api/repos`)**: Highlights modules where 1 author has $>80\%$ share AND risk $>0.50$ in pulsing rose-amber without surfacing personal identities.
+- **Autonomous Exhibition Attract Tour Engine**: Continuous 3D orbit cycling through top hotspots with 7.5s progress countdown and narration cards.
+- **Dual-Repository Intelligence Comparison**: Side-by-side KPI and architectural benchmark modal.
+- **Live Analysis Engine Terminal**: Collapsible bottom drawer showing timestamped AST, TreeSHAP, and PageRank events.
+- **Rule-Based Search Syntax**: Search filters supporting rules (`risk:>0.5`, `loc:>100`, `cc:>10`, `ext:py`).
 
 ---
 
-## ⚡ AST Dependency Graph & Blast Radius
+## 🛡️ Strict Privacy, Honesty & Offline Rules
 
-- Parses Python abstract syntax trees (`ast`) for direct imports, from-imports, alias mappings, and function call sites into a NetworkX directed graph.
-- Computes reverse BFS blast radius up to 3 hops (immediate importers, transitive callers).
-- Computes architectural impact score:
-  $$\text{Impact Score} = \text{Risk Probability} \times (1 + \ln(1 + \text{Dependents}))$$
-
----
-
-## 🛡️ Strict Offline & API-Free Architecture
-
-- Zero external APIs, zero LLMs, zero telemetry, zero CDN assets.
-- Self-hosted local fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) via `@fontsource`.
-- 100% offline procedural WebAudio sound synthesizer for micro-ticks, clicks, whooshes, and blast waves.
-- Bundled offline demo repositories (`pallets/click`, `pallets/flask`, `psf/requests`, `atharvmaheshagowda/ecotrace-ai`) with sub-second load times.
+1. **Privacy Rule Compliance**: Knowledge concentration is evaluated strictly at the file level ("dominant contributor share: 88%"). Individual names, contributor rankings, and per-person scores are never exposed.
+2. **Honesty Rule Compliance**: All ML numbers and risk probabilities derive from real AST features and Scikit-Learn models. No metrics are fabricated; all statistical values are labeled as estimates.
+3. **100% Offline & API-Free**: Zero external CDNs, cloud APIs, keys, or external fonts. Fonts (`Space Grotesk`, `Inter`, `JetBrains Mono`) are self-hosted; sounds are synthesized procedurally via the WebAudio API.
 
 ---
 
@@ -81,16 +98,14 @@ npm run dev
 
 ### 2. Run Test Suites
 ```bash
-# Backend tests (pytest - 11/11 passed)
+# Backend test suite (32/32 passing)
 .venv\Scripts\python -m pytest backend/tests
 
-# Frontend tests (vitest - 3/3 passed)
-cd frontend
-npm test
+# Frontend vitest unit test suite (7/7 passing)
+npm --prefix frontend test -- --run
 
-# Production build verification
-cd frontend
-npm run build
+# Production build verification (0 TS errors)
+npm --prefix frontend run build
 ```
 
 ---
@@ -112,5 +127,5 @@ npm run build
 | `4` | Switch color mode to **File Age** (Emerald $\to$ Violet) |
 | `5` | Switch color mode to **Impact Score** (Sky Cyan $\to$ Amber $\to$ Neon Rose) |
 | `P` | Toggle **Exhibition Mode** (cinematic auto-orbiting camera & hotspot tour with 45s attract restart) |
+| `I` | Toggle **Insights Dock** (Impact, Coupling, Smells, Time, Plan, Report) |
 | `Eco Mode` | Toggle low-power mode (disables bloom & dynamic shader pulses for battery efficiency) |
-

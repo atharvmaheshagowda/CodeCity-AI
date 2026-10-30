@@ -280,6 +280,18 @@ export function getBuildingColorHex(file: FileNode, mode: ColorMode): string {
       if (impact < 1.8) return '#f59e0b';
       return '#f43f5e';
     }
+    case 'contagion': {
+      const r = file.risk_probability;
+      if (r < 0.30) return '#06b6d4';
+      if (r < 0.60) return '#f59e0b';
+      return '#ef4444';
+    }
+    case 'busfactor': {
+      const authors = file.distinct_authors || 1;
+      if (authors === 1) return '#f43f5e';
+      if (authors === 2) return '#f59e0b';
+      return '#10b981';
+    }
     default:
       return '#10b981';
   }

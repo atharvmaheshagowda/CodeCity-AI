@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Activity,
   Layers,
@@ -11,10 +11,13 @@ import {
   Leaf,
   X,
   Expand,
+  ShieldAlert,
+  Sparkles,
 } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { ColorMode } from '../types';
 import { soundFx } from '../utils/soundEffects';
+import { LayersMenu } from './HUD/LayersMenu';
 
 export const BottomHUD: React.FC = () => {
   const {
@@ -26,7 +29,10 @@ export const BottomHUD: React.FC = () => {
     triggerCameraReset,
     toggleLowPowerMode,
     togglePresentationMode,
+    toggleInsights,
   } = useCityStore();
+
+  const [isLayersOpen, setIsLayersOpen] = useState(false);
 
   const colorModes: Array<{ id: ColorMode; label: string; icon: any }> = [
     { id: 'risk', label: 'Risk', icon: Activity },
@@ -34,6 +40,7 @@ export const BottomHUD: React.FC = () => {
     { id: 'churn', label: 'Churn', icon: Flame },
     { id: 'age', label: 'Age', icon: Clock },
     { id: 'impact', label: 'Impact', icon: Zap },
+    { id: 'contagion', label: 'Contagion', icon: ShieldAlert },
   ];
 
   if (presentationMode || !currentRepo) return null;
@@ -138,10 +145,31 @@ export const BottomHUD: React.FC = () => {
             <Target className="w-4 h-4" />
           </button>
 
+          {/* Insights Button */}
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              toggleInsights();
+            }}
+            onMouseEnter={soundFx.playHoverTick}
+            className="p-2 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-white/5 border border-transparent hover:border-cyan-500/30 transition-all"
+            title="Open CodeCity Insights Dock"
+          >
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+          </button>
+
           {/* Layers Button */}
           <button
-            onClick={() => soundFx.playHoverTick()}
-            className="p-2 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-white/5 border border-transparent hover:border-cyan-500/30 transition-all"
+            onClick={() => {
+              soundFx.playClick();
+              setIsLayersOpen(!isLayersOpen);
+            }}
+            onMouseEnter={soundFx.playHoverTick}
+            className={`p-2 rounded-xl transition-all border ${
+              isLayersOpen
+                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50 shadow-glow-cyan'
+                : 'text-slate-400 hover:text-cyan-300 hover:bg-white/5 border-transparent hover:border-cyan-500/30'
+            }`}
             title="Toggle City Layers"
           >
             <Layers className="w-4 h-4" />
@@ -182,6 +210,9 @@ export const BottomHUD: React.FC = () => {
           <Leaf className={`w-3.5 h-3.5 ${lowPowerMode ? 'text-emerald-400' : 'text-slate-400'}`} />
           <span>Low Power Mode</span>
         </button>
+
+        {/* Floating Layers Dropdown Menu */}
+        <LayersMenu isOpen={isLayersOpen} onClose={() => setIsLayersOpen(false)} />
       </div>
     </div>
   );

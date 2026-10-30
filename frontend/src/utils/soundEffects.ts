@@ -190,5 +190,33 @@ export const soundFx = {
       // audio error handling
     }
   },
+
+  /** Low urgent warning double-pulse for traceback crash detection & failure simulation */
+  playWarningPulse: () => {
+    if (isAudioMuted) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(160, now + 0.22);
+
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.26);
+    } catch {
+      // audio error handling
+    }
+  },
 };
 

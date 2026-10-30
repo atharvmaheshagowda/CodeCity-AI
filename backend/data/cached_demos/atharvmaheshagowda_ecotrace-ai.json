@@ -146,7 +146,8 @@
         "explanation_text": "Low defect risk (19.1%). Strong stability sustained by low branch complexity (max CC 1.0), and isolated module position."
       },
       "risk_rank": 3,
-      "impact_rank": 3
+      "impact_rank": 3,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "download_samples.py",
@@ -272,7 +273,8 @@
         "explanation_text": "Low defect risk (19.1%). Strong stability sustained by low branch complexity (max CC 1.0), and isolated module position."
       },
       "risk_rank": 4,
-      "impact_rank": 4
+      "impact_rank": 4,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "ingest_knowledge.py",
@@ -406,7 +408,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 3.0), and large codebase footprint (43 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 1,
-      "impact_rank": 1
+      "impact_rank": 1,
+      "dominant_contributor_share": 1.0
     },
     {
       "id": "main.py",
@@ -540,7 +543,8 @@
         "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 6.0), and large codebase footprint (83 LOC). Partially buffered by isolated module position."
       },
       "risk_rank": 2,
-      "impact_rank": 2
+      "impact_rank": 2,
+      "dominant_contributor_share": 1.0
     }
   ],
   "graph_edges": [],

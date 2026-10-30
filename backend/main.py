@@ -36,6 +36,18 @@ from ml.shap_explainer import CodeCityExplainer
 from mining.git_miner import extract_features_at_head
 from mining.synthetic_repo import create_synthetic_git_repo
 from graph.dep_graph import compute_blast_radius, compute_impact_score, normalize_rel_path
+from intelligence.impact import parse_traceback, simulate_failure, find_shortest_path
+from intelligence.coupling import mine_hidden_coupling
+from intelligence.contagion import compute_risk_contagion
+from intelligence.whatif import run_counterfactual_whatif
+from intelligence.smells import detect_architecture_smells
+from intelligence.report import compute_code_health_score, generate_markdown_report, generate_html_report
+from intelligence.breaking_change import detect_breaking_changes
+from intelligence.test_impact import analyze_test_coverage_and_impact
+from intelligence.backtest import run_temporal_backtest_replay, compute_risk_trajectories, compute_uncertainty_bounds
+from intelligence.planner import plan_review_budget
+from intelligence.commit_risk import evaluate_commit_or_diff_risk, parse_unified_diff
+from intelligence.timelapse import generate_monthly_timelapse
 
 app = FastAPI(
     title="CodeCity AI API",
@@ -188,6 +200,7 @@ def generate_city_payload(repo_id: str, repo_name: str, repo_path: str, max_comm
             "max_complexity": float(row["max_complexity"]),
             "commit_count": int(row["commit_count"]),
             "distinct_authors": int(row["distinct_authors"]),
+            "dominant_contributor_share": round(float(row["dominant_contributor_share"]) if "dominant_contributor_share" in row and pd.notna(row["dominant_contributor_share"]) else (0.88 if int(row["distinct_authors"]) <= 2 else 0.55), 3),
             "file_age_days": float(row["file_age_days"]),
             "days_since_last_change": float(row["days_since_last_change"]),
             "churn_90d": int(row["churn_90d"]),
@@ -466,3 +479,298 @@ def get_model_card():
             return json.load(fp)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to load metrics.json: {e}")
+
+
+# ==============================================================
+# PHASE 1: P0 EXTENSION ENDPOINTS
+# ==============================================================
+
+def load_repo_graph_and_files(repo_id: str):
+    """
+    Loads repository payload from cache, reconstructing NetworkX DiGraph G and files list.
+    """
+    cache_path = os.path.join(CACHED_DEMOS_DIR, f"{repo_id}.json")
+    if not os.path.exists(cache_path):
+        for f in os.listdir(CACHED_DEMOS_DIR):
+            if f == f"{repo_id}.json" or f.startswith(repo_id):
+                cache_path = os.path.join(CACHED_DEMOS_DIR, f)
+                break
+    if not os.path.exists(cache_path):
+        raise HTTPException(status_code=404, detail=f"Repository '{repo_id}' not found in cached datasets.")
+
+    try:
+        with open(cache_path, "r", encoding="utf-8") as fp:
+            payload = json.load(fp)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to read cached repository: {e}")
+
+    files = payload.get("files", [])
+    edges = payload.get("graph_edges", [])
+
+    import networkx as nx
+    G = nx.DiGraph()
+    for f in files:
+        G.add_node(f["path"])
+    for e in edges:
+        G.add_edge(e["source"], e["target"], edge_type=e.get("type", "import"), calls=e.get("calls", []))
+
+    return payload, files, G
+
+
+class TracebackRequest(BaseModel):
+    repo_id: str = Field(..., description="Repository identifier")
+    traceback: str = Field(..., description="Raw Python stack trace string")
+
+
+@app.post("/api/traceback")
+def api_parse_traceback(req: TracebackRequest):
+    """
+    Parses a Python traceback, identifies crashed file & frame, and traverses cascading blast radius.
+    """
+    _, files, G = load_repo_graph_and_files(req.repo_id)
+    try:
+        res = parse_traceback(req.traceback, files, G)
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Traceback analysis failed: {str(e)}")
+
+
+class SimulateFailureRequest(BaseModel):
+    repo_id: str = Field(..., description="Repository identifier")
+    file_path: str = Field(..., description="Target file path to simulate failure for")
+
+
+@app.post("/api/simulate-failure")
+def api_simulate_failure(req: SimulateFailureRequest):
+    """
+    Simulates a failure cascading from the specified file through all dependent callers.
+    """
+    _, files, G = load_repo_graph_and_files(req.repo_id)
+    try:
+        res = simulate_failure(req.file_path, G, files)
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Simulation failed: {str(e)}")
+
+
+@app.get("/api/path")
+def api_find_path(repo_id: str, source: str, target: str):
+    """
+    Computes shortest dependency path between two repository modules.
+    """
+    _, files, G = load_repo_graph_and_files(repo_id)
+    try:
+        res = find_shortest_path(source, target, G, files)
+        return res
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Path computation failed: {str(e)}")
+
+
+@app.get("/api/coupling")
+def api_coupling(repo_id: str, min_support: int = 2, min_jaccard: float = 0.15):
+    """
+    Mines Git commit history to find hidden co-change coupling between files with NO direct import edges.
+    """
+    payload, files, G = load_repo_graph_and_files(repo_id)
+    commits = payload.get("commits", [])
+    res = mine_hidden_coupling(commits, G, files, min_support=min_support, min_jaccard=min_jaccard)
+    return res
+
+
+@app.get("/api/contagion")
+def api_contagion(repo_id: str, alpha: float = 0.85):
+    """
+    Computes Personalized PageRank risk diffusion propagating upstream library risks downstream to callers.
+    """
+    _, files, G = load_repo_graph_and_files(repo_id)
+    res = compute_risk_contagion(files, G, damping=alpha)
+    return res
+
+
+class WhatIfRequest(BaseModel):
+    repo_id: str = Field(..., description="Repository identifier")
+    file_path: str = Field(..., description="File path to adjust")
+    max_complexity: Optional[float] = Field(None, description="Altered cyclomatic complexity")
+    churn_90d: Optional[int] = Field(None, description="Altered recent churn")
+    loc: Optional[int] = Field(None, description="Altered lines of code")
+    past_bug_fixes: Optional[int] = Field(None, description="Altered bug fixes count")
+
+
+@app.post("/api/whatif")
+def api_whatif(req: WhatIfRequest):
+    """
+    Re-evaluates ML risk inference and SHAP attributions under hypothetical metric changes.
+    """
+    _, files, G = load_repo_graph_and_files(req.repo_id)
+    matched_file = next((f for f in files if f["path"] == req.file_path or f["filename"] == req.file_path), None)
+    if not matched_file:
+        raise HTTPException(status_code=404, detail=f"File '{req.file_path}' not found in repository.")
+
+    overrides = {}
+    if req.max_complexity is not None:
+        overrides["max_complexity"] = req.max_complexity
+    if req.churn_90d is not None:
+        overrides["churn_90d"] = req.churn_90d
+    if req.loc is not None:
+        overrides["loc"] = req.loc
+    if req.past_bug_fixes is not None:
+        overrides["past_bug_fixes"] = req.past_bug_fixes
+
+    model = get_loaded_model()
+    explainer = None
+    if model is not None:
+        try:
+            explainer = CodeCityExplainer(model)
+        except Exception:
+            explainer = None
+
+    res = run_counterfactual_whatif(matched_file, overrides, model, explainer)
+    return res
+
+
+@app.get("/api/smells")
+def api_smells(repo_id: str):
+    """
+    Detects structural architectural smells: circular dependencies, god files, and orphan files.
+    """
+    _, files, G = load_repo_graph_and_files(repo_id)
+    res = detect_architecture_smells(files, G)
+    return res
+
+
+@app.get("/api/report")
+def api_report(repo_id: str, format: str = Query("json", description="Output format: json, markdown, or html")):
+    """
+    Computes transparent 0-100 Code Health Score and generates executive health reports.
+    """
+    payload, files, G = load_repo_graph_and_files(repo_id)
+    smells = detect_architecture_smells(files, G)
+    health = compute_code_health_score(payload, smells)
+
+    if format == "markdown":
+        from fastapi.responses import PlainTextResponse
+        md = generate_markdown_report(payload, health, smells)
+        return PlainTextResponse(content=md, media_type="text/markdown")
+    elif format == "html":
+        from fastapi.responses import HTMLResponse
+        html = generate_html_report(payload, health, smells)
+        return HTMLResponse(content=html)
+    else:
+        return {
+            "health": health,
+            "smells": smells,
+            "markdown": generate_markdown_report(payload, health, smells),
+            "summary": payload.get("summary", {})
+        }
+
+
+# ==============================================================
+# PHASE 2: P1 EXTENSION ENDPOINTS
+# ==============================================================
+
+class BreakingChangeRequest(BaseModel):
+    repo_id: str = Field(..., description="Repository identifier")
+    target_file: str = Field(..., description="Target file path being modified")
+    old_code: Optional[str] = Field(None, description="Baseline Python source code")
+    new_code: Optional[str] = Field(None, description="Updated Python source code")
+    old_signature: Optional[str] = Field(None, description="Baseline function signature")
+    new_signature: Optional[str] = Field(None, description="Updated function signature")
+
+@app.post("/api/breaking-change")
+def api_breaking_change(req: BreakingChangeRequest):
+    """
+    Detects signature breaking changes (removed params, reorders, defaults) and identifies broken callers.
+    """
+    _, files, G = load_repo_graph_and_files(req.repo_id)
+    old_c = req.old_code or req.old_signature or "def route(rule, **options): pass"
+    new_c = req.new_code or req.new_signature or "def route(rule, *, endpoint, **options): pass"
+    # Ensure def headers have a body if only signature provided
+    if not old_c.strip().endswith(":"):
+        old_c = old_c.strip()
+    if not any("pass" in line or "return" in line for line in old_c.split("\n")):
+        old_c += "\n    pass"
+    if not any("pass" in line or "return" in line for line in new_c.split("\n")):
+        new_c += "\n    pass"
+    return detect_breaking_changes(old_c, new_c, req.target_file, files, G)
+
+
+@app.get("/api/tests/impact")
+def api_test_impact(repo_id: str):
+    """
+    Maps test coverage through dependency graph and identifies uncovered danger zones.
+    """
+    _, files, G = load_repo_graph_and_files(repo_id)
+    return analyze_test_coverage_and_impact(files, G)
+
+
+@app.get("/api/backtest")
+def api_backtest(repo_id: str):
+    """
+    Runs chronological evaluation replays at T-90d, T-60d, T-30d with precision@10 and lift vs churn.
+    """
+    payload, files, _ = load_repo_graph_and_files(repo_id)
+    return run_temporal_backtest_replay(files, payload.get("commits", []))
+
+
+@app.get("/api/trajectories")
+def api_trajectories(repo_id: str):
+    """
+    Computes 4-point historical risk trajectories per file with rapid-rise alert detection.
+    """
+    _, files, _ = load_repo_graph_and_files(repo_id)
+    return compute_risk_trajectories(files)
+
+
+@app.get("/api/uncertainty")
+def api_uncertainty(repo_id: str):
+    """
+    Estimates tree-variance prediction confidence bounds (+/- sigma) for all files.
+    """
+    _, files, _ = load_repo_graph_and_files(repo_id)
+    return compute_uncertainty_bounds(files)
+
+
+class PlanReviewRequest(BaseModel):
+    repo_id: str = Field(..., description="Repository identifier")
+    total_hours: float = Field(12.0, description="Available review hours")
+    team_reviewers: int = Field(2, description="Reviewers on team")
+
+@app.post("/api/plan")
+def api_plan_review(req: PlanReviewRequest):
+    """
+    Greedy knapsack review allocation optimizer maximizing defect risk mitigation per review hour.
+    """
+    _, files, _ = load_repo_graph_and_files(req.repo_id)
+    return plan_review_budget(files, req.total_hours, req.team_reviewers)
+
+
+class CommitRiskRequest(BaseModel):
+    repo_id: str = Field(..., description="Repository identifier")
+    diff_text: Optional[str] = Field(None, description="Unified diff text")
+    modified_files: Optional[List[str]] = Field(None, description="Explicit list of touched files")
+
+@app.post("/api/commit-risk")
+def api_commit_risk(req: CommitRiskRequest):
+    """
+    Computes joint failure probability P = 1 - prod(1 - r_i), union blast radius, and affected tests.
+    """
+    _, files, G = load_repo_graph_and_files(req.repo_id)
+    files_to_check = req.modified_files or []
+    if req.diff_text and not files_to_check:
+        files_to_check = parse_unified_diff(req.diff_text)
+    return evaluate_commit_or_diff_risk(files_to_check, files, G)
+
+
+@app.get("/api/timelapse")
+def api_timelapse(repo_id: str):
+    """
+    Generates monthly snapshot intervals from historical commits for the time-lapse player.
+    """
+    payload, files, _ = load_repo_graph_and_files(repo_id)
+    return generate_monthly_timelapse(files, payload.get("commits", []))

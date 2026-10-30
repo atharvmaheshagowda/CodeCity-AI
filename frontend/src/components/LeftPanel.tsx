@@ -44,10 +44,45 @@ export const LeftPanel: React.FC = () => {
     if (!currentRepo) return [];
     let list = [...currentRepo.files];
 
-    // Filter by search query
+    // Filter by search query with C9 Rule-Based Syntax (risk:>0.8 loc:>200 cc:>10 ext:py)
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter((f) => f.path.toLowerCase().includes(q) || f.filename.toLowerCase().includes(q));
+      const tokens = searchQuery.trim().split(/\s+/);
+      list = list.filter((f) => {
+        return tokens.every((token) => {
+          // Rule: risk:>0.5 or risk:<0.3
+          const riskMatch = token.match(/^risk:([><]=?)([\d.]+)/i);
+          if (riskMatch) {
+            const op = riskMatch[1];
+            const val = parseFloat(riskMatch[2]);
+            if (op === '>' || op === '>=') return f.risk_probability >= val;
+            if (op === '<' || op === '<=') return f.risk_probability <= val;
+          }
+          // Rule: loc:>200 or loc:<50
+          const locMatch = token.match(/^loc:([><]=?)(\d+)/i);
+          if (locMatch) {
+            const op = locMatch[1];
+            const val = parseInt(locMatch[2]);
+            if (op === '>' || op === '>=') return f.loc >= val;
+            if (op === '<' || op === '<=') return f.loc <= val;
+          }
+          // Rule: cc:>10 or complexity:>5
+          const ccMatch = token.match(/^(?:cc|complexity):([><]=?)(\d+)/i);
+          if (ccMatch) {
+            const op = ccMatch[1];
+            const val = parseInt(ccMatch[2]);
+            if (op === '>' || op === '>=') return f.max_complexity >= val;
+            if (op === '<' || op === '<=') return f.max_complexity <= val;
+          }
+          // Rule: ext:py
+          const extMatch = token.match(/^ext:(\w+)/i);
+          if (extMatch) {
+            return f.filename.toLowerCase().endsWith('.' + extMatch[1].toLowerCase());
+          }
+          // Substring match
+          const q = token.toLowerCase();
+          return f.path.toLowerCase().includes(q) || f.filename.toLowerCase().includes(q);
+        });
+      });
     }
 
     // Sort
