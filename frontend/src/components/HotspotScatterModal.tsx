@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, LayoutGrid as ScatterIcon, Layers, Info, Filter } from 'lucide-react';
+import { X, Layers, Info, Filter, BarChart3 } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { soundFx } from '../utils/soundEffects';
 import { getBuildingColorHex } from '../utils/cityLayout';
@@ -9,6 +9,21 @@ import { FileNode } from '../types';
 export const HotspotScatterModal: React.FC = () => {
   const { isScatterPlotOpen, toggleScatterPlot, currentRepo, selectedFile, selectFile } = useCityStore();
   const [hoveredNode, setHoveredNode] = useState<FileNode | null>(null);
+  const [matrixMode, setMatrixMode] = useState<'complexity_churn' | 'complexity_blast' | 'risk_impact'>('complexity_churn');
+
+  const files = currentRepo?.files || [];
+
+  // Dynamic metric values based on selected matrix mode (unconditionally declared at top)
+  const maxX = useMemo(() => {
+    if (matrixMode === 'risk_impact') return 1.0;
+    return Math.max(12, ...files.map((f) => f.max_complexity || 1));
+  }, [files, matrixMode]);
+
+  const maxY = useMemo(() => {
+    if (matrixMode === 'risk_impact') return Math.max(2.5, ...files.map((f) => f.impact_score || 0.1));
+    if (matrixMode === 'complexity_blast') return Math.max(5, ...files.map((f) => f.blast_radius?.total_count || 1));
+    return Math.max(50, ...files.map((f) => f.churn_90d || 1));
+  }, [files, matrixMode]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -23,18 +38,24 @@ export const HotspotScatterModal: React.FC = () => {
 
   if (!isScatterPlotOpen || !currentRepo) return null;
 
-  const files = currentRepo.files || [];
-
   // Width and height of SVG canvas
-  const svgWidth = 640;
+  const svgWidth = 660;
   const svgHeight = 420;
-  const padding = 50;
+  const padding = 54;
   const plotWidth = svgWidth - padding * 2;
   const plotHeight = svgHeight - padding * 2;
 
-  // Compute maximum values
-  const maxComplexity = Math.max(12, ...files.map((f) => f.max_complexity || 1));
-  const maxChurn = Math.max(50, ...files.map((f) => f.churn_90d || 1));
+  const xLabel =
+    matrixMode === 'risk_impact'
+      ? 'Defect Risk Likelihood (0% to 100%)'
+      : 'Max Cyclomatic Complexity (Branching Depth)';
+
+  const yLabel =
+    matrixMode === 'risk_impact'
+      ? 'Cascading Impact Score (Risk × Log Dependents)'
+      : matrixMode === 'complexity_blast'
+      ? '3-Hop Blast Radius (Reachable Files)'
+      : 'Recent Code Churn (90-Day Modified LOC)';
 
   // Compute quadrant midpoints
   const midX = padding + plotWidth * 0.5;
@@ -57,8 +78,8 @@ export const HotspotScatterModal: React.FC = () => {
           className="relative w-full max-w-3xl glass-panel rounded-2xl border border-white/15 p-6 shadow-2xl overflow-hidden flex flex-col backdrop-blur-2xl bg-slate-950/95"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          {/* Header with Mode Toggles */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-white/10 gap-3">
             <div className="flex items-center space-x-3">
               <div className="p-2 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400">
                 <Layers className="w-5 h-5" />
@@ -67,12 +88,53 @@ export const HotspotScatterModal: React.FC = () => {
                 <h2 className="text-base font-bold text-white font-sans flex items-center gap-2">
                   <span>Architecture Hotspot Matrix</span>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                    2D Scatter Plot
+                    2D Correlation Space
                   </span>
                 </h2>
-                <p className="text-xs text-slate-400 font-mono">
-                  Code Complexity vs. Recent Edits | Bubble Size = File Length | Color = Bug Risk
-                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[11px] text-slate-400 font-mono">Axis View:</span>
+                  <div className="flex items-center space-x-1 bg-slate-900/80 p-0.5 rounded-lg border border-white/10 text-[10px] font-mono">
+                    <button
+                      onClick={() => {
+                        soundFx.playClick();
+                        setMatrixMode('complexity_churn');
+                      }}
+                      className={`px-2 py-0.5 rounded transition-all ${
+                        matrixMode === 'complexity_churn'
+                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Complexity vs Churn
+                    </button>
+                    <button
+                      onClick={() => {
+                        soundFx.playClick();
+                        setMatrixMode('complexity_blast');
+                      }}
+                      className={`px-2 py-0.5 rounded transition-all ${
+                        matrixMode === 'complexity_blast'
+                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Complexity vs Blast Radius
+                    </button>
+                    <button
+                      onClick={() => {
+                        soundFx.playClick();
+                        setMatrixMode('risk_impact');
+                      }}
+                      className={`px-2 py-0.5 rounded transition-all ${
+                        matrixMode === 'risk_impact'
+                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Risk vs Impact
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -81,7 +143,7 @@ export const HotspotScatterModal: React.FC = () => {
                 soundFx.playClick();
                 toggleScatterPlot();
               }}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all self-start sm:self-center"
             >
               <X className="w-5 h-5" />
             </button>
@@ -130,7 +192,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.8"
                 >
-                  DANGER ZONE (Complex & Frequently Edited)
+                  DANGER ZONE (High Risk & High Exposure)
                 </text>
                 <text
                   x={padding + 14}
@@ -141,7 +203,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.7"
                 >
-                  RECENT CHANGES (Simple Code, Actively Edited)
+                  HIGH FLUX (Active Volatility)
                 </text>
                 <text
                   x={padding + plotWidth - 12}
@@ -152,7 +214,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.7"
                 >
-                  STABLE LEGACY (Complex Code, Rarely Touched)
+                  STABLE COMPLEXITY (Infrequently Modified)
                 </text>
                 <text
                   x={padding + 14}
@@ -163,7 +225,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   opacity="0.7"
                 >
-                  SAFE & CLEAN (Simple Code, Low Risk)
+                  CLEAN BASELINE (Simple & Low Risk)
                 </text>
 
                 {/* Grid ticks */}
@@ -172,9 +234,17 @@ export const HotspotScatterModal: React.FC = () => {
 
                 {/* Bubbles */}
                 {files.map((file) => {
-                  const cx = padding + (file.max_complexity / maxComplexity) * plotWidth;
-                  const cy = padding + plotHeight - (file.churn_90d / maxChurn) * plotHeight;
-                  const radius = Math.max(6, Math.min(22, Math.sqrt(file.loc || 50) * 0.55));
+                  const valX = matrixMode === 'risk_impact' ? file.risk_probability : file.max_complexity;
+                  const valY =
+                    matrixMode === 'risk_impact'
+                      ? file.impact_score
+                      : matrixMode === 'complexity_blast'
+                      ? file.blast_radius?.total_count || 1
+                      : file.churn_90d;
+
+                  const cx = padding + (Math.min(maxX, valX) / maxX) * plotWidth;
+                  const cy = padding + plotHeight - (Math.min(maxY, valY) / maxY) * plotHeight;
+                  const radius = Math.max(6, Math.min(20, Math.sqrt(file.loc || 50) * 0.52));
                   const color = getBuildingColorHex(file, 'risk');
                   const isSelected = selectedFile?.path === file.path;
                   const isHovered = hoveredNode?.path === file.path;
@@ -233,7 +303,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontSize="11"
                   fontWeight="bold"
                 >
-                  Code Complexity (Branching Logic) &rarr;
+                  {xLabel} &rarr;
                 </text>
                 <text
                   x={14}
@@ -244,7 +314,7 @@ export const HotspotScatterModal: React.FC = () => {
                   fontWeight="bold"
                   transform={`rotate(-90, 14, ${padding + plotHeight / 2})`}
                 >
-                  &larr; 90-Day Churn (Lines Changed)
+                  &larr; {yLabel}
                 </text>
               </svg>
 
@@ -257,8 +327,9 @@ export const HotspotScatterModal: React.FC = () => {
                     <span className="text-rose-400 font-bold">
                       Risk: {(hoveredNode.risk_probability * 100).toFixed(0)}%
                     </span>
-                    <span className="text-cyan-400">CC: {hoveredNode.max_complexity}</span>
+                    <span className="text-cyan-400">CC: {hoveredNode.max_complexity.toFixed(1)}</span>
                     <span className="text-amber-400">Churn: {hoveredNode.churn_90d}</span>
+                    <span className="text-violet-400">Blast: {hoveredNode.blast_radius?.total_count || 1}</span>
                     <span className="text-slate-300">{hoveredNode.loc} LOC</span>
                   </div>
                 </div>
@@ -268,7 +339,7 @@ export const HotspotScatterModal: React.FC = () => {
 
           {/* Footer */}
           <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 font-mono">
-            <span>Click any bubble to select module and sync 3D viewport.</span>
+            <span>Click any bubble to focus module in 3D city and open line diagnostics.</span>
             <span className="text-cyan-400 font-semibold">{files.length} modules plotted</span>
           </div>
         </motion.div>

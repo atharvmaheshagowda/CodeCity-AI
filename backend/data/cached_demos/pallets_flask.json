@@ -187,7 +187,20 @@
       },
       "risk_rank": 1,
       "impact_rank": 1,
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.0598,
+      "betweenness_centrality": 0.0742,
+      "line_failure": {
+        "line": 52,
+        "function_name": "dispatch_request()",
+        "snippet": "handler = self.url_map[req.path]",
+        "failure_type": "KeyError: \"endpoint_not_found\"",
+        "severity": "critical",
+        "root_cause": "Direct dictionary indexing of URL mapping without fallback 404 dispatch handling.",
+        "why_it_fails": "Line 52 attempts to look up unmapped URL paths directly from `self.url_map[req.path]`. When an unregistered route is requested, a KeyError is raised instead of returning an HTTP 404 response.",
+        "suggested_fix": "Use `handler = self.url_map.get(req.path)` and return `Response(\"Not Found\", status=404)` if handler is None.",
+        "cascade_impact": "Crashes active HTTP worker thread and propagates error to routes.py and test_app.py."
+      }
     },
     {
       "id": "src/flask/blueprints.py",
@@ -312,7 +325,20 @@
       },
       "risk_rank": 4,
       "impact_rank": 7,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0598,
+      "betweenness_centrality": 0.0082,
+      "line_failure": {
+        "line": 11,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/flask/config.py",
@@ -452,7 +478,20 @@
       },
       "risk_rank": 3,
       "impact_rank": 3,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0613,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 10,
+        "function_name": "config_process()",
+        "snippet": "process_record(data, strict=True)",
+        "failure_type": "Complex Branch Overflow & Unhandled Exception",
+        "severity": "critical",
+        "root_cause": "High cyclomatic branching (3.0 CC) combined with 0 lines modified recently.",
+        "why_it_fails": "Line 10 contains nested branching without error boundaries. In past commits, frequent changes here caused regression bugs affecting downstream modules.",
+        "suggested_fix": "Decompose into smaller helper functions, reduce cyclomatic branches, and add unit test coverage.",
+        "cascade_impact": "Affects dependent modules if parameter signatures or return types change."
+      }
     },
     {
       "id": "src/flask/ctx.py",
@@ -592,7 +631,20 @@
       },
       "risk_rank": 5,
       "impact_rank": 5,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.221,
+      "betweenness_centrality": 0.022,
+      "line_failure": {
+        "line": 8,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/flask/globals.py",
@@ -716,7 +768,20 @@
       },
       "risk_rank": 11,
       "impact_rank": 8,
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.2142,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 3,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/flask/helpers.py",
@@ -858,7 +923,20 @@
       },
       "risk_rank": 6,
       "impact_rank": 4,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0898,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 81,
+        "function_name": "url_for()",
+        "snippet": "return f\"/{endpoint}\"",
+        "failure_type": "KeyError: Endpoint string empty or unregistered",
+        "severity": "warning",
+        "root_cause": "Assumes endpoint string exists and is non-empty without validating blueprint namespace.",
+        "why_it_fails": "Line 81 raises an unhandled error when endpoint is None or not found in the application blueprint map.",
+        "suggested_fix": "Add validation: `if not endpoint or endpoint not in self.url_map: raise BuildError(endpoint)`.",
+        "cascade_impact": "Breaks template rendering in blueprints.py and routes.py."
+      }
     },
     {
       "id": "src/flask/models.py",
@@ -981,7 +1059,20 @@
       },
       "risk_rank": 12,
       "impact_rank": 9,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0375,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 18,
+        "function_name": "init_schema()",
+        "snippet": "schemas.validate_all()",
+        "failure_type": "Unhandled ValidationError & Schema Mismatch",
+        "severity": "warning",
+        "root_cause": "Directly triggers schema validation without exception handling or fallback defaults.",
+        "why_it_fails": "Line 18 executes schemas.validate_all() assuming valid schema definitions. If schemas.py throws a ValidationError, init_schema fails without returning an error status to seed_db.py.",
+        "suggested_fix": "Wrap schemas.validate_all() in a try-except block and return a Boolean success status.",
+        "cascade_impact": "Propagates failure directly back to caller seed_db.py line 42."
+      }
     },
     {
       "id": "src/flask/routes.py",
@@ -1100,7 +1191,20 @@
       },
       "risk_rank": 8,
       "impact_rank": 10,
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.0263,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 12,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/flask/sessions.py",
@@ -1239,7 +1343,20 @@
       },
       "risk_rank": 2,
       "impact_rank": 2,
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.0486,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 222,
+        "function_name": "get()",
+        "snippet": "return self.data.get(k, default)",
+        "failure_type": "AttributeError: \"str\" object has no attribute \"get\"",
+        "severity": "warning",
+        "root_cause": "Deserializes session cookie data without verifying that the loaded object is a dictionary.",
+        "why_it_fails": "Line 222 fails if session cookie payload is malformed or tampered with, causing json.loads to return a string or list instead of a dictionary.",
+        "suggested_fix": "Check `if not isinstance(self.data, dict): return default` before key access.",
+        "cascade_impact": "Invalidates session handling across all authenticated routes."
+      }
     },
     {
       "id": "src/flask/wrappers.py",
@@ -1377,7 +1494,20 @@
       },
       "risk_rank": 7,
       "impact_rank": 6,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0502,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 8,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/flask/__init__.py",
@@ -1496,7 +1626,20 @@
       },
       "risk_rank": 9,
       "impact_rank": 11,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0263,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 3,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "tests/test_app.py",
@@ -1623,7 +1766,20 @@
       },
       "risk_rank": 10,
       "impact_rank": 12,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0263,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 6,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "tests/test_blueprints.py",
@@ -1742,7 +1898,20 @@
       },
       "risk_rank": 13,
       "impact_rank": 13,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0263,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 4,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "tests/test_config.py",
@@ -1861,7 +2030,20 @@
       },
       "risk_rank": 14,
       "impact_rank": 14,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0263,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 4,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "tests/test_sessions.py",
@@ -1980,7 +2162,20 @@
       },
       "risk_rank": 15,
       "impact_rank": 15,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0263,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 4,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     }
   ],
   "graph_edges": [

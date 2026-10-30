@@ -175,7 +175,20 @@
       },
       "risk_rank": 3,
       "impact_rank": 3,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0923,
+      "betweenness_centrality": 0.0179,
+      "line_failure": {
+        "line": 10,
+        "function_name": "adapters_handler()",
+        "snippet": "return options.get('timeout', None)",
+        "failure_type": "Potential Null / Unchecked Parameter Vulnerability",
+        "severity": "warning",
+        "root_cause": "Moderate branch complexity (3.0 CC) with 0 LOC churned.",
+        "why_it_fails": "Line 10 returns a fallback parameter that can be None, which callers may dereference without a null check.",
+        "suggested_fix": "Provide strict default values and add unit test assertions for edge cases.",
+        "cascade_impact": "Could propagate unexpected NoneType errors to calling modules."
+      }
     },
     {
       "id": "src/requests/api.py",
@@ -289,7 +302,20 @@
       },
       "risk_rank": 6,
       "impact_rank": 8,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0787,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 8,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/requests/auth.py",
@@ -417,7 +443,20 @@
       },
       "risk_rank": 7,
       "impact_rank": 6,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0923,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 4,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/requests/cookies.py",
@@ -545,7 +584,20 @@
       },
       "risk_rank": 8,
       "impact_rank": 7,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0923,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 2,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/requests/exceptions.py",
@@ -678,7 +730,20 @@
       },
       "risk_rank": 4,
       "impact_rank": 4,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.1639,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 4,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/requests/models.py",
@@ -816,7 +881,20 @@
       },
       "risk_rank": 1,
       "impact_rank": 1,
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.1489,
+      "betweenness_centrality": 0.1071,
+      "line_failure": {
+        "line": 18,
+        "function_name": "init_schema()",
+        "snippet": "schemas.validate_all()",
+        "failure_type": "Unhandled ValidationError & Schema Mismatch",
+        "severity": "warning",
+        "root_cause": "Directly triggers schema validation without exception handling or fallback defaults.",
+        "why_it_fails": "Line 18 executes schemas.validate_all() assuming valid schema definitions. If schemas.py throws a ValidationError, init_schema fails without returning an error status to seed_db.py.",
+        "suggested_fix": "Wrap schemas.validate_all() in a try-except block and return a Boolean success status.",
+        "cascade_impact": "Propagates failure directly back to caller seed_db.py line 42."
+      }
     },
     {
       "id": "src/requests/sessions.py",
@@ -957,7 +1035,20 @@
       },
       "risk_rank": 2,
       "impact_rank": 2,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.1456,
+      "betweenness_centrality": 0.1607,
+      "line_failure": {
+        "line": 10,
+        "function_name": "sessions_handler()",
+        "snippet": "return options.get('timeout', None)",
+        "failure_type": "Potential Null / Unchecked Parameter Vulnerability",
+        "severity": "warning",
+        "root_cause": "Moderate branch complexity (2.0 CC) with 0 LOC churned.",
+        "why_it_fails": "Line 10 returns a fallback parameter that can be None, which callers may dereference without a null check.",
+        "suggested_fix": "Provide strict default values and add unit test assertions for edge cases.",
+        "cascade_impact": "Could propagate unexpected NoneType errors to calling modules."
+      }
     },
     {
       "id": "src/requests/utils.py",
@@ -1090,7 +1181,20 @@
       },
       "risk_rank": 9,
       "impact_rank": 5,
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.1246,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 4,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "src/requests/__init__.py",
@@ -1209,7 +1313,20 @@
       },
       "risk_rank": 5,
       "impact_rank": 9,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.0613,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 3,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     }
   ],
   "graph_edges": [

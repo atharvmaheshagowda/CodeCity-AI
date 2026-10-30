@@ -17,7 +17,7 @@ import tempfile
 import threading
 import time
 from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -48,6 +48,7 @@ from intelligence.backtest import run_temporal_backtest_replay, compute_risk_tra
 from intelligence.planner import plan_review_budget
 from intelligence.commit_risk import evaluate_commit_or_diff_risk, parse_unified_diff
 from intelligence.timelapse import generate_monthly_timelapse
+from intelligence.line_diagnostics import diagnose_file_failure
 
 app = FastAPI(
     title="CodeCity AI API",
@@ -175,6 +176,18 @@ def generate_city_payload(repo_id: str, repo_name: str, repo_path: str, max_comm
             for _, row in df.iterrows()
         ]
 
+    # Compute network centralities once for the graph
+    import networkx as nx
+    try:
+        pr_scores = nx.pagerank(G, alpha=0.85, max_iter=100)
+    except Exception:
+        pr_scores = {n: 1.0 / max(1, len(G)) for n in G.nodes()}
+
+    try:
+        betweenness_scores = nx.betweenness_centrality(G)
+    except Exception:
+        betweenness_scores = {n: 0.0 for n in G.nodes()}
+
     # Compute blast radius and impact scores for all files
     files_list = []
     file_paths = []
@@ -190,7 +203,7 @@ def generate_city_payload(repo_id: str, repo_name: str, repo_path: str, max_comm
         dir_part = "/".join(fpath.split("/")[:-1])
         filename = fpath.split("/")[-1]
 
-        files_list.append({
+        file_entry = {
             "id": fpath,
             "path": fpath,
             "directory": dir_part,
@@ -208,11 +221,18 @@ def generate_city_payload(repo_id: str, repo_name: str, repo_path: str, max_comm
             "past_bug_fixes": int(row["past_bug_fixes"]),
             "fan_in": int(row["fan_in"]),
             "fan_out": int(row["fan_out"]),
+            "pagerank": round(float(pr_scores.get(fpath, 0.0)), 4),
+            "betweenness_centrality": round(float(betweenness_scores.get(fpath, 0.0)), 4),
             "risk_probability": round(risk, 4),
             "impact_score": round(impact, 4),
             "blast_radius": br,
             "shap": shap_explanations[idx]
-        })
+        }
+        
+        full_p = os.path.join(repo_path, fpath) if repo_path and os.path.exists(os.path.join(repo_path, fpath)) else None
+        file_entry["line_failure"] = diagnose_file_failure(fpath, file_entry, full_file_path=full_p)
+
+        files_list.append(file_entry)
 
     # Sort and rank files by risk and impact
     sorted_by_risk = sorted(files_list, key=lambda x: x["risk_probability"], reverse=True)
@@ -485,9 +505,13 @@ def get_model_card():
 # PHASE 1: P0 EXTENSION ENDPOINTS
 # ==============================================================
 
+# In-memory repository graph and payload cache (keyed by cache_path and file modification time)
+_REPO_MEM_CACHE: Dict[str, Tuple[float, Any, List[Dict[str, Any]], Any]] = {}
+
 def load_repo_graph_and_files(repo_id: str):
     """
     Loads repository payload from cache, reconstructing NetworkX DiGraph G and files list.
+    Uses memory caching keyed by file modification time to prevent repeated JSON reads.
     """
     cache_path = os.path.join(CACHED_DEMOS_DIR, f"{repo_id}.json")
     if not os.path.exists(cache_path):
@@ -497,6 +521,12 @@ def load_repo_graph_and_files(repo_id: str):
                 break
     if not os.path.exists(cache_path):
         raise HTTPException(status_code=404, detail=f"Repository '{repo_id}' not found in cached datasets.")
+
+    mtime = os.path.getmtime(cache_path)
+    if cache_path in _REPO_MEM_CACHE:
+        cached_mtime, cached_payload, cached_files, cached_G = _REPO_MEM_CACHE[cache_path]
+        if cached_mtime == mtime:
+            return cached_payload, cached_files, cached_G
 
     try:
         with open(cache_path, "r", encoding="utf-8") as fp:
@@ -514,6 +544,7 @@ def load_repo_graph_and_files(repo_id: str):
     for e in edges:
         G.add_edge(e["source"], e["target"], edge_type=e.get("type", "import"), calls=e.get("calls", []))
 
+    _REPO_MEM_CACHE[cache_path] = (mtime, payload, files, G)
     return payload, files, G
 
 

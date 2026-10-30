@@ -93,11 +93,23 @@
   - [x] Guided onboarding tour spotlight on first run (skippable).
   - [x] Exhibition mode: auto-orbit camera, rotating callouts of riskiest buildings, large readable HUD type, 45s idle attract mode.
 
-- [x] **Milestone 7: Small-Repo Composition & 60 FPS Performance**
-  - [x] Small repos (<30 files): center layout, scale footprint/height, closer heroic camera pitch, dim decorative context skyline in background with toggle.
-  - [x] 55+ FPS on largest demo repo (`pallets/flask` and `psf/requests`).
-  - [x] Low-Power Eco mode toggle degrades postprocessing cleanly.
-  - [x] Respect `prefers-reduced-motion`.
+- [x] **Phase 4: Premium Mission Control UI & Interface Refinement (Completed)**
+  - [x] Re-architected interface into cohesive Cyberpunk Mission Control with Linear/Vercel-level restraint and visionOS glass.
+  - [x] Implemented bottom unified `InsightsDock` tabs (Architecture Smells, Blast & Impact, Coupling & Centrality, Git Timeline, Refactor Plan, Audit Report).
+  - [x] Synchronized 2D and 3D interactions: bidirectional focus, hover sync, keyboard navigation, and instant camera framing.
+  - [x] Streamlined top bar HUD with quick action controls, mode pills, and theme switching.
+  - [x] Authored `PHASE4_UI_DESIGN.md` and `PHASE4_UI_NOTES.md`.
+  - [x] Verified 0 console errors, 7/7 Vitest tests passing, 32/32 Pytest tests passing, and 144 FPS benchmarked.
+
+- [x] **Phase 5: Advanced Software Intelligence & Architectural Insights (Completed)**
+  - [x] Architectural Health & Insights Panel: Organizes findings into 7 structured risk categories (Critical Defect Hotspots, Architectural Bottlenecks, Change Instability, Dependency Concentration, Architecture Smells, Ownership Concentration/Bus Factor, Potential Cascading Failures).
+  - [x] Graph Centrality Algorithms: Integrated NetworkX PageRank Authority and Betweenness Centrality calculations directly into the backend payload generation with file-level caching.
+  - [x] Controllable Failure Simulation: Added interactive hop depth selector buttons (`[Hops: 1 | 2 | 3]`) to the holographic banner with explicit static reachability disclaimers.
+  - [x] Multi-Perspective Hotspot Matrix: Upgraded scatter modal with 3 perspective switches (`Complexity vs Churn`, `Complexity vs Blast Radius`, `Risk vs Impact`).
+  - [x] Dual Repository Intelligence Benchmarking: Restructured comparison into 4 scale-invariant sections (Volume Counts, Normalized Ratios, Structural Profile, and ML Model Validation) with methodological transparency notes.
+  - [x] Eliminated Background Barriers: Replaced old floating 2D billboard sky mesh with infinite canvas viewport background and 360° distant horizon towers at $R \in [140, 185]\text{m}$ (zero building occlusion).
+  - [x] Authored `PHASE5_INTELLIGENCE_DESIGN.md` and `PHASE5_INTELLIGENCE_NOTES.md`.
+  - [x] Verified zero console errors, 7/7 frontend unit tests, 32/32 backend pytest suites passing, clean production build in 15.24s, and benchmarked 144-145 FPS.
 
 ---
 

@@ -64,6 +64,8 @@ export interface FileNode {
   past_bug_fixes: number;
   fan_in: number;
   fan_out: number;
+  pagerank?: number;
+  betweenness_centrality?: number;
   risk_probability: number;
   impact_score: number;
   risk_rank?: number;

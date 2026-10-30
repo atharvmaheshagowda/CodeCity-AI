@@ -148,20 +148,34 @@ CodeCity AI features an award-winning cinematic user interface combining the atm
 - **Large Projector Typography**: Clean, high-contrast banner and hotspot diagnostic HUD readable from across a room.
 - **Inactivity Attract Mode**: Automatically enters Exhibition mode after 45 seconds of user inactivity; instantly yields control back upon mouse movement, touch, or keypress.
 
-### 5. Performance Engineering & Low-Power Mode
-- **60 FPS Target**: Powered by Three.js `InstancedMesh` batching across 5 shared tower geometries and custom GLSL vertex/fragment hooks.
+### 5. Architectural Intelligence & Health Engine (Phase 5)
+- **7-Category Architectural Health Matrix**: The flagship Overview dock synthesizes repository telemetry into actionable categories:
+  1. *Critical Defect Hotspots*: Highest ML defect probabilities combined with structural blast exposure.
+  2. *Architectural Bottlenecks*: High Betweenness Centrality modules bridging disparate subsystems.
+  3. *Change Instability*: High 90-day churn accompanied by significant complexity.
+  4. *Dependency Concentration*: Files with excessive direct incoming and outgoing imports.
+  5. *Architecture Smells*: Circular import cycles, god files ($>500$ LOC), and isolated orphans.
+  6. *Ownership Concentration*: Bus factor risks identifying files maintained by a single contributor.
+  7. *Cascading Impact Risks*: Transitive failure reachability up to 3 hops deep.
+- **Graph Centrality Algorithms**: Native NetworkX PageRank and Betweenness Centrality metrics computed during graph generation, clearly distinguished from defect probability.
+- **Controllable Failure Simulation**: Interactive hop-depth filtering (`[Hops: 1 | 2 | 3]`) allowing engineers to study immediate callers versus full transitive impact with explicit static-reachability semantics.
+- **Scale-Invariant Repository Benchmarking**: Multi-repo comparison categorized into raw counts, normalized architectural ratios (LOC/file, dependency density, hotspot exposure %), structural profiles, and empirical ML validation metrics.
+- **Unobstructed 360° Cinematic Environment**: Infinite canvas background and distant procedural megalopolis horizon ($R = 140\text{--}185\text{m}$) completely outside repository bounds, eliminating any billboard barriers or building clipping.
+
+### 6. Performance Engineering & Low-Power Mode
+- **60+ FPS Target (Measured 144–146 FPS)**: Powered by Three.js `InstancedMesh` batching across 10 architectural archetypes, procedural GLSL window shaders, and an in-memory graph cache (`_REPO_MEM_CACHE`).
 - **Low-Power Mode Toggle**: A dedicated "Eco" switch in the Navbar allows users on battery or integrated GPUs to instantly bypass expensive postprocessing bloom passes while maintaining complete interactive functionality.
 
-### 6. Accessibility & Motion Principles
+### 7. Accessibility & Motion Principles
 - **Color-Blind Safe Encoding**: Defect severity is encoded redundantly through color, numerical percentages, rank badges, building height, and glowing roof accents.
 - **Respects `prefers-reduced-motion`**: Disables auto-orbit and particle drift for users requesting reduced motion.
 - **Visible Focus Outlines & Keyboard Navigation**: Fully navigable via keyboard shortcuts (`Ctrl+K`, `P`, `Esc`, `F`, `1-5`).
 
-### 7. 100% Offline Guarantee
+### 8. 100% Offline Guarantee
 - **Zero External Network Requests**: No external CDNs, fonts, or remote assets.
 - **Self-Hosted Typography**: Local `@fontsource/space-grotesk`, `@fontsource/inter`, and `@fontsource/jetbrains-mono` bundled into local frontend assets.
 - **Procedural Shaders & Audio**: All city textures, ground reflections, bloom effects, and sound effects are generated natively on client GPU and WebAudio API.
-- **Bundled Demo Repositories**: Pre-mined datasets for `pallets/flask`, `pallets/click`, `psf/requests`, and `ecotrace-ai` allow full offline demonstration.
+- **Bundled Demo Repositories**: Pre-mined datasets for `pallets/flask`, `pallets/click`, `psf/requests`, `agenta-workspace`, `codecity-ai`, and `ecotrace-ai` allow full offline demonstration.
 
 ---
 

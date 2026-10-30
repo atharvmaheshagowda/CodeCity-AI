@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, GitCompare, ArrowRight, ShieldCheck, Layers, AlertTriangle, FileCode } from 'lucide-react';
+import { X, GitCompare, ArrowRight, ShieldCheck, Layers, AlertTriangle, FileCode, CheckCircle, BarChart2 } from 'lucide-react';
 import { useCityStore } from '../store/useCityStore';
 import { soundFx } from '../utils/soundEffects';
 
@@ -39,6 +39,22 @@ export const RepoComparisonModal: React.FC = () => {
   const primarySummary = currentRepo.summary;
   const secondarySummary = compareRepo?.summary;
 
+  // Normalized ratios for scale-invariant comparison
+  const primaryLocPerFile = Math.round(primarySummary.total_loc / Math.max(1, primarySummary.total_files));
+  const secondaryLocPerFile = secondarySummary ? Math.round(secondarySummary.total_loc / Math.max(1, secondarySummary.total_files)) : 0;
+
+  const primaryDepDensity = (primarySummary.total_dependencies / Math.max(1, primarySummary.total_files)).toFixed(2);
+  const secondaryDepDensity = secondarySummary ? (secondarySummary.total_dependencies / Math.max(1, secondarySummary.total_files)).toFixed(2) : '0';
+
+  const primaryHotspotPct = Math.round((primarySummary.critical_files_count / Math.max(1, primarySummary.total_files)) * 100);
+  const secondaryHotspotPct = secondarySummary ? Math.round((secondarySummary.critical_files_count / Math.max(1, secondarySummary.total_files)) * 100) : 0;
+
+  const primaryMaxCC = Math.max(1, ...currentRepo.files.map((f) => f.max_complexity || 1));
+  const secondaryMaxCC = compareRepo ? Math.max(1, ...compareRepo.files.map((f) => f.max_complexity || 1)) : 1;
+
+  const primaryAvgCC = (currentRepo.files.reduce((acc, f) => acc + (f.mean_complexity || 1), 0) / Math.max(1, currentRepo.files.length)).toFixed(2);
+  const secondaryAvgCC = compareRepo ? (compareRepo.files.reduce((acc, f) => acc + (f.mean_complexity || 1), 0) / Math.max(1, compareRepo.files.length)).toFixed(2) : '0';
+
   return (
     <AnimatePresence>
       <div
@@ -70,7 +86,7 @@ export const RepoComparisonModal: React.FC = () => {
                   </span>
                 </h2>
                 <p className="text-xs text-slate-400 font-mono">
-                  Side-by-side KPI, risk profile, and architectural density benchmarking.
+                  Scale-invariant comparison: raw volume, normalized ratios, and graph density.
                 </p>
               </div>
             </div>
@@ -121,60 +137,103 @@ export const RepoComparisonModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Side-by-Side Comparison Metrics Table */}
+          {/* Comparison Content */}
           {secondarySummary ? (
-            <div className="py-4 space-y-3 font-mono text-xs overflow-y-auto">
-              <div className="grid grid-cols-3 text-slate-400 font-semibold pb-2 border-b border-white/5 text-[11px]">
+            <div className="py-4 space-y-4 font-mono text-xs overflow-y-auto pr-1">
+              {/* Column Header */}
+              <div className="grid grid-cols-3 text-slate-400 font-semibold pb-2 border-b border-white/10 text-[11px]">
                 <span>Intelligence Metric</span>
-                <span className="text-cyan-400">{currentRepo.name.split('/').pop()}</span>
-                <span className="text-violet-400">{compareRepo?.name.split('/').pop()}</span>
+                <span className="text-cyan-400 font-bold">{currentRepo.name.split('/').pop()}</span>
+                <span className="text-violet-400 font-bold">{compareRepo?.name.split('/').pop()}</span>
               </div>
 
-              {/* Row: Total Files */}
-              <div className="grid grid-cols-3 py-2 border-b border-white/5 items-center">
-                <span className="text-slate-300">Total Code Modules</span>
-                <span className="text-white font-bold">{primarySummary.total_files} files</span>
-                <span className="text-white font-bold">{secondarySummary.total_files} files</span>
+              {/* 1. RAW VOLUME COUNTS */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">1. Raw Volume Counts</div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Total Code Modules</span>
+                  <span className="text-white font-bold">{primarySummary.total_files} files</span>
+                  <span className="text-white font-bold">{secondarySummary.total_files} files</span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Total Lines of Code</span>
+                  <span className="text-white font-bold">{primarySummary.total_loc.toLocaleString()} LOC</span>
+                  <span className="text-white font-bold">{secondarySummary.total_loc.toLocaleString()} LOC</span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Total Dependency Edges</span>
+                  <span className="text-cyan-300 font-bold">{primarySummary.total_dependencies} edges</span>
+                  <span className="text-violet-300 font-bold">{secondarySummary.total_dependencies} edges</span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Critical Hotspot Files</span>
+                  <span className="text-rose-400 font-bold">{primarySummary.critical_files_count} files</span>
+                  <span className="text-rose-400 font-bold">{secondarySummary.critical_files_count} files</span>
+                </div>
               </div>
 
-              {/* Row: Total LOC */}
-              <div className="grid grid-cols-3 py-2 border-b border-white/5 items-center">
-                <span className="text-slate-300">Lines of Code (Volume)</span>
-                <span className="text-white font-bold">{primarySummary.total_loc.toLocaleString()} LOC</span>
-                <span className="text-white font-bold">{secondarySummary.total_loc.toLocaleString()} LOC</span>
+              {/* 2. NORMALIZED SCALE-INVARIANT RATIOS */}
+              <div className="space-y-1.5 pt-2">
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">2. Normalized Architectural Ratios</div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Average Module Size</span>
+                  <span className="text-slate-200 font-bold">{primaryLocPerFile} LOC / file</span>
+                  <span className="text-slate-200 font-bold">{secondaryLocPerFile} LOC / file</span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Dependency Density</span>
+                  <span className="text-cyan-300 font-bold">{primaryDepDensity} links / module</span>
+                  <span className="text-violet-300 font-bold">{secondaryDepDensity} links / module</span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Hotspot Exposure %</span>
+                  <span className={`font-bold ${primaryHotspotPct >= 25 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                    {primaryHotspotPct}% of files
+                  </span>
+                  <span className={`font-bold ${secondaryHotspotPct >= 25 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                    {secondaryHotspotPct}% of files
+                  </span>
+                </div>
               </div>
 
-              {/* Row: Mean Defect Risk */}
-              <div className="grid grid-cols-3 py-2 border-b border-white/5 items-center">
-                <span className="text-slate-300">Mean Defect Risk</span>
-                <span className={`font-bold ${primarySummary.avg_risk >= 0.3 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                  {(primarySummary.avg_risk * 100).toFixed(1)}%
-                </span>
-                <span className={`font-bold ${secondarySummary.avg_risk >= 0.3 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                  {(secondarySummary.avg_risk * 100).toFixed(1)}%
-                </span>
+              {/* 3. GRAPH & COMPLEXITY CHARACTERISTICS */}
+              <div className="space-y-1.5 pt-2">
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">3. Complexity & Structural Profile</div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Average Branching (CC)</span>
+                  <span className="text-slate-200 font-bold">{primaryAvgCC} mean CC</span>
+                  <span className="text-slate-200 font-bold">{secondaryAvgCC} mean CC</span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Peak Branching (Max CC)</span>
+                  <span className="text-amber-400 font-bold">{primaryMaxCC.toFixed(1)} max CC</span>
+                  <span className="text-amber-400 font-bold">{secondaryMaxCC.toFixed(1)} max CC</span>
+                </div>
               </div>
 
-              {/* Row: Critical Hotspot Files */}
-              <div className="grid grid-cols-3 py-2 border-b border-white/5 items-center">
-                <span className="text-slate-300">Critical Hotspot Files</span>
-                <span className="text-rose-400 font-bold">{primarySummary.critical_files_count} files</span>
-                <span className="text-rose-400 font-bold">{secondarySummary.critical_files_count} files</span>
+              {/* 4. MACHINE LEARNING VALIDATION */}
+              <div className="space-y-1.5 pt-2">
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">4. Machine Learning Model Metrics</div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Mean Defect Likelihood</span>
+                  <span className={`font-bold ${primarySummary.avg_risk >= 0.3 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                    {(primarySummary.avg_risk * 100).toFixed(1)}%
+                  </span>
+                  <span className={`font-bold ${secondarySummary.avg_risk >= 0.3 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                    {(secondarySummary.avg_risk * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 py-1.5 border-b border-white/5 items-center">
+                  <span className="text-slate-300">Held-Out ROC-AUC</span>
+                  <span className="text-emerald-400 font-bold">{primarySummary.model_roc_auc.toFixed(3)}</span>
+                  <span className="text-emerald-400 font-bold">{secondarySummary.model_roc_auc.toFixed(3)}</span>
+                </div>
               </div>
 
-              {/* Row: Total Dependencies */}
-              <div className="grid grid-cols-3 py-2 border-b border-white/5 items-center">
-                <span className="text-slate-300">AST Import Conduits</span>
-                <span className="text-cyan-400 font-bold">{primarySummary.total_dependencies} edges</span>
-                <span className="text-cyan-400 font-bold">{secondarySummary.total_dependencies} edges</span>
-              </div>
-
-              {/* Row: Model ROC-AUC */}
-              <div className="grid grid-cols-3 py-2 border-b border-white/5 items-center">
-                <span className="text-slate-300">ML ROC-AUC Score</span>
-                <span className="text-emerald-400 font-bold">{primarySummary.model_roc_auc.toFixed(3)}</span>
-                <span className="text-emerald-400 font-bold">{secondarySummary.model_roc_auc.toFixed(3)}</span>
-              </div>
+              {/* Methodological Transparency Note */}
+              <p className="text-[10px] text-slate-400 font-sans leading-relaxed pt-3 border-t border-white/10">
+                <strong className="text-slate-300">Methodological Note:</strong> Comparisons use actual computed AST and Git metrics normalized by file count and LOC volume. No unvalidated external industry benchmarks or synthetic targets are assumed.
+              </p>
             </div>
           ) : (
             <div className="py-12 text-center text-slate-400 font-mono text-xs">

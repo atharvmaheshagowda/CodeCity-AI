@@ -805,6 +805,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
     smellsResult,
     shortestPathResult,
     theme,
+    setMaxHopDepth,
   } = useCityStore();
 
   const skyTexture = useMemo(() => (theme === 'neon' ? createNeonSkyTexture() : createSunsetSkyTexture()), [theme]);
@@ -1055,7 +1056,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
               Origin: <strong className="text-white font-semibold">{simulatedFailedFile.filename}</strong>
               <span className="text-slate-500 mx-1.5">•</span>
               <span className="text-rose-300">
-                {simulateResult?.total_dependents ?? simulatedFailedFile.blast_radius?.total_count ?? 0} Broken Dependents
+                {simulateResult?.total_dependents ?? simulatedFailedFile.blast_radius?.total_count ?? 0} Dependents Reached
               </span>
               {simulateResult?.at_risk_tests_count !== undefined && simulateResult.at_risk_tests_count > 0 && (
                 <>
@@ -1064,12 +1065,43 @@ export const CityScene: React.FC<CitySceneProps> = ({
                 </>
               )}
             </div>
+
+            {/* Hop Depth Filter Buttons */}
+            <div className="flex items-center space-x-1 bg-black/50 px-2 py-1 rounded-xl border border-white/10 text-[10px] font-mono">
+              <span className="text-slate-400 mr-1 select-none">Hops:</span>
+              {[1, 2, 3].map((h) => (
+                <button
+                  key={h}
+                  onClick={() => {
+                    soundFx.playClick();
+                    setMaxHopDepth(h);
+                  }}
+                  className={`px-1.5 py-0.5 rounded transition-all cursor-pointer ${
+                    maxHopDepth === h
+                      ? 'bg-rose-500/30 text-rose-200 border border-rose-500/50 font-bold'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                  title={`Limit propagation reachability to ${h} hop(s)`}
+                >
+                  {h}
+                </button>
+              ))}
+            </div>
+
+            {/* Reachability Disclaimer Badge */}
+            <span
+              className="hidden lg:inline-flex px-2 py-0.5 rounded-lg bg-slate-900/80 text-[10px] text-slate-400 border border-white/10 font-sans"
+              title="Deterministic reachability: an import relationship indicates interface exposure, not an unconditional production runtime exception."
+            >
+              Static Reachability
+            </span>
+
             <button
               onClick={() => {
                 soundFx.playClick();
                 simulateFailure(null);
               }}
-              className="ml-2 px-2.5 py-1 rounded-xl bg-rose-500/20 text-rose-200 hover:bg-rose-500/30 border border-rose-500/40 text-[11px] font-mono transition-all flex items-center gap-1.5 cursor-pointer"
+              className="ml-1 px-2.5 py-1 rounded-xl bg-rose-500/20 text-rose-200 hover:bg-rose-500/30 border border-rose-500/40 text-[11px] font-mono transition-all flex items-center gap-1.5 cursor-pointer"
               title="Exit failure simulation (Esc)"
             >
               <span>Exit Simulation</span>

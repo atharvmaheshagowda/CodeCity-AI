@@ -63,7 +63,7 @@ interface CityState {
 
   // Insights Dock
   isInsightsOpen: boolean;
-  insightsTab: 'impact' | 'coupling' | 'smells' | 'report' | 'whatif' | 'plan' | 'time';
+  insightsTab: 'insights' | 'impact' | 'coupling' | 'smells' | 'report' | 'whatif' | 'plan' | 'time';
 
   // Impact Analysis (A1, A2, A5)
   tracebackInput: string;
@@ -155,7 +155,7 @@ interface CityState {
 
   // Intelligence Actions
   toggleInsights: (open?: boolean) => void;
-  setInsightsTab: (tab: 'impact' | 'coupling' | 'smells' | 'report' | 'whatif' | 'plan' | 'time') => void;
+  setInsightsTab: (tab: 'insights' | 'impact' | 'coupling' | 'smells' | 'report' | 'whatif' | 'plan' | 'time') => void;
   toggleLayer: (layer: keyof ActiveLayersState) => void;
   setTracebackInput: (val: string) => void;
   analyzeTraceback: (tracebackText?: string) => Promise<void>;
@@ -238,7 +238,7 @@ export const useCityStore = create<CityState>((set, get) => ({
 
   // Insights Dock
   isInsightsOpen: false,
-  insightsTab: 'impact',
+  insightsTab: 'insights',
 
   // Impact Analysis (A1, A2, A5)
   tracebackInput: '',

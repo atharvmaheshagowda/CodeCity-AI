@@ -147,7 +147,20 @@
       },
       "risk_rank": 3,
       "impact_rank": 3,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.25,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 18,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "download_samples.py",
@@ -274,7 +287,20 @@
       },
       "risk_rank": 4,
       "impact_rank": 4,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.25,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 17,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "ingest_knowledge.py",
@@ -409,7 +435,20 @@
       },
       "risk_rank": 1,
       "impact_rank": 1,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.25,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 15,
+        "function_name": "ingest_knowledge_process()",
+        "snippet": "process_record(data, strict=True)",
+        "failure_type": "Complex Branch Overflow & Unhandled Exception",
+        "severity": "critical",
+        "root_cause": "High cyclomatic branching (3.0 CC) combined with 62 lines modified recently.",
+        "why_it_fails": "Line 15 contains nested branching without error boundaries. In past commits, frequent changes here caused regression bugs affecting downstream modules.",
+        "suggested_fix": "Decompose into smaller helper functions, reduce cyclomatic branches, and add unit test coverage.",
+        "cascade_impact": "Affects dependent modules if parameter signatures or return types change."
+      }
     },
     {
       "id": "main.py",
@@ -544,7 +583,20 @@
       },
       "risk_rank": 2,
       "impact_rank": 2,
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.25,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 30,
+        "function_name": "main_process()",
+        "snippet": "process_record(data, strict=True)",
+        "failure_type": "Complex Branch Overflow & Unhandled Exception",
+        "severity": "critical",
+        "root_cause": "High cyclomatic branching (6.0 CC) combined with 112 lines modified recently.",
+        "why_it_fails": "Line 30 contains nested branching without error boundaries. In past commits, frequent changes here caused regression bugs affecting downstream modules.",
+        "suggested_fix": "Decompose into smaller helper functions, reduce cyclomatic branches, and add unit test coverage.",
+        "cascade_impact": "Affects dependent modules if parameter signatures or return types change."
+      }
     }
   ],
   "graph_edges": [],

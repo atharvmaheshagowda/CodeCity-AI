@@ -254,6 +254,49 @@ export const RightDrawer: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Architectural Centrality & Graph Position Card (Phase 5) */}
+            <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-white/10 space-y-2.5">
+              <span className="font-bold text-slate-200 text-xs font-sans flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <GitBranch className="w-4 h-4 text-violet-400" />
+                  <span>Dependency Centrality & Reachability</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-400 font-normal">Graph Metrics</span>
+              </span>
+
+              <div className="grid grid-cols-2 gap-2 text-[11px]">
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="PageRank: Structural authority in dependency network">
+                  <div className="text-slate-400 text-[10px]">PageRank Authority</div>
+                  <div className="text-violet-300 font-bold text-sm mt-0.5">
+                    {selectedFile.pagerank !== undefined ? selectedFile.pagerank.toFixed(4) : (1 / Math.max(1, currentRepo?.files.length || 1)).toFixed(4)}
+                  </div>
+                </div>
+
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Betweenness Centrality: How often this file bridges separate subsystems">
+                  <div className="text-slate-400 text-[10px]">Betweenness Bridge</div>
+                  <div className="text-cyan-300 font-bold text-sm mt-0.5">
+                    {selectedFile.betweenness_centrality !== undefined ? selectedFile.betweenness_centrality.toFixed(4) : '0.0000'}
+                  </div>
+                </div>
+
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Direct dependers: files that directly import this module">
+                  <div className="text-slate-400 text-[10px]">Direct Callers (In-Degree)</div>
+                  <div className="text-slate-200 font-bold text-sm mt-0.5">{selectedFile.fan_in} files</div>
+                </div>
+
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5" title="Total downstream reach: all files reachable across 3 hops">
+                  <div className="text-slate-400 text-[10px]">3-Hop Blast Radius</div>
+                  <div className="text-rose-300 font-bold text-sm mt-0.5">
+                    {selectedFile.blast_radius?.total_count || selectedFile.fan_in} files
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-[10px] text-slate-400 leading-relaxed font-sans pt-1 border-t border-white/5">
+                <strong className="text-slate-300">Centrality vs Defect Risk:</strong> Centrality measures structural exposure in the architecture. High centrality means changes here reach many downstream modules, but does not imply an intrinsic runtime flaw.
+              </p>
+            </div>
           </div>
         ) : activeTab === 'shap' ? (
           /* SHAP TAB: Deep TreeSHAP Feature Attribution & Line Failure */
