@@ -18,7 +18,7 @@ import {
 import { EnvironmentalDetails } from './EnvironmentalDetails';
 import { InSceneBuildingBadges } from './InSceneBuildingBadges';
 import { CyberCityGround } from './CyberCityGround';
-import { SkylineBackdrop } from './SkylineBackdrop';
+import { SkylineBackdrop, DistantMegalopolisHorizon } from './SkylineBackdrop';
 import { DependencySkybridges } from './DependencySkybridges';
 import { CouplingTunnels } from './CouplingTunnels';
 import { SmellArcs } from './SmellArcs';
@@ -50,7 +50,7 @@ interface CitySceneProps {
   onHoverFile: (file: FileNode | null) => void;
 }
 
-// Cinematic Camera Controller with Inertial Damping & Multi-Stage Establishing Intro
+// Cinematic Camera Controller with Inertial Damping, Centered Focus & Ambient Drift
 function CameraController({
   targetFile,
   focusedDistrict,
@@ -60,6 +60,7 @@ function CameraController({
   cameraResetTrigger = 0,
   isIntroActive,
   onIntroComplete,
+  lowPowerMode = false,
 }: {
   targetFile: FileNode | null;
   focusedDistrict: DistrictZone | null;
@@ -69,10 +70,13 @@ function CameraController({
   cameraResetTrigger?: number;
   isIntroActive: boolean;
   onIntroComplete: () => void;
+  lowPowerMode?: boolean;
 }) {
   const { camera } = useThree();
   const controlsRef = useRef<any>(null);
   const introAnimRef = useRef<number | null>(null);
+  const lastInteractionRef = useRef<number>(performance.now());
+  const prevTargetFileRef = useRef<FileNode | null>(null);
 
   // Compute optimal default overview framing adapted to actual repository bounds
   const { defaultCamPos, defaultTarget, highIntroPos, midIntroPos } = useMemo(() => {
@@ -97,6 +101,23 @@ function CameraController({
       midIntroPos: new THREE.Vector3(centerX + camDist * 0.85, camDist * 0.95, centerZ + camDist * 0.95),
     };
   }, [bounds]);
+
+  // Track user interaction to intelligently suspend idle camera drift
+  useEffect(() => {
+    const onUserActive = () => {
+      lastInteractionRef.current = performance.now();
+    };
+
+    window.addEventListener('pointerdown', onUserActive, { passive: true });
+    window.addEventListener('wheel', onUserActive, { passive: true });
+    window.addEventListener('keydown', onUserActive, { passive: true });
+
+    return () => {
+      window.removeEventListener('pointerdown', onUserActive);
+      window.removeEventListener('wheel', onUserActive);
+      window.removeEventListener('keydown', onUserActive);
+    };
+  }, []);
 
   // 1. Choreographed 4-Stage Cinematic Establishing Intro
   useEffect(() => {
@@ -173,49 +194,76 @@ function CameraController({
     }
   }, [cameraResetTrigger, defaultCamPos, defaultTarget, camera]);
 
-  // 3. Selection Fly-To Animation (Contextual camera framing)
+  // 3. Selection Fly-To Animation (Contextual camera framing & smooth deselect return)
   useEffect(() => {
-    if (!targetFile || isIntroActive) return;
-    const resolved = allBuildingsMap.get(targetFile.id) || allBuildingsMap.get(targetFile.path) || targetFile;
-    if (resolved && resolved.x !== undefined && resolved.z !== undefined) {
-      soundFx.playWhoosh();
-      const destTarget = new THREE.Vector3(resolved.x * 0.15, 3.5, resolved.z * 0.15);
-      const destCam = new THREE.Vector3(
-        resolved.x * 0.15 + 30.0,
-        32.0,
-        resolved.z * 0.15 + 36.0
-      );
+    if (isIntroActive) return;
 
+    if (targetFile) {
+      const resolved = allBuildingsMap.get(targetFile.id) || allBuildingsMap.get(targetFile.path) || targetFile;
+      if (resolved && resolved.x !== undefined && resolved.z !== undefined) {
+        soundFx.playWhoosh();
+        const bHeight = resolved.height || 4;
+        const destTarget = new THREE.Vector3(resolved.x - 1.2, bHeight * 0.45, resolved.z);
+        const focusDist = Math.max(18, Math.min(38, bHeight * 1.85));
+        const destCam = new THREE.Vector3(
+          resolved.x + focusDist * 0.65,
+          bHeight * 0.55 + focusDist * 0.60,
+          resolved.z + focusDist * 0.75
+        );
+
+        const startTime = performance.now();
+        const startCam = camera.position.clone();
+        const startTarget = controlsRef.current ? controlsRef.current.target.clone() : new THREE.Vector3(0, 0, 0);
+
+        const animateCam = () => {
+          const elapsed = (performance.now() - startTime) / 620;
+          const t = Math.min(1.0, elapsed);
+          const ease = 1 - Math.pow(1 - t, 3);
+
+          camera.position.lerpVectors(startCam, destCam, ease);
+          if (controlsRef.current) {
+            controlsRef.current.target.lerpVectors(startTarget, destTarget, ease);
+            controlsRef.current.update();
+          }
+
+          if (t < 1.0) {
+            requestAnimationFrame(animateCam);
+          }
+        };
+        requestAnimationFrame(animateCam);
+      }
+    } else if (prevTargetFileRef.current && !targetFile) {
+      // Smooth return to overview when file is deselected
       const startTime = performance.now();
       const startCam = camera.position.clone();
-      const startTarget = controlsRef.current
-        ? controlsRef.current.target.clone()
-        : new THREE.Vector3(0, 0, 0);
+      const startTarget = controlsRef.current ? controlsRef.current.target.clone() : new THREE.Vector3(0, 0, 0);
 
-      const animateCam = () => {
-        const elapsed = (performance.now() - startTime) / 600;
+      const animateReturn = () => {
+        const elapsed = (performance.now() - startTime) / 550;
         const t = Math.min(1.0, elapsed);
         const ease = 1 - Math.pow(1 - t, 3);
 
-        camera.position.lerpVectors(startCam, destCam, ease);
+        camera.position.lerpVectors(startCam, defaultCamPos, ease);
         if (controlsRef.current) {
-          controlsRef.current.target.lerpVectors(startTarget, destTarget, ease);
+          controlsRef.current.target.lerpVectors(startTarget, defaultTarget, ease);
           controlsRef.current.update();
         }
 
         if (t < 1.0) {
-          requestAnimationFrame(animateCam);
+          requestAnimationFrame(animateReturn);
         }
       };
-      requestAnimationFrame(animateCam);
+      requestAnimationFrame(animateReturn);
     }
-  }, [targetFile, allBuildingsMap, camera, isIntroActive]);
+
+    prevTargetFileRef.current = targetFile;
+  }, [targetFile, allBuildingsMap, camera, isIntroActive, defaultCamPos, defaultTarget]);
 
   // 4. District Zoom-in on Double-Click
   useEffect(() => {
     if (!focusedDistrict || isIntroActive) return;
     soundFx.playWhoosh();
-    const destTarget = new THREE.Vector3(focusedDistrict.x, (focusedDistrict.maxBuildingHeight || 4) * 0.4, focusedDistrict.z);
+    const destTarget = new THREE.Vector3(focusedDistrict.x - 1.0, (focusedDistrict.maxBuildingHeight || 4) * 0.4, focusedDistrict.z);
     const radius = Math.max(focusedDistrict.width, focusedDistrict.depth) * 1.25;
     const destCam = new THREE.Vector3(
       focusedDistrict.x + radius * 0.65,
@@ -245,18 +293,46 @@ function CameraController({
     requestAnimationFrame(animateDistrict);
   }, [focusedDistrict, camera, isIntroActive]);
 
+  // 5. Cinematic Ambient Idle Drift
+  useFrame((_, delta) => {
+    if (
+      !targetFile &&
+      !focusedDistrict &&
+      !isIntroActive &&
+      !presentationMode &&
+      !lowPowerMode &&
+      controlsRef.current
+    ) {
+      const idleTime = performance.now() - lastInteractionRef.current;
+      if (idleTime > 3800) {
+        // Slow orbital drift at ~0.0006 rad/frame
+        const driftSpeed = 0.035 * delta;
+        const cam = camera.position;
+        const tgt = controlsRef.current.target;
+        const dx = cam.x - tgt.x;
+        const dz = cam.z - tgt.z;
+        const cos = Math.cos(driftSpeed);
+        const sin = Math.sin(driftSpeed);
+        cam.x = tgt.x + (dx * cos - dz * sin);
+        cam.z = tgt.z + (dx * sin + dz * cos);
+        controlsRef.current.update();
+      }
+    }
+  });
+
   return (
     <OrbitControls
       ref={controlsRef}
       enableDamping
-      dampingFactor={0.05}
-      maxPolarAngle={Math.PI / 2.05}
-      minDistance={5}
-      maxDistance={290}
-      autoRotate={presentationMode}
-      autoRotateSpeed={0.65}
+      dampingFactor={0.06}
+      maxPolarAngle={Math.PI / 2.15}
+      minDistance={10}
+      maxDistance={140}
+      onChange={() => {
+        lastInteractionRef.current = performance.now();
+      }}
       onStart={() => {
-        if (isIntroActive) onIntroComplete();
+        lastInteractionRef.current = performance.now();
       }}
     />
   );
@@ -608,7 +684,7 @@ function CleanDistrictPlates({
   );
 }
 
-// Procedural Sunset Twilight Sky Texture matching reference image
+// Procedural Nocturnal Sky Texture (Deep Navy, Indigo, & Midnight Teal Atmospheric Depth)
 function createSunsetSkyTexture(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
@@ -616,13 +692,13 @@ function createSunsetSkyTexture(): THREE.CanvasTexture {
   const ctx = canvas.getContext('2d')!;
 
   const grad = ctx.createLinearGradient(0, 512, 0, 0);
-  grad.addColorStop(0.00, '#02050e'); // ground depth
-  grad.addColorStop(0.30, '#040916'); // horizon base
-  grad.addColorStop(0.42, '#ea580c'); // rich amber/orange sunset glow
-  grad.addColorStop(0.50, '#9a3412'); // warm dusk rose
-  grad.addColorStop(0.62, '#0c2d4a'); // twilight dusk cyan
-  grad.addColorStop(0.80, '#030816'); // deep midnight navy
-  grad.addColorStop(1.00, '#010206');
+  grad.addColorStop(0.00, '#010308'); // Horizon abyss
+  grad.addColorStop(0.24, '#030816'); // Distant ground baseline
+  grad.addColorStop(0.38, '#071830'); // Atmospheric midnight teal/navy horizon haze
+  grad.addColorStop(0.52, '#0c2744'); // Soft nocturnal Rayleigh glow
+  grad.addColorStop(0.68, '#051124'); // Deep indigo transition
+  grad.addColorStop(0.85, '#020612'); // Midnight navy
+  grad.addColorStop(1.00, '#010206'); // Void zenith
 
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 512);
@@ -637,22 +713,16 @@ function createNeonSkyTexture(): THREE.CanvasTexture {
   const ctx = canvas.getContext('2d')!;
 
   const grad = ctx.createLinearGradient(0, 512, 0, 0);
-  grad.addColorStop(0.00, '#020514');
-  grad.addColorStop(0.28, '#081734');
-  grad.addColorStop(0.44, '#06b6d4');
-  grad.addColorStop(0.54, '#7c3aed');
-  grad.addColorStop(0.72, '#1e1b4b');
-  grad.addColorStop(1.00, '#040718');
+  grad.addColorStop(0.00, '#020410');
+  grad.addColorStop(0.25, '#050a22');
+  grad.addColorStop(0.42, '#180a38'); // Electric violet twilight
+  grad.addColorStop(0.55, '#0a2342'); // Cyan horizon accent
+  grad.addColorStop(0.70, '#07102e'); // Deep blue
+  grad.addColorStop(0.85, '#030514');
+  grad.addColorStop(1.00, '#010208');
 
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 512);
-
-  ctx.fillStyle = '#67e8f9';
-  for (let i = 0; i < 90; i++) {
-    const x = (i * 79) % 512;
-    const y = (i * 37) % 240;
-    ctx.fillRect(x, y, 1.5, 1.5);
-  }
 
   return new THREE.CanvasTexture(canvas);
 }
@@ -772,6 +842,8 @@ export const CityScene: React.FC<CitySceneProps> = ({
         <VolumetricSearchlights lowPowerMode={lowPowerMode} />
 
         {/* Distant Megalopolis Context Skyline (for small repos & depth) */}
+        {/* 360-Degree Distant Megalopolis Horizon (Situated at R = 140-185m in the far horizon) */}
+        {showDecorativeSkyline && <DistantMegalopolisHorizon lowPowerMode={lowPowerMode} />}
         {showDecorativeSkyline && isSparse && <SkylineBackdrop lowPowerMode={lowPowerMode} />}
 
         {/* Floating Drifting Dust / Firefly Particles */}
@@ -878,6 +950,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
           cameraResetTrigger={cameraResetTrigger}
           isIntroActive={isIntroActive}
           onIntroComplete={() => setIsIntroActive(false)}
+          lowPowerMode={lowPowerMode}
         />
 
         {/* Selective Postprocessing: Bloom, Chromatic Aberration, & Vignette */}
