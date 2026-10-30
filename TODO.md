@@ -48,6 +48,15 @@
 - [x] **Milestone 6: Modals, Command Palette, Tour & Exhibition**
   - [x] Command Palette (`Ctrl/Cmd+K`): fuzzy search for files, actions, views, animated results, keyboard nav.
   - [x] Model Card modal: animated self-drawing ROC curve, metric counters, baseline comparison.
+
+- [x] **Phase 1: Realistic Procedural Architecture Engine (Completed)**
+  - [x] Implement 10 deterministic architectural archetypes (`glass_skyscraper`, `corporate_tower`, `stepped_industrial`, `brutalist_tech`, `research_facility`, `compact_residential`, `datacenter`, `multisection_complex`, `telecom_spire`, `monumental_landmark`).
+  - [x] Ensure uniform non-indexed `BufferGeometry` attributes across compound parts to prevent merge collisions.
+  - [x] Procedural facade shader: dual-temperature interior window illumination (warm amber + cool cyan), ordered window grid, dark spandrels, metric-driven exoskeleton conduits & rooftop parapet trim, and pulsing crimson accents on high-risk landmarks.
+  - [x] Verified full theme compatibility (`Midnight Cyber City` and `Electric Cyber Neon`) and all 5 color modes (`Risk`, `Complexity`, `Churn`, `Age`, `Impact`).
+  - [x] Measured 144–146 FPS performance across 1080p, 768p, Eco mode, and large repo switching (`pallets/flask`).
+  - [x] Documented in `PHASE1_ARCHITECTURE_NOTES.md`.
+
   - [x] Designed states: scanning radar loading effect, skeleton shimmer for loading panels, empty/error states, toast notifications.
   - [x] Guided onboarding tour spotlight on first run (skippable).
   - [x] Exhibition mode: auto-orbit camera, rotating callouts of riskiest buildings, large readable HUD type, 45s idle attract mode.

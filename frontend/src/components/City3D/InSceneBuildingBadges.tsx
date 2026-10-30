@@ -111,9 +111,9 @@ export const InSceneBuildingBadges: React.FC<InSceneBuildingBadgesProps> = ({
         const isHighRisk = riskPct >= 50 || b.is_hotspot || b.filename === 'seed_db.py';
         const arch = getArchetype(b);
 
-        // Custom display label matching reference image for 7-file demo
-        const displayName = isExactDemo && b.filename === 'config.py' ? 'tenfo.py' : b.filename;
-        const displayRisk = isExactDemo && b.filename === 'config.py' ? 15 : riskPct;
+        // In-scene label and risk percentage
+        const displayName = b.filename;
+        const displayRisk = riskPct;
 
         return (
           <group key={`badge-${b.id}`} position={[bx, bHeight + 1.8, bz]}>
