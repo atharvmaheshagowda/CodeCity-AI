@@ -23,7 +23,7 @@ export const ARCHETYPE_NAMES: Record<BuildingArchetype, string> = {
   compact_residential: 'High-Density Residential Block',
   datacenter: 'Fortified Data Center Monolith',
   multisection_complex: 'Twin-Tower Multi-Section Complex',
-  telecom_spire: 'Lattice Communications Spire',
+  telecom_spire: 'Lattice Communications Mast',
   monumental_landmark: 'Monumental Critical Landmark',
 };
 
@@ -82,9 +82,9 @@ export function getBuildingArchetype(file: FileNode, index: number): BuildingArc
     return 'datacenter';
   }
 
-  // 4. Heavy complexity files (> 14 cyclomatic complexity) -> Glass Skyscraper or Corporate Tower
-  if (file.max_complexity >= 14) {
-    return (index % 2 === 0) ? 'glass_skyscraper' : 'corporate_tower';
+  // 4. Heavy complexity files (> 12 cyclomatic complexity) -> Glass Skyscraper or Corporate Tower
+  if (file.max_complexity >= 12) {
+    return index % 2 === 0 ? 'glass_skyscraper' : 'corporate_tower';
   }
 
   // 5. Tests, specs, mocks, fixtures -> Stepped Industrial Hub
@@ -118,8 +118,8 @@ export function getBuildingArchetype(file: FileNode, index: number): BuildingArc
     return 'research_facility';
   }
 
-  // 8. Large multi-component modules (LOC > 400) -> Multi-Section Complex
-  if (file.loc > 400) {
+  // 8. Large multi-component modules (LOC > 350) -> Multi-Section Complex
+  if (file.loc > 350) {
     return 'multisection_complex';
   }
 
@@ -149,302 +149,268 @@ export function getBuildingArchetype(file: FileNode, index: number): BuildingArc
 
 /**
  * Procedural Compound Geometry Factory.
- * Builds rich, normalized [0..1] unit geometries with physical architectural details,
- * setbacks, roof machinery, antennas, and cantilevers.
+ * Builds rich, normalized [0..1] unit geometries with clean architectural details,
+ * stepped setbacks, roof machinery, antennas, and cantilevers.
+ * Absolutely NO tapered barrels, NO rings, and NO random spires.
  */
 export function createArchetypeGeometries(): Record<BuildingArchetype, THREE.BufferGeometry> {
-  // Helper to ensure clean attributes before merge
   const prep = (geo: THREE.BufferGeometry) => {
     geo.computeVertexNormals();
     return geo;
   };
 
-  // 1. Futuristic Glass Skyscraper
-  // Base podium + octagonal chamfered tower + tapered crown + needle spire with pinnacle beacon
+  // 1. Futuristic Glass Skyscraper: Sharp rectangular tower with recessed base plinth, vertical corner columns, and flat roof deck
   const glassSkyscraperGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Base podium
-    const base = prep(new THREE.BoxGeometry(1.0, 0.12, 1.0));
-    base.translate(0, 0.06, 0);
+    // Base podium plinth: y=0 to 0.10 (1.02 x 1.02)
+    const base = prep(new THREE.BoxGeometry(1.02, 0.10, 1.02));
+    base.translate(0, 0.05, 0);
     parts.push(base);
 
     // 4 Corner structural pillars
-    const pW = 0.06;
+    const pW = 0.08;
     const colCoords = [
-      [-0.46, -0.46],
-      [0.46, -0.46],
-      [-0.46, 0.46],
-      [0.46, 0.46],
+      [-0.45, -0.45],
+      [0.45, -0.45],
+      [-0.45, 0.45],
+      [0.45, 0.45],
     ];
     for (const [cx, cz] of colCoords) {
-      const col = prep(new THREE.BoxGeometry(pW, 0.82, pW));
-      col.translate(cx, 0.50, cz);
+      const col = prep(new THREE.BoxGeometry(pW, 0.86, pW));
+      col.translate(cx, 0.53, cz);
       parts.push(col);
     }
 
-    // Main octagonal tower shaft
-    const shaft = prep(new THREE.CylinderGeometry(0.58, 0.64, 0.76, 8));
-    shaft.translate(0, 0.48, 0);
+    // Main rectangular glass tower shaft: y=0.10 to 0.92 (0.92 x 0.92)
+    const shaft = prep(new THREE.BoxGeometry(0.92, 0.82, 0.92));
+    shaft.translate(0, 0.51, 0);
     parts.push(shaft);
 
-    // Tapered setback crown
-    const crown = prep(new THREE.CylinderGeometry(0.40, 0.56, 0.12, 8));
-    crown.translate(0, 0.92, 0);
-    parts.push(crown);
+    // Flat roof penthouse & parapet trim: y=0.92 to 1.0
+    const roof = prep(new THREE.BoxGeometry(0.96, 0.08, 0.96));
+    roof.translate(0, 0.96, 0);
+    parts.push(roof);
 
-    // Pinnacle communication spire
-    const spire = prep(new THREE.CylinderGeometry(0.012, 0.035, 0.22, 6));
-    spire.translate(0, 1.09, 0);
-    parts.push(spire);
-
-    // Spire beacon sphere
-    const beacon = prep(new THREE.SphereGeometry(0.032, 8, 6));
-    beacon.translate(0, 1.20, 0);
-    parts.push(beacon);
+    // Recessed elevator mechanical housing: y=1.0 to 1.05
+    const mech = prep(new THREE.BoxGeometry(0.50, 0.06, 0.50));
+    mech.translate(0, 1.01, 0);
+    parts.push(mech);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 2. High-Rise Corporate Tower
-  // Tiered 3-step setbacks + penthouse + rooftop chiller units + dual antenna masts
+  // 2. High-Rise Corporate Tower: 3-tier stepped setbacks + rooftop HVAC chiller units
   const corporateTowerGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Tier 1 Base Podium
-    const t1 = prep(new THREE.BoxGeometry(1.0, 0.22, 1.0));
-    t1.translate(0, 0.11, 0);
+    // Tier 1 Base Podium: y=0 to 0.24 (1.0 x 1.0)
+    const t1 = prep(new THREE.BoxGeometry(1.0, 0.24, 1.0));
+    t1.translate(0, 0.12, 0);
     parts.push(t1);
 
-    // Tier 2 Mid-Tower Shaft
-    const t2 = prep(new THREE.BoxGeometry(0.82, 0.46, 0.82));
-    t2.translate(0, 0.45, 0);
+    // Tier 2 Mid-Tower Shaft: y=0.24 to 0.70 (0.80 x 0.80)
+    const t2 = prep(new THREE.BoxGeometry(0.80, 0.46, 0.80));
+    t2.translate(0, 0.47, 0);
     parts.push(t2);
 
-    // Tier 3 Penthouse Setback
-    const t3 = prep(new THREE.BoxGeometry(0.62, 0.28, 0.62));
-    t3.translate(0, 0.82, 0);
+    // Tier 3 Penthouse Setback: y=0.70 to 0.96 (0.60 x 0.60)
+    const t3 = prep(new THREE.BoxGeometry(0.60, 0.26, 0.60));
+    t3.translate(0, 0.83, 0);
     parts.push(t3);
 
-    // Rooftop Machinery Bulkhead
-    const bulkhead = prep(new THREE.BoxGeometry(0.38, 0.08, 0.38));
-    bulkhead.translate(0, 1.00, 0);
+    // Rooftop Machinery Bulkhead: y=0.96 to 1.02
+    const bulkhead = prep(new THREE.BoxGeometry(0.38, 0.06, 0.38));
+    bulkhead.translate(0, 0.99, 0);
     parts.push(bulkhead);
 
-    // Dual Antennas
-    const ant1 = prep(new THREE.CylinderGeometry(0.01, 0.02, 0.16, 4));
-    ant1.translate(-0.12, 1.12, -0.12);
-    parts.push(ant1);
-    const ant2 = prep(new THREE.CylinderGeometry(0.01, 0.02, 0.16, 4));
-    ant2.translate(0.12, 1.12, 0.12);
-    parts.push(ant2);
+    // Dual HVAC Chiller boxes on mid-terrace
+    const hvac1 = prep(new THREE.BoxGeometry(0.12, 0.06, 0.14));
+    hvac1.translate(0.36, 0.27, -0.36);
+    parts.push(hvac1);
+    const hvac2 = prep(new THREE.BoxGeometry(0.12, 0.06, 0.14));
+    hvac2.translate(-0.36, 0.27, 0.36);
+    parts.push(hvac2);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 3. Stepped Industrial Tech Hub
-  // Ziggurat stepped blocks + mechanical cooling units + industrial exhaust stacks
+  // 3. Stepped Industrial Tech Hub: Ziggurat massing, ventilation housings & cooling units
   const steppedIndustrialGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Step 1 Base
-    const s1 = prep(new THREE.BoxGeometry(1.0, 0.34, 1.0));
-    s1.translate(0, 0.17, 0);
-    parts.push(s1);
+    // Heavy Plinth Base: y=0 to 0.28 (1.04 x 1.04)
+    const base = prep(new THREE.BoxGeometry(1.04, 0.28, 1.04));
+    base.translate(0, 0.14, 0);
+    parts.push(base);
 
-    // Step 2 Middle
-    const s2 = prep(new THREE.BoxGeometry(0.76, 0.34, 0.76));
-    s2.translate(0, 0.51, 0);
-    parts.push(s2);
+    // Terrace 1: y=0.28 to 0.58 (0.84 x 0.84)
+    const terr1 = prep(new THREE.BoxGeometry(0.84, 0.30, 0.84));
+    terr1.translate(0, 0.43, 0);
+    parts.push(terr1);
 
-    // Step 3 Upper
-    const s3 = prep(new THREE.BoxGeometry(0.52, 0.26, 0.52));
-    s3.translate(0, 0.81, 0);
-    parts.push(s3);
+    // Terrace 2: y=0.58 to 0.86 (0.62 x 0.62)
+    const terr2 = prep(new THREE.BoxGeometry(0.62, 0.28, 0.62));
+    terr2.translate(0, 0.72, 0);
+    parts.push(terr2);
 
-    // Industrial HVAC Chiller (horizontal cylinder on step 1 ledge)
-    const chiller1 = prep(new THREE.CylinderGeometry(0.06, 0.06, 0.36, 8));
-    chiller1.rotateZ(Math.PI / 2);
-    chiller1.translate(-0.38, 0.40, 0.36);
-    parts.push(chiller1);
+    // Industrial Roof Deck: y=0.86 to 0.98 (0.44 x 0.44)
+    const deck = prep(new THREE.BoxGeometry(0.44, 0.12, 0.44));
+    deck.translate(0, 0.92, 0);
+    parts.push(deck);
 
-    // Industrial HVAC Chiller 2
-    const chiller2 = prep(new THREE.CylinderGeometry(0.05, 0.05, 0.28, 8));
-    chiller2.rotateZ(Math.PI / 2);
-    chiller2.translate(0.28, 0.72, -0.28);
-    parts.push(chiller2);
-
-    // Dual Rooftop Exhaust Stacks
-    const stack1 = prep(new THREE.CylinderGeometry(0.035, 0.045, 0.14, 6));
-    stack1.translate(-0.10, 1.01, 0);
-    parts.push(stack1);
-    const stack2 = prep(new THREE.CylinderGeometry(0.035, 0.045, 0.14, 6));
-    stack2.translate(0.10, 1.01, 0);
-    parts.push(stack2);
+    // Cooling Towers (twin rectangular chiller enclosures)
+    const ch1 = prep(new THREE.BoxGeometry(0.14, 0.10, 0.14));
+    ch1.translate(0.32, 0.33, 0.32);
+    parts.push(ch1);
+    const ch2 = prep(new THREE.BoxGeometry(0.14, 0.10, 0.14));
+    ch2.translate(-0.32, 0.33, -0.32);
+    parts.push(ch2);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 4. Brutalist Technology Structure
-  // Heavy cantilevered overhangs + 4 massive corner pillars + recessed horizontal slot windows
+  // 4. Brutalist Technology Structure: Heavy pilasters, cantilevered overhangs, and recessed window slits
   const brutalistTechGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // 4 Heavy Corner Pilasters
-    const pSize = 0.14;
-    const pCoords = [
-      [-0.42, -0.42],
-      [0.42, -0.42],
-      [-0.42, 0.42],
-      [0.42, 0.42],
+    // Recessed Ground Floor Core: y=0 to 0.18 (0.80 x 0.80)
+    const core = prep(new THREE.BoxGeometry(0.80, 0.18, 0.80));
+    core.translate(0, 0.09, 0);
+    parts.push(core);
+
+    // 4 Corner Pilaster Pylons: y=0 to 0.95
+    const pW = 0.14;
+    const corners = [
+      [-0.44, -0.44],
+      [0.44, -0.44],
+      [-0.44, 0.44],
+      [0.44, 0.44],
     ];
-    for (const [cx, cz] of pCoords) {
-      const p = prep(new THREE.BoxGeometry(pSize, 0.26, pSize));
-      p.translate(cx, 0.13, cz);
+    for (const [cx, cz] of corners) {
+      const p = prep(new THREE.BoxGeometry(pW, 0.95, pW));
+      p.translate(cx, 0.475, cz);
       parts.push(p);
     }
 
-    // Recessed ground base
-    const base = prep(new THREE.BoxGeometry(0.72, 0.26, 0.72));
-    base.translate(0, 0.13, 0);
-    parts.push(base);
-
-    // Cantilevered Mid-Section
-    const mid = prep(new THREE.BoxGeometry(1.04, 0.44, 1.04));
-    mid.translate(0, 0.48, 0);
+    // Cantilevered Mid-Section: y=0.18 to 0.76 (1.02 x 1.02)
+    const mid = prep(new THREE.BoxGeometry(1.02, 0.58, 1.02));
+    mid.translate(0, 0.47, 0);
     parts.push(mid);
 
-    // Projected Top Overhang
-    const top = prep(new THREE.BoxGeometry(1.10, 0.24, 1.10));
-    top.translate(0, 0.82, 0);
-    parts.push(top);
+    // Upper Brutalist Setback Deck: y=0.76 to 0.96 (0.86 x 0.86)
+    const upper = prep(new THREE.BoxGeometry(0.86, 0.20, 0.86));
+    upper.translate(0, 0.86, 0);
+    parts.push(upper);
 
-    // Recessed roof parapet rim
-    const parapet = prep(new THREE.BoxGeometry(0.86, 0.08, 0.86));
-    parapet.translate(0, 0.98, 0);
-    parts.push(parapet);
+    // Parapet roof trim: y=0.96 to 1.0
+    const trim = prep(new THREE.BoxGeometry(0.88, 0.04, 0.88));
+    trim.translate(0, 0.98, 0);
+    parts.push(trim);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 5. Modular Research Facility
-  // Central octagonal core + flanking laboratory pods + connecting skybridges + rooftop radome
+  // 5. Modular Research Facility: Central tower flanked by twin laboratory pods with skyway tubes
   const researchFacilityGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Central Core Tower
-    const core = prep(new THREE.CylinderGeometry(0.36, 0.38, 0.94, 8));
-    core.translate(0, 0.47, 0);
-    parts.push(core);
+    // Foundation Base: y=0 to 0.16 (1.0 x 0.92)
+    const found = prep(new THREE.BoxGeometry(1.0, 0.16, 0.92));
+    found.translate(0, 0.08, 0);
+    parts.push(found);
 
-    // Flanking Lab Wing West
-    const wingW = prep(new THREE.BoxGeometry(0.36, 0.60, 0.42));
-    wingW.translate(-0.35, 0.30, 0);
-    parts.push(wingW);
+    // Central Core Tower: y=0.16 to 0.95 (0.50 x 0.50)
+    const central = prep(new THREE.BoxGeometry(0.50, 0.79, 0.50));
+    central.translate(0, 0.555, 0);
+    parts.push(central);
 
-    // Flanking Lab Wing East
-    const wingE = prep(new THREE.BoxGeometry(0.36, 0.60, 0.42));
-    wingE.translate(0.35, 0.30, 0);
-    parts.push(wingE);
+    // West Laboratory Pod: y=0.16 to 0.72 (0.34 x 0.68)
+    const westPod = prep(new THREE.BoxGeometry(0.34, 0.56, 0.68));
+    westPod.translate(-0.35, 0.44, 0);
+    parts.push(westPod);
 
-    // Connecting Skybridge Tube
-    const bridge = prep(new THREE.CylinderGeometry(0.08, 0.08, 0.70, 8));
-    bridge.rotateZ(Math.PI / 2);
-    bridge.translate(0, 0.48, 0);
-    parts.push(bridge);
+    // East Laboratory Pod: y=0.16 to 0.72 (0.34 x 0.68)
+    const eastPod = prep(new THREE.BoxGeometry(0.34, 0.56, 0.68));
+    eastPod.translate(0.35, 0.44, 0);
+    parts.push(eastPod);
 
-    // Rooftop Radome Observatory Dome
-    const radome = prep(new THREE.SphereGeometry(0.20, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2));
-    radome.translate(0, 0.94, 0);
-    parts.push(radome);
+    // Rooftop Observation Dome Bulkhead
+    const dome = prep(new THREE.BoxGeometry(0.32, 0.08, 0.32));
+    dome.translate(0, 0.98, 0);
+    parts.push(dome);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 6. Compact High-Density Residential Block
-  // Offset stacked cubic modules + exterior service balconies + rooftop water tank
+  // 6. High-Density Residential Block: Offset stacked rectangular modules with exterior balconies
   const compactResidentialGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Lower Module
-    const mod1 = prep(new THREE.BoxGeometry(0.96, 0.46, 0.96));
-    mod1.translate(0, 0.23, 0);
-    parts.push(mod1);
+    // Sturdy Plinth: y=0 to 0.20 (0.96 x 0.96)
+    const plinth = prep(new THREE.BoxGeometry(0.96, 0.20, 0.96));
+    plinth.translate(0, 0.10, 0);
+    parts.push(plinth);
 
-    // Upper Offset Module
-    const mod2 = prep(new THREE.BoxGeometry(0.86, 0.46, 0.86));
-    mod2.translate(0.04, 0.69, -0.04);
-    parts.push(mod2);
+    // Main Residential Block: y=0.20 to 0.88 (0.90 x 0.90)
+    const block = prep(new THREE.BoxGeometry(0.90, 0.68, 0.90));
+    block.translate(0, 0.54, 0);
+    parts.push(block);
 
-    // Balcony Ledge 1
-    const balc1 = prep(new THREE.BoxGeometry(0.98, 0.04, 0.16));
-    balc1.translate(0, 0.46, 0.42);
-    parts.push(balc1);
+    // Service Balcony Ledges (West & East)
+    const bal1 = prep(new THREE.BoxGeometry(0.06, 0.03, 0.74));
+    bal1.translate(0.46, 0.44, 0);
+    parts.push(bal1);
+    const bal2 = prep(new THREE.BoxGeometry(0.06, 0.03, 0.74));
+    bal2.translate(-0.46, 0.64, 0);
+    parts.push(bal2);
 
-    // Balcony Ledge 2
-    const balc2 = prep(new THREE.BoxGeometry(0.16, 0.04, 0.88));
-    balc2.translate(-0.42, 0.74, 0);
-    parts.push(balc2);
-
-    // Rooftop Water Tank (cylinder on 4 stilts)
-    const tank = prep(new THREE.CylinderGeometry(0.14, 0.14, 0.16, 8));
-    tank.translate(-0.20, 1.02, 0.18);
-    parts.push(tank);
-    const stilts = prep(new THREE.BoxGeometry(0.24, 0.10, 0.24));
-    stilts.translate(-0.20, 0.94, 0.18);
-    parts.push(stilts);
-
-    // Elevator Penthouse
-    const elev = prep(new THREE.BoxGeometry(0.26, 0.10, 0.26));
-    elev.translate(0.18, 0.97, -0.16);
-    parts.push(elev);
+    // Flat roof penthouse: y=0.88 to 0.98 (0.64 x 0.64)
+    const roof = prep(new THREE.BoxGeometry(0.64, 0.10, 0.64));
+    roof.translate(0, 0.93, 0);
+    parts.push(roof);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 7. Fortified Data Center Monolith
-  // Monolithic armored block + vertical heat-sink cooling fins + rooftop fan arrays
+  // 7. Fortified Data Center Monolith: Heavy server vault with vertical cooling louvers and 4-fan chiller bay
   const datacenterGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Armored plinth base
-    const plinth = prep(new THREE.BoxGeometry(1.04, 0.10, 1.04));
-    plinth.translate(0, 0.05, 0);
-    parts.push(plinth);
-
-    // Main Server Vault
-    const vault = prep(new THREE.BoxGeometry(0.94, 0.84, 0.94));
-    vault.translate(0, 0.52, 0);
+    // Armored Server Vault Base: y=0 to 0.88 (0.98 x 0.98)
+    const vault = prep(new THREE.BoxGeometry(0.98, 0.88, 0.98));
+    vault.translate(0, 0.44, 0);
     parts.push(vault);
 
-    // Vertical Heat Sink Fins (East and West facades)
-    const finThick = 0.04;
-    const finH = 0.72;
-    const finD = 0.08;
-    const zOffsets = [-0.30, -0.15, 0.0, 0.15, 0.30];
-    for (const z of zOffsets) {
-      const finE = prep(new THREE.BoxGeometry(finD, finH, finThick));
-      finE.translate(0.50, 0.50, z);
-      parts.push(finE);
+    // Vertical Heat-Sink Louvers (North & South exterior fins)
+    for (let f = -0.38; f <= 0.38; f += 0.19) {
+      const finNorth = prep(new THREE.BoxGeometry(0.04, 0.64, 0.04));
+      finNorth.translate(f, 0.44, 0.51);
+      parts.push(finNorth);
 
-      const finWest = prep(new THREE.BoxGeometry(finD, finH, finThick));
-      finWest.translate(-0.50, 0.50, z);
-      parts.push(finWest);
+      const finSouth = prep(new THREE.BoxGeometry(0.04, 0.64, 0.04));
+      finSouth.translate(f, 0.44, -0.51);
+      parts.push(finSouth);
     }
 
-    // Rooftop Cooling Chiller Fans (4 circular fan wells)
+    // 4-Fan Chiller Bay Array on Roof: y=0.88 to 0.98
+    const chillerBay = prep(new THREE.BoxGeometry(0.78, 0.10, 0.78));
+    chillerBay.translate(0, 0.93, 0);
+    parts.push(chillerBay);
+
+    // 4 Individual Chiller Housings
     const fanCoords = [
       [-0.22, -0.22],
       [0.22, -0.22],
@@ -452,9 +418,9 @@ export function createArchetypeGeometries(): Record<BuildingArchetype, THREE.Buf
       [0.22, 0.22],
     ];
     for (const [fx, fz] of fanCoords) {
-      const fanWell = prep(new THREE.CylinderGeometry(0.12, 0.12, 0.06, 8));
-      fanWell.translate(fx, 0.97, fz);
-      parts.push(fanWell);
+      const fan = prep(new THREE.BoxGeometry(0.20, 0.04, 0.20));
+      fan.translate(fx, 0.99, fz);
+      parts.push(fan);
     }
 
     const merged = BGU.mergeGeometries(parts, false);
@@ -462,136 +428,124 @@ export function createArchetypeGeometries(): Record<BuildingArchetype, THREE.Buf
     return merged;
   })();
 
-  // 8. Twin-Tower Multi-Section Complex
-  // Twin towers + ground atrium connector + mid-level enclosed skybridge + upper skyway truss
+  // 8. Twin-Tower Multi-Section Complex: Asymmetric twin rectangular towers linked by skybridge
   const multisectionComplexGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Ground Atrium Plinth
-    const atrium = prep(new THREE.BoxGeometry(0.96, 0.18, 0.84));
-    atrium.translate(0, 0.09, 0);
-    parts.push(atrium);
+    // Foundation Base: y=0 to 0.16 (1.02 x 0.92)
+    const foundation = prep(new THREE.BoxGeometry(1.02, 0.16, 0.92));
+    foundation.translate(0, 0.08, 0);
+    parts.push(foundation);
 
-    // Tower 1 (West)
-    const t1 = prep(new THREE.BoxGeometry(0.38, 1.0, 0.78));
-    t1.translate(-0.29, 0.50, 0);
-    parts.push(t1);
+    // West Tower Column: y=0.16 to 0.98 (0.42 x 0.84)
+    const westCol = prep(new THREE.BoxGeometry(0.42, 0.82, 0.84));
+    westCol.translate(-0.28, 0.57, 0);
+    parts.push(westCol);
 
-    // Tower 2 (East - slightly shorter for dynamic skyline)
-    const t2 = prep(new THREE.BoxGeometry(0.38, 0.90, 0.78));
-    t2.translate(0.29, 0.45, 0);
-    parts.push(t2);
+    // East Tower Column: y=0.16 to 0.88 (0.42 x 0.84)
+    const eastCol = prep(new THREE.BoxGeometry(0.42, 0.72, 0.84));
+    eastCol.translate(0.28, 0.52, 0);
+    parts.push(eastCol);
 
-    // Enclosed Skybridge (at y=0.54)
-    const skybridge = prep(new THREE.BoxGeometry(0.26, 0.10, 0.30));
-    skybridge.translate(0, 0.54, 0);
-    parts.push(skybridge);
-
-    // Upper Structural Truss (at y=0.82)
-    const truss = prep(new THREE.BoxGeometry(0.26, 0.05, 0.18));
-    truss.translate(0, 0.82, 0);
-    parts.push(truss);
-
-    // Roof Antenna on Tower 1
-    const ant = prep(new THREE.CylinderGeometry(0.015, 0.025, 0.18, 4));
-    ant.translate(-0.29, 1.09, 0);
-    parts.push(ant);
+    // Enclosed Skybridge Connector: y=0.54 to 0.64
+    const bridge = prep(new THREE.BoxGeometry(0.26, 0.10, 0.36));
+    bridge.translate(0, 0.59, 0);
+    parts.push(bridge);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 9. Lattice Communications Spire
-  // Tapered pyramidal base + equipment deck + open lattice mast + microwave dishes + needle spire
+  // 9. Lattice Communications Mast: Sturdy podium + slender rectangular communications structure + equipment platforms
   const telecomSpireGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // Heavy Tapered Base
-    const base = prep(new THREE.CylinderGeometry(0.62, 0.98, 0.28, 4));
-    base.rotateY(Math.PI / 4);
-    base.translate(0, 0.14, 0);
+    // Sturdy Plinth Base: y=0 to 0.24 (0.94 x 0.94)
+    const base = prep(new THREE.BoxGeometry(0.94, 0.24, 0.94));
+    base.translate(0, 0.12, 0);
     parts.push(base);
 
-    // Equipment Deck Mezzanine
-    const mezz = prep(new THREE.BoxGeometry(0.56, 0.22, 0.56));
-    mezz.translate(0, 0.39, 0);
+    // Equipment Deck Mezzanine: y=0.24 to 0.52 (0.68 x 0.68)
+    const mezz = prep(new THREE.BoxGeometry(0.68, 0.28, 0.68));
+    mezz.translate(0, 0.38, 0);
     parts.push(mezz);
 
-    // Tapering Lattice Transmission Mast
-    const mast = prep(new THREE.CylinderGeometry(0.12, 0.26, 0.50, 4));
-    mast.rotateY(Math.PI / 4);
-    mast.translate(0, 0.75, 0);
+    // Upper Mast Platform: y=0.52 to 0.88 (0.34 x 0.34)
+    const mast = prep(new THREE.BoxGeometry(0.34, 0.36, 0.34));
+    mast.translate(0, 0.70, 0);
     parts.push(mast);
 
-    // Microwave Dish 1 (Lower)
-    const dish1 = prep(new THREE.CylinderGeometry(0.10, 0.02, 0.04, 8));
-    dish1.rotateX(Math.PI / 2);
-    dish1.translate(0, 0.66, 0.22);
+    // Microwave Transmission Dishes (flat circular cylinders)
+    const dish1 = prep(new THREE.CylinderGeometry(0.11, 0.11, 0.03, 12));
+    dish1.rotateZ(Math.PI / 2);
+    dish1.translate(0.20, 0.68, 0);
     parts.push(dish1);
 
-    // Microwave Dish 2 (Upper, opposite side)
-    const dish2 = prep(new THREE.CylinderGeometry(0.08, 0.02, 0.04, 8));
-    dish2.rotateX(Math.PI / 2);
-    dish2.translate(0, 0.86, -0.16);
+    const dish2 = prep(new THREE.CylinderGeometry(0.09, 0.09, 0.03, 12));
+    dish2.rotateZ(Math.PI / 2);
+    dish2.translate(-0.20, 0.80, 0);
     parts.push(dish2);
 
-    // High-Gain Needle Spire
-    const spire = prep(new THREE.CylinderGeometry(0.01, 0.035, 0.36, 6));
-    spire.translate(0, 1.18, 0);
-    parts.push(spire);
-
-    // Aviation Warning Beacon
-    const beacon = prep(new THREE.SphereGeometry(0.035, 8, 6));
-    beacon.translate(0, 1.36, 0);
-    parts.push(beacon);
+    // Flat roof equipment crown: y=0.88 to 1.0 (0.22 x 0.22)
+    const crown = prep(new THREE.BoxGeometry(0.22, 0.12, 0.22));
+    crown.translate(0, 0.94, 0);
+    parts.push(crown);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
     return merged;
   })();
 
-  // 10. Monumental Critical Landmark
-  // Reserved for critical files & top-risk hotspots.
-  // Swept corner buttress pylons + multi-tier central spire + glowing torus halo ring + apex pinnacle
+  // 10. Monumental Critical Landmark: Hero Cyber Skyscraper matching reference image
+  // Sleek, tall, majestic architectural skyscraper with vertical structural mullions,
+  // lobby podium, tiered setbacks, and illuminated rooftop crown
   const monumentalLandmarkGeo = (() => {
     const parts: THREE.BufferGeometry[] = [];
 
-    // 4 Diagonal Swept Buttresses
-    const buttressAngles = [Math.PI / 4, (3 * Math.PI) / 4, (5 * Math.PI) / 4, (7 * Math.PI) / 4];
-    for (const angle of buttressAngles) {
-      const bx = Math.cos(angle) * 0.44;
-      const bz = Math.sin(angle) * 0.44;
-      const buttress = prep(new THREE.BoxGeometry(0.16, 0.60, 0.16));
-      buttress.translate(bx, 0.30, bz);
-      parts.push(buttress);
+    // Grand Lobby Podium Base: y=0 to 0.14 (1.04 x 1.04)
+    const podium = prep(new THREE.BoxGeometry(1.04, 0.14, 1.04));
+    podium.translate(0, 0.07, 0);
+    parts.push(podium);
+
+    // Lower Tower Shaft: y=0.14 to 0.58 (0.92 x 0.92)
+    const lowerShaft = prep(new THREE.BoxGeometry(0.92, 0.44, 0.92));
+    lowerShaft.translate(0, 0.36, 0);
+    parts.push(lowerShaft);
+
+    // 4 Vertical Exoskeleton Corner Columns running up through the lower tower
+    const colW = 0.08;
+    const corners = [
+      [-0.45, -0.45],
+      [0.45, -0.45],
+      [-0.45, 0.45],
+      [0.45, 0.45],
+    ];
+    for (const [cx, cz] of corners) {
+      const col = prep(new THREE.BoxGeometry(colW, 0.82, colW));
+      col.translate(cx, 0.41, cz);
+      parts.push(col);
     }
 
-    // Monumental Octagonal Core Tower
-    const core = prep(new THREE.CylinderGeometry(0.48, 0.66, 0.90, 8));
-    core.translate(0, 0.45, 0);
-    parts.push(core);
+    // Mid-tower Architectural Reveal / Terrace: y=0.58 to 0.62 (0.96 x 0.96)
+    const midReveal = prep(new THREE.BoxGeometry(0.96, 0.04, 0.96));
+    midReveal.translate(0, 0.60, 0);
+    parts.push(midReveal);
 
-    // Floating Halo Torus Ring (Upper Tier)
-    const halo = prep(new THREE.TorusGeometry(0.56, 0.026, 8, 24));
-    halo.rotateX(Math.PI / 2);
-    halo.translate(0, 0.84, 0);
-    parts.push(halo);
+    // Upper Tower Shaft: y=0.62 to 0.88 (0.80 x 0.80)
+    const upperShaft = prep(new THREE.BoxGeometry(0.80, 0.26, 0.80));
+    upperShaft.translate(0, 0.75, 0);
+    parts.push(upperShaft);
 
-    // Stepped Crown Apex
-    const apex = prep(new THREE.BoxGeometry(0.44, 0.14, 0.44));
-    apex.translate(0, 0.97, 0);
-    parts.push(apex);
+    // Crown Penthouse & Machinery Deck: y=0.88 to 0.98 (0.64 x 0.64)
+    const penthouse = prep(new THREE.BoxGeometry(0.64, 0.10, 0.64));
+    penthouse.translate(0, 0.93, 0);
+    parts.push(penthouse);
 
-    // Monumental Pinnacle Spire
-    const needle = prep(new THREE.ConeGeometry(0.12, 0.36, 8));
-    needle.translate(0, 1.18, 0);
-    parts.push(needle);
-
-    // Apex Energy Beacon Sphere
-    const beacon = prep(new THREE.SphereGeometry(0.055, 8, 8));
-    beacon.translate(0, 1.38, 0);
-    parts.push(beacon);
+    // Rooftop Crown Parapet / Helipad Frame: y=0.98 to 1.04 (0.48 x 0.48)
+    const crown = prep(new THREE.BoxGeometry(0.48, 0.06, 0.48));
+    crown.translate(0, 1.01, 0);
+    parts.push(crown);
 
     const merged = BGU.mergeGeometries(parts, false);
     merged.computeVertexNormals();
@@ -614,19 +568,18 @@ export function createArchetypeGeometries(): Record<BuildingArchetype, THREE.Buf
 
 /**
  * Creates the high-fidelity procedural architectural facade shader.
- * Supports:
- * - Architectural floor bands and vertical structural columns.
- * - Recessed window apertures.
- * - Deterministic window hash lighting (warm amber, cyber cyan, cool terminal white).
- * - Subtle window flicker on a small fraction of illuminated windows.
- * - Emissive vertical accent stripes and edge lighting driven by instanceColor.
- * - Rooftop trim and beacon illumination.
- * - Emissive risk pulse sweep on critical/high-risk structures.
+ * - Dual-temperature lighting: warm golden interior office glow (~50%) + cool cyan workstation lighting (~25%).
+ * - Dark tinted glass spandrels and structural mullions.
+ * - Subtle window flicker on ~4% of lit windows.
+ * - Slow crimson pulse on high-risk buildings.
+ * - Fresnel edge rim light for crisp architectural silhouette readability against the dark night sky.
+ * - Soft vertical gradient (darker at base, brighter toward crown).
+ * - Rooftop surfaces: dark metallic gravel roof decks with glowing edge parapets.
  */
 export function createArchitecturalFacadeMaterial(): THREE.MeshStandardMaterial {
   const mat = new THREE.MeshStandardMaterial({
-    roughness: 0.32,
-    metalness: 0.72,
+    roughness: 0.26,
+    metalness: 0.80,
     emissive: new THREE.Color('#000000'),
     emissiveIntensity: 1.0,
   });
@@ -641,7 +594,8 @@ export function createArchitecturalFacadeMaterial(): THREE.MeshStandardMaterial 
       `#include <common>
        varying vec3 vWorldPos;
        varying vec3 vModelNormal;
-       varying vec3 vObjectPos;`
+       varying vec3 vObjectPos;
+       varying vec3 vViewDir;`
     );
 
     shader.vertexShader = shader.vertexShader.replace(
@@ -649,7 +603,8 @@ export function createArchitecturalFacadeMaterial(): THREE.MeshStandardMaterial 
       `#include <worldpos_vertex>
        vWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;
        vModelNormal = normal;
-       vObjectPos = position;`
+       vObjectPos = position;
+       vViewDir = normalize(cameraPosition - vWorldPos);`
     );
 
     shader.fragmentShader = shader.fragmentShader.replace(
@@ -660,101 +615,120 @@ export function createArchitecturalFacadeMaterial(): THREE.MeshStandardMaterial 
        varying vec3 vWorldPos;
        varying vec3 vModelNormal;
        varying vec3 vObjectPos;
+       varying vec3 vViewDir;
 
-       float hash21(vec2 p) {
-         p = fract(p * vec2(123.34, 456.21));
-         p += dot(p, p + 45.32);
+       float hashWindow(vec2 p) {
+         p = fract(p * vec2(234.34, 435.345));
+         p += dot(p, p + 34.23);
          return fract(p.x * p.y);
        }`
     );
 
-    shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <dithering_fragment>',
-      `#include <dithering_fragment>
-       // Realistic Procedural Architectural Facade Shader
+        shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <opaque_fragment>',
+      `#include <opaque_fragment>
+       // High-Fidelity HDR Procedural Architectural Facade Shader with Neon Conduits
 
-       // 1. Facade Vertical Walls (abs(normal.y) < 0.42)
-       if (abs(vModelNormal.y) < 0.42) {
-         // Angle-aware coordinate projection for planar, chamfered, and cylindrical facades
-         float angle = atan(vModelNormal.z, vModelNormal.x);
-         float uCoord = (abs(vModelNormal.x) > 0.65) ? vWorldPos.z : ((abs(vModelNormal.z) > 0.65) ? vWorldPos.x : angle * 2.5);
-         vec2 wallCoord = vec2(uCoord, vWorldPos.y);
+       // Detect high-risk file from diffuse / instance color (red dominant)
+       float isHighRisk = step(diffuseColor.g + 0.12, diffuseColor.r) * step(diffuseColor.b + 0.10, diffuseColor.r);
+       float crimsonPulse = 0.88 + 0.28 * sin(uTime * 2.4);
 
-         // Calibrated architectural grid: ~5.0 window bays per unit, ~3.6 floors per unit
-         vec2 gridPos = wallCoord * vec2(5.0, 3.6);
+       // 1. Facade Vertical Walls (abs(normal.y) < 0.40)
+       if (abs(vModelNormal.y) < 0.40) {
+         vec2 wallCoord = abs(vModelNormal.x) > 0.40 ? vWorldPos.zy : vWorldPos.xy;
+
+         // High-density architectural window grid: 6.5 bays per unit, 4.8 floors per unit
+         vec2 gridPos = wallCoord * vec2(6.5, 4.8);
          vec2 cell = floor(gridPos);
          vec2 uvInCell = fract(gridPos);
 
-         // Crisp architectural window aperture with dark structural spandrels and mullions
-         // Horizontal spandrel: [0.18, 0.82]
-         // Vertical mullion: [0.18, 0.82]
-         float isWindow = step(0.18, uvInCell.x) * step(uvInCell.x, 0.82) *
-                          step(0.20, uvInCell.y) * step(uvInCell.y, 0.80);
+         // Crisp rectangular window aperture
+         float isWindow = step(0.14, uvInCell.x) * step(uvInCell.x, 0.86) *
+                          step(0.16, uvInCell.y) * step(uvInCell.y, 0.84);
 
-         // Detect if this instance is dimmed into standby mode (e.g. during blast radius)
-         float instanceLuma = dot(gl_FragColor.rgb, vec3(0.299, 0.587, 0.114));
+         float instanceLuma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
          float isDimmed = step(instanceLuma, 0.12);
-         float windowDimFactor = mix(1.0, 0.18, isDimmed);
+         float dimFactor = mix(1.0, 0.20, isDimmed);
 
          if (isWindow > 0.5) {
-           float h = hash21(cell);
+           float h = hashWindow(cell);
            float flicker = 1.0;
-           // Subtle flicker on ~5% of lit windows
-           if (h > 0.89) {
-             flicker = 0.80 + 0.20 * sin(uTime * 4.5 + h * 6.28);
+           if (h > 0.92) {
+             flicker = 0.84 + 0.16 * sin(uTime * 4.8 + h * 6.28);
            }
 
-           vec3 winColor = vec3(0.015, 0.025, 0.045); // Unlit dark office
-           if (h > 0.68) {
-             // Warm incandescent amber interior light
-             winColor = vec3(1.0, 0.82, 0.52) * 1.35;
-           } else if (h > 0.44) {
-             // Cyber cyan terminal workstation
-             winColor = vec3(0.28, 0.86, 1.0) * 1.45;
-           } else if (h > 0.24) {
-             // Cool white corporate fluorescent
-             winColor = vec3(0.88, 0.94, 1.0) * 1.20;
+           vec3 winColor = vec3(0.02, 0.03, 0.05); // Unlit dark glass
+           if (h > 0.20) {
+             // Warm golden incandescent amber interior glow
+             winColor = vec3(1.0, 0.82, 0.45) * 2.6;
+           } else if (h > 0.08) {
+             // Cool cyan/white office lighting
+             winColor = vec3(0.55, 0.88, 1.0) * 1.8;
            }
 
-           // Blend window illumination into surface diffuse
-           gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.25, winColor * flicker * windowDimFactor, 0.88);
+           // On high-risk buildings (seed_db.py), blend warm golden interior with fiery amber-red
+           if (isHighRisk > 0.5 && h > 0.20) {
+             winColor = mix(winColor, vec3(1.0, 0.48, 0.20) * 2.4, 0.45 * crimsonPulse);
+           }
+
+           gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.18, winColor * flicker * dimFactor, 0.92);
          } else {
-           // Dark structural spandrel / mullion framing
-           gl_FragColor.rgb *= 0.32;
+           // Dark metallic spandrel / mullion framing
+           gl_FragColor.rgb *= 0.25;
+         }
 
-           // Subtle vertical corner neon accent fin
-           float edgeDist = min(uvInCell.x, 1.0 - uvInCell.x);
-           if (edgeDist < 0.04) {
-             gl_FragColor.rgb += vec3(0.05, 0.16, 0.28) * windowDimFactor;
+         // High-risk hero skyscraper (seed_db.py) EXOSKELETON CONDUITS
+         if (isHighRisk > 0.5) {
+           // 4 Vertical corner buttress columns running up the skyscraper
+           float isCorner = step(0.36, abs(vObjectPos.x)) * step(0.36, abs(vObjectPos.z));
+           if (isCorner > 0.5) {
+             gl_FragColor.rgb = vec3(1.0, 0.14, 0.08) * 3.8 * crimsonPulse;
+           }
+           // Mid-tower architectural reveal
+           float isMidBelt = step(0.58, vObjectPos.y) * step(vObjectPos.y, 0.62);
+           if (isMidBelt > 0.5) {
+             gl_FragColor.rgb += vec3(1.0, 0.18, 0.10) * 2.6 * crimsonPulse;
+           }
+           // Rooftop crown frame
+           float isCrown = step(0.96, vObjectPos.y);
+           if (isCrown > 0.5) {
+             gl_FragColor.rgb = vec3(1.0, 0.14, 0.08) * 4.0 * crimsonPulse;
+           }
+         } else {
+           // Normal buildings: glowing cyan rooftop parapet trim
+           float isTopTrim = step(0.96, vObjectPos.y);
+           if (isTopTrim > 0.5) {
+             gl_FragColor.rgb += vec3(0.18, 0.82, 1.0) * 2.4;
            }
          }
 
-         // Vertical scanning pulse wave for high-risk / selected buildings
-         float scanWave = sin(vWorldPos.y * 0.55 - uTime * 2.8);
-         if (scanWave > 0.90) {
-           float scanFactor = (scanWave - 0.90) / 0.10;
-           gl_FragColor.rgb += vec3(0.08, 0.24, 0.42) * scanFactor * uPulseIntensity * windowDimFactor;
-         }
+         // Soft vertical gradient (darker at ground, brighter toward crown)
+         float vertGrad = mix(0.75, 1.12, clamp(vObjectPos.y, 0.0, 1.0));
+         gl_FragColor.rgb *= vertGrad;
+
+         // Fresnel rim lighting for instant silhouette readability
+         float fresnel = pow(1.0 - max(0.0, dot(vModelNormal, vViewDir)), 2.8);
+         gl_FragColor.rgb += vec3(0.02, 0.15, 0.28) * fresnel * dimFactor;
        }
-       // 2. Rooftop Surfaces and Architectural Equipment (normal.y > 0.42)
-       else if (vModelNormal.y > 0.42) {
-         // Dark metallic roof gravel finish (prevent white blowout)
-         gl_FragColor.rgb *= 0.38;
+       // 2. Rooftop Surfaces (abs(normal.y) >= 0.40)
+       else if (vModelNormal.y > 0.40) {
+         gl_FragColor.rgb *= 0.26;
 
-         // Rooftop edge perimeter trim neon accent
-         vec2 roofPos = fract(vWorldPos.xz * 0.35);
+         vec2 roofPos = fract(vWorldPos.xz * 0.45);
          float borderDist = min(min(roofPos.x, 1.0 - roofPos.x), min(roofPos.y, 1.0 - roofPos.y));
-         if (borderDist < 0.07) {
-           gl_FragColor.rgb += vec3(0.12, 0.35, 0.52);
-         }
 
-         // Beacon glow for spires and antenna tips at upper heights (y > 0.95 in model)
-         if (vObjectPos.y > 0.95) {
-           float beaconPulse = 0.7 + 0.3 * sin(uTime * 5.0 + vWorldPos.x * 2.0);
-           gl_FragColor.rgb = vec3(0.25, 0.75, 1.0) * beaconPulse * 1.8;
+         if (isHighRisk > 0.5) {
+           // Brilliant red neon rooftop perimeter parapet
+           if (borderDist < 0.12) {
+             gl_FragColor.rgb = vec3(1.0, 0.14, 0.08) * 4.0 * crimsonPulse;
+           }
+         } else {
+           // Brilliant cyan perimeter parapet trim
+           if (borderDist < 0.08) {
+             gl_FragColor.rgb += vec3(0.18, 0.82, 1.0) * 2.6;
+           }
          }
-       }`
-    );
+       }`    );
   };
 
   return mat;

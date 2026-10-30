@@ -5,14 +5,19 @@ interface CyberCityGroundProps {
   lowPowerMode?: boolean;
 }
 
+/**
+ * Realistic Cyber-City Ground matching reference image:
+ * - Deep wet asphalt pavement with glossy specular reflections
+ * - Defined illuminated cyan avenue lane lines and road curbs framing the city blocks
+ * - Warm golden interior spill pools and red lobby reflections under buildings
+ * - Zero infinite Tron grid lines across the world
+ */
 export const CyberCityGround: React.FC<CyberCityGroundProps> = ({ lowPowerMode = false }) => {
-  // Deep obsidian glossy ground material with soft specular sheen and radial distance fade
-  // Absolutely no random black blobs, no messy puddle cutouts, and no stray avenue dashes.
   const groundMaterial = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color('#01040a'),
-      roughness: 0.16,
-      metalness: 0.92,
+      color: new THREE.Color('#020611'),
+      roughness: 0.18,
+      metalness: 0.88,
     });
 
     if (!lowPowerMode) {
@@ -40,22 +45,60 @@ export const CyberCityGround: React.FC<CyberCityGroundProps> = ({ lowPowerMode =
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <dithering_fragment>',
           `#include <dithering_fragment>
-           // Clean glossy reflective ground plane with smooth radial distance falloff
-           float distFromCenter = length(vWorldPos.xz);
-           float edgeFade = 1.0 - smoothstep(160.0, 320.0, distFromCenter);
+            // Wet asphalt city pavement with illuminated avenue markings and ground reflections
+            float distFromCenter = length(vWorldPos.xz);
+            float edgeFade = 1.0 - smoothstep(120.0, 240.0, distFromCenter);
 
-           // Faint, elegant coordinate micro-grid (every 4 units, hairline width)
-           vec2 gridCoord = abs(fract(vWorldPos.xz * 0.25) - 0.5);
-           float gridLine = 1.0 - smoothstep(0.008, 0.024, min(gridCoord.x, gridCoord.y));
-           vec3 gridGlow = vec3(0.02, 0.14, 0.28) * gridLine * 0.40;
+            vec3 groundGlow = vec3(0.0);
 
-           // Major district boundary grid (every 20 units)
-           vec2 majorCoord = abs(fract(vWorldPos.xz * 0.05) - 0.5);
-           float majorLine = 1.0 - smoothstep(0.004, 0.016, min(majorCoord.x, majorCoord.y));
-           vec3 majorGlow = vec3(0.04, 0.28, 0.52) * majorLine * 0.65;
+            // 1. Central Hero Skyscraper (seed_db.py) ground lobby spill: warm golden + red reflection
+            float distHero = length(vWorldPos.xz);
+            float heroSpill = 1.0 - smoothstep(2.5, 9.5, distHero);
+            groundGlow += vec3(1.0, 0.72, 0.35) * heroSpill * 0.95;
+            float heroRedRim = smoothstep(3.2, 5.8, distHero) * (1.0 - smoothstep(5.8, 8.5, distHero));
+            groundGlow += vec3(1.0, 0.15, 0.10) * heroRedRim * 0.70;
 
-           gl_FragColor.rgb += (gridGlow + majorGlow) * edgeFade;
-           gl_FragColor.rgb *= edgeFade;`
+            // 2. Surrounding buildings warm light pools on asphalt
+            vec2 pModels = vWorldPos.xz - vec2(-8.8, -8.5);
+            vec2 pSchemas = vWorldPos.xz - vec2(-9.2, 8.2);
+            vec2 pTest = vWorldPos.xz - vec2(8.8, 8.5);
+            vec2 pConfig = vWorldPos.xz - vec2(10.8, -1.0);
+            vec2 pUtils = vWorldPos.xz - vec2(-12.8, 0.5);
+
+            float bSpill = (1.0 - smoothstep(1.5, 7.5, length(pModels))) * 0.65
+                         + (1.0 - smoothstep(1.5, 7.5, length(pSchemas))) * 0.65
+                         + (1.0 - smoothstep(1.5, 7.5, length(pTest))) * 0.65
+                         + (1.0 - smoothstep(1.5, 6.5, length(pConfig))) * 0.55
+                         + (1.0 - smoothstep(1.5, 6.0, length(pUtils))) * 0.50;
+            groundGlow += vec3(1.0, 0.80, 0.45) * bSpill;
+
+            // 3. Cyber Avenue Network: Glowing cyan road lane lines framing the city blocks
+            // Primary outer perimeter avenue: box from [-18, 18] in X and Z
+            vec2 boxDistOuter = abs(vWorldPos.xz) - vec2(18.0, 18.0);
+            float outerAvenue = 1.0 - smoothstep(0.12, 0.45, abs(max(boxDistOuter.x, boxDistOuter.y)));
+            float outerAvenueCurb = 1.0 - smoothstep(0.08, 0.35, abs(max(boxDistOuter.x, boxDistOuter.y) + 1.2));
+
+            // Inner hero perimeter avenue: box from [-5.2, 5.2] in X and Z
+            vec2 boxDistInner = abs(vWorldPos.xz) - vec2(5.2, 5.2);
+            float innerAvenue = 1.0 - smoothstep(0.10, 0.38, abs(max(boxDistInner.x, boxDistInner.y)));
+
+            // Cross-block connector avenues
+            float crossX = (1.0 - smoothstep(0.10, 0.38, abs(vWorldPos.z))) * step(abs(vWorldPos.x), 18.2) * (1.0 - step(abs(vWorldPos.x), 5.0));
+            float crossZ = (1.0 - smoothstep(0.10, 0.38, abs(vWorldPos.x))) * step(abs(vWorldPos.z), 18.2) * (1.0 - step(abs(vWorldPos.z), 5.0));
+
+            // Diagonal arterial avenues linking to surrounding districts
+            float diag1 = (1.0 - smoothstep(0.12, 0.40, abs(vWorldPos.x - vWorldPos.z))) * step(14.0, abs(vWorldPos.x)) * step(abs(vWorldPos.x), 36.0);
+            float diag2 = (1.0 - smoothstep(0.12, 0.40, abs(vWorldPos.x + vWorldPos.z))) * step(14.0, abs(vWorldPos.x)) * step(abs(vWorldPos.x), 36.0);
+
+            float totalAvenues = max(max(outerAvenue, outerAvenueCurb * 0.7), max(innerAvenue, max(crossX, crossZ)));
+            totalAvenues = max(totalAvenues, max(diag1, diag2) * 0.85);
+
+            vec3 cyanRoadGlow = vec3(0.15, 0.75, 1.0) * totalAvenues * 2.2;
+            groundGlow += cyanRoadGlow;
+
+            // Wet asphalt specular sheen
+            gl_FragColor.rgb += groundGlow * edgeFade;
+            gl_FragColor.rgb *= edgeFade;`
         );
       };
     }
@@ -67,14 +110,14 @@ export const CyberCityGround: React.FC<CyberCityGroundProps> = ({ lowPowerMode =
     <group position={[0, -0.06, 0]}>
       {/* 1. Dark Glossy Ground Plane with soft specular reflections */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[650, 650, 4, 4]} />
+        <planeGeometry args={[520, 520, 4, 4]} />
         <primitive object={groundMaterial} attach="material" />
       </mesh>
 
       {/* 2. Soft Fading Peripheral Coordinate Ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[180, 420, 64]} />
-        <meshBasicMaterial color="#010308" transparent opacity={0.96} />
+        <ringGeometry args={[140, 360, 64]} />
+        <meshBasicMaterial color="#010308" transparent opacity={0.98} />
       </mesh>
     </group>
   );

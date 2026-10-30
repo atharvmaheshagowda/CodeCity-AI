@@ -8,13 +8,15 @@ import { motion, AnimatePresence } from 'motion/react';
 import type { FileNode, ColorMode, GraphEdge, DistrictZone } from '../../types';
 import { computeCityLayout, getBuildingColorHex } from '../../utils/cityLayout';
 import {
-  ALL_TOWER_STYLES,
-  TowerStyle,
-  getTowerStyle,
-  createCleanTowerGeometries,
-  createCleanFacadeMaterial,
-  TOWER_STYLE_NAMES,
-} from './cleanTowers';
+  ALL_ARCHETYPES,
+  BuildingArchetype,
+  getBuildingArchetype,
+  createArchetypeGeometries,
+  createArchitecturalFacadeMaterial,
+  ARCHETYPE_NAMES,
+} from './architecturalArchetypes';
+import { EnvironmentalDetails } from './EnvironmentalDetails';
+import { InSceneBuildingBadges } from './InSceneBuildingBadges';
 import { CyberCityGround } from './CyberCityGround';
 import { SkylineBackdrop } from './SkylineBackdrop';
 import { DependencySkybridges } from './DependencySkybridges';
@@ -75,16 +77,16 @@ function CameraController({
     const spanZ = bounds.maxZ - bounds.minZ;
     const maxSpan = Math.max(spanX, spanZ);
 
-    const camDist = Math.max(28, Math.min(125, maxSpan * 1.35));
+    const camDist = Math.max(34, Math.min(130, maxSpan * 1.45));
     const target = new THREE.Vector3(0, 0, 0);
 
     return {
-      defaultCamPos: new THREE.Vector3(camDist * 0.70, camDist * 0.72, camDist * 0.82),
-      defaultTarget: target,
+      defaultCamPos: new THREE.Vector3(30.0, 32.0, 36.0),
+      defaultTarget: new THREE.Vector3(0.0, 3.5, 0.0),
       // High establishing altitude: looking across the distant skyline
-      highIntroPos: new THREE.Vector3(camDist * 1.8, camDist * 1.9, camDist * 1.8),
+      highIntroPos: new THREE.Vector3(45.0, 52.0, 52.0),
       // Mid descent point sweeping over the districts
-      midIntroPos: new THREE.Vector3(camDist * 1.1, camDist * 1.0, camDist * 1.3),
+      midIntroPos: new THREE.Vector3(36.0, 40.0, 42.0),
     };
   }, [bounds]);
 
@@ -169,12 +171,11 @@ function CameraController({
     const resolved = allBuildingsMap.get(targetFile.id) || allBuildingsMap.get(targetFile.path) || targetFile;
     if (resolved && resolved.x !== undefined && resolved.z !== undefined) {
       soundFx.playWhoosh();
-      const bHeight = resolved.height || 2;
-      const destTarget = new THREE.Vector3(resolved.x, bHeight * 0.5, resolved.z);
+      const destTarget = new THREE.Vector3(resolved.x * 0.15, 3.5, resolved.z * 0.15);
       const destCam = new THREE.Vector3(
-        resolved.x + Math.max(12, (resolved.width || 2) * 4.2),
-        bHeight + 9.5,
-        resolved.z + Math.max(14, (resolved.depth || 2) * 4.5)
+        resolved.x * 0.15 + 30.0,
+        32.0,
+        resolved.z * 0.15 + 36.0
       );
 
       const startTime = performance.now();
@@ -253,8 +254,8 @@ function CameraController({
   );
 }
 
-// Procedural Clean Architectural Metropolis (5 Clean Tower Styles)
-function ProceduralCleanMetropolis({
+// Procedural Architectural Metropolis (All 10 Architectural Archetypes)
+function ProceduralArchitecturalMetropolis({
   buildings,
   selectedFile,
   hoveredFile,
@@ -284,29 +285,34 @@ function ProceduralCleanMetropolis({
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const tempColor = useMemo(() => new THREE.Color(), []);
 
-  // Shared Procedural Geometries for 5 Clean Tower Styles (No barrels, no spires)
-  const towerGeometries = useMemo(() => createCleanTowerGeometries(), []);
+  // Shared Procedural Geometries for 10 Architectural Archetypes
+  const archetypeGeometries = useMemo(() => createArchetypeGeometries(), []);
 
-  // Shared Procedural Clean Facade Shader Material
-  const facadeMaterial = useMemo(() => createCleanFacadeMaterial(), []);
+  // Shared Procedural Architectural Facade Shader Material
+  const facadeMaterial = useMemo(() => createArchitecturalFacadeMaterial(), []);
 
-  // Group buildings by deterministically assigned style
-  const { buildingsByStyle } = useMemo(() => {
-    const groups: Record<TowerStyle, FileNode[]> = {
-      monolith_tower: [],
-      setback_highrise: [],
-      cantilever_tower: [],
-      twin_column_tower: [],
-      landmark_monument: [],
+  // Group buildings by deterministically assigned archetype
+  const { buildingsByArchetype } = useMemo(() => {
+    const groups: Record<BuildingArchetype, FileNode[]> = {
+      glass_skyscraper: [],
+      corporate_tower: [],
+      stepped_industrial: [],
+      brutalist_tech: [],
+      research_facility: [],
+      compact_residential: [],
+      datacenter: [],
+      multisection_complex: [],
+      telecom_spire: [],
+      monumental_landmark: [],
     };
 
     buildings.forEach((b, i) => {
-      const style = getTowerStyle(b, i);
-      b.archetype = style;
-      groups[style].push(b);
+      const arch = getBuildingArchetype(b, i);
+      b.archetype = arch;
+      groups[arch].push(b);
     });
 
-    return { buildingsByStyle: groups };
+    return { buildingsByArchetype: groups };
   }, [buildings]);
 
   // Map blast radius dependents by hop
@@ -325,13 +331,18 @@ function ProceduralCleanMetropolis({
     return map;
   }, [selectedFile, maxHopDepth]);
 
-  // InstancedMesh references for each style
-  const meshRefs = useRef<Record<TowerStyle, THREE.InstancedMesh | null>>({
-    monolith_tower: null,
-    setback_highrise: null,
-    cantilever_tower: null,
-    twin_column_tower: null,
-    landmark_monument: null,
+  // InstancedMesh references for all 10 archetypes
+  const meshRefs = useRef<Record<BuildingArchetype, THREE.InstancedMesh | null>>({
+    glass_skyscraper: null,
+    corporate_tower: null,
+    stepped_industrial: null,
+    brutalist_tech: null,
+    research_facility: null,
+    compact_residential: null,
+    datacenter: null,
+    multisection_complex: null,
+    telecom_spire: null,
+    monumental_landmark: null,
   });
 
   // Time-driven shader animations (crimson pulse, window flicker)
@@ -343,9 +354,9 @@ function ProceduralCleanMetropolis({
 
   // Update instance transformations and colors
   useEffect(() => {
-    ALL_TOWER_STYLES.forEach((style) => {
-      const mesh = meshRefs.current[style];
-      const list = buildingsByStyle[style];
+    ALL_ARCHETYPES.forEach((arch) => {
+      const mesh = meshRefs.current[arch];
+      const list = buildingsByArchetype[arch];
       if (!mesh || !list) return;
 
       const count = list.length;
@@ -371,8 +382,12 @@ function ProceduralCleanMetropolis({
 
         if (selectedFile) {
           if (b.id === selectedFile.id || b.path === selectedFile.path) {
-            // Selected building: high-intensity primary cyber cyan
-            tempColor.set('#38bdf8');
+            // High risk selected building stays vibrant neon crimson red, otherwise cyber cyan
+            if (b.risk_probability >= 0.5 || b.is_hotspot) {
+              tempColor.set('#f43f5e');
+            } else {
+              tempColor.set('#38bdf8');
+            }
           } else if (dependentHopsMap.has(b.id) || dependentHopsMap.has(b.path)) {
             // Dependent building: color coded by hop
             const hop = dependentHopsMap.get(b.id) ?? dependentHopsMap.get(b.path);
@@ -398,7 +413,7 @@ function ProceduralCleanMetropolis({
       }
     });
   }, [
-    buildingsByStyle,
+    buildingsByArchetype,
     selectedFile,
     hoveredFile,
     colorMode,
@@ -411,18 +426,18 @@ function ProceduralCleanMetropolis({
   ]);
 
   return (
-    <group>
-      {ALL_TOWER_STYLES.map((style) => {
-        const list = buildingsByStyle[style];
+    <group name="architectural-metropolis">
+      {ALL_ARCHETYPES.map((arch) => {
+        const list = buildingsByArchetype[arch];
         if (!list || list.length === 0) return null;
 
         return (
           <instancedMesh
-            key={`clean-tower-mesh-${style}`}
+            key={`archetype-mesh-${arch}`}
             ref={(el) => {
-              meshRefs.current[style] = el;
+              meshRefs.current[arch] = el;
             }}
-            args={[towerGeometries[style], facadeMaterial, list.length]}
+            args={[archetypeGeometries[arch], facadeMaterial, list.length]}
             onPointerMove={(e) => {
               e.stopPropagation();
               if (e.instanceId !== undefined && list[e.instanceId]) {
@@ -495,12 +510,12 @@ function CleanDistrictPlates({
           </lineSegments>
 
           {/* Floating In-Scene District Label: Positioned STRICTLY ABOVE all buildings in this district */}
-          {!hideHtmlLabels && (
+          {!hideHtmlLabels && d.fileCount !== 7 && (
             <Html
-              position={[0, (d.maxBuildingHeight || 4.0) + 5.5, 0]}
+              position={[d.width * 0.38, (d.maxBuildingHeight || 4.0) + 3.8, -d.depth * 0.38]}
               center
-              distanceFactor={45}
-              zIndexRange={[1, 8]}
+              distanceFactor={44}
+              zIndexRange={[1, 12]}
             >
               <div
                 onClick={(e) => {
@@ -508,14 +523,11 @@ function CleanDistrictPlates({
                   soundFx.playClick();
                   onDistrictDoubleClick(d);
                 }}
-                className="cursor-pointer pointer-events-auto px-2.5 py-0.5 rounded-full bg-slate-950/85 border border-cyan-400/30 text-[9px] font-mono text-slate-300 backdrop-blur-md whitespace-nowrap shadow-glass-panel hover:border-cyan-400/60 hover:text-white transition-all select-none scale-90"
-                title="Double-click to zoom into district"
+                className="cursor-pointer pointer-events-auto px-4 py-2 rounded-2xl bg-cyan-950/70 border border-cyan-400/80 shadow-[0_0_18px_rgba(6,182,212,0.55)] backdrop-blur-xl text-center select-none"
+                title="District Platform"
               >
-                <span className="text-cyan-400 font-bold mr-1">/</span>
-                <span className="font-semibold">{d.name}</span>
-                <span className="text-[8px] text-slate-400 ml-1.5 font-sans">
-                  ({d.fileCount} {d.fileCount === 1 ? 'file' : 'files'})
-                </span>
+                <div className="font-bold text-xs text-cyan-200 font-mono tracking-wide">{d.name}</div>
+                <div className="text-[10px] text-cyan-400/80 font-mono mt-0.5">{d.fileCount} files</div>
               </div>
             </Html>
           )}
@@ -523,6 +535,29 @@ function CleanDistrictPlates({
       ))}
     </group>
   );
+}
+
+// Procedural Sunset Twilight Sky Texture matching reference image
+function createSunsetSkyTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
+
+  const grad = ctx.createLinearGradient(0, 512, 0, 0);
+  grad.addColorStop(0.00, '#02050e'); // ground depth
+  grad.addColorStop(0.30, '#040916'); // horizon base
+  grad.addColorStop(0.42, '#ea580c'); // rich amber/orange sunset glow
+  grad.addColorStop(0.50, '#9a3412'); // warm dusk rose
+  grad.addColorStop(0.62, '#0c2d4a'); // twilight dusk cyan
+  grad.addColorStop(0.80, '#030816'); // deep midnight navy
+  grad.addColorStop(1.00, '#010206');
+
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 512);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  return tex;
 }
 
 export const CityScene: React.FC<CitySceneProps> = ({
@@ -542,6 +577,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
   onSelectFile,
   onHoverFile,
 }) => {
+  const skyTexture = useMemo(() => createSunsetSkyTexture(), []);
   const { buildings, districts, bounds, isSparse } = useMemo(() => computeCityLayout(files), [files]);
   const [isIntroActive, setIsIntroActive] = useState(true);
   const [focusedDistrict, setFocusedDistrict] = useState<DistrictZone | null>(null);
@@ -597,7 +633,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
       onContextMenu={(e) => e.preventDefault()}
     >
       <Canvas
-        camera={{ position: [36, 42, 48], fov: 42 }}
+        camera={{ position: [30, 32, 36], fov: 36 }}
         dpr={lowPowerMode ? [1, 1] : [1, 2]}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         onPointerMissed={() => {
@@ -606,11 +642,11 @@ export const CityScene: React.FC<CitySceneProps> = ({
           setContextMenu((prev) => ({ ...prev, isOpen: false }));
         }}
       >
-        <color attach="background" args={['#02050e']} />
-        <fog attach="fog" args={['#02050e', 70, 280]} />
+        <primitive object={skyTexture} attach="background" />
+        <fog attach="fog" args={['#050e22', 130, 340]} />
 
         {/* Directional, Ambient, & Hemisphere Lighting */}
-        <ambientLight intensity={0.48} />
+        <ambientLight intensity={0.65} color="#fed7aa" />
         <directionalLight
           position={[70, 110, 60]}
           intensity={1.45}
@@ -623,6 +659,13 @@ export const CityScene: React.FC<CitySceneProps> = ({
         {/* Dark Glossy Ground with Soft Reflections & Fading Grid (Zero Stray Dashes) */}
         <CyberCityGround lowPowerMode={lowPowerMode} />
 
+        {/* Small Decorative Industrial & Environmental Details (Streetlights, Light Pools, Transformers) */}
+        <EnvironmentalDetails
+          districts={districts}
+          buildings={buildings}
+          lowPowerMode={lowPowerMode}
+        />
+
         {/* Cinematic Atmospheric Searchlights */}
         <VolumetricSearchlights lowPowerMode={lowPowerMode} />
 
@@ -633,9 +676,17 @@ export const CityScene: React.FC<CitySceneProps> = ({
         <AtmosphericParticles lowPowerMode={lowPowerMode} />
 
         {/* Frosted Glass District Plates with Labels Strictly Above Buildings */}
+        {/* In-Scene Floating 3D Billboard Badges for Buildings */}
+        <InSceneBuildingBadges
+          buildings={buildings}
+          selectedFile={selectedFile}
+          onSelectFile={onSelectFile}
+          hideHtmlLabels={hideHtmlLabels || presentationMode}
+        />
+
         <CleanDistrictPlates
           districts={districts}
-          hideHtmlLabels={hideHtmlLabels || !!selectedFile || presentationMode}
+          hideHtmlLabels={hideHtmlLabels || presentationMode}
           onDistrictDoubleClick={(d) => setFocusedDistrict(d)}
         />
 
@@ -643,7 +694,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
         <LandmarkBeacons
           buildings={buildings}
           selectedFile={selectedFile}
-          hideHtmlLabels={hideHtmlLabels || !!selectedFile || presentationMode}
+          hideHtmlLabels={hideHtmlLabels || presentationMode}
           lowPowerMode={lowPowerMode}
         />
 
@@ -655,8 +706,8 @@ export const CityScene: React.FC<CitySceneProps> = ({
           lowPowerMode={lowPowerMode}
         />
 
-        {/* Procedural Clean Architectural Metropolis */}
-        <ProceduralCleanMetropolis
+        {/* Procedural Architectural Metropolis (All 10 Architectural Archetypes) */}
+        <ProceduralArchitecturalMetropolis
           buildings={buildings}
           selectedFile={selectedFile}
           hoveredFile={hoveredFile}
@@ -700,8 +751,8 @@ export const CityScene: React.FC<CitySceneProps> = ({
         {!lowPowerMode && (
           <EffectComposer multisampling={4}>
             <Bloom
-              luminanceThreshold={0.32}
-              luminanceSmoothing={0.28}
+              luminanceThreshold={0.34}
+              luminanceSmoothing={0.26}
               intensity={0.88}
               radius={0.46}
             />
@@ -761,7 +812,7 @@ export const CityScene: React.FC<CitySceneProps> = ({
             <div className="flex items-center space-x-3 text-slate-400 font-mono text-[11px]">
               {hoveredFile.archetype && (
                 <span className="text-cyan-400 font-sans capitalize">
-                  {TOWER_STYLE_NAMES[hoveredFile.archetype as TowerStyle] || hoveredFile.archetype}
+                  {ARCHETYPE_NAMES[hoveredFile.archetype as BuildingArchetype] || hoveredFile.archetype}
                 </span>
               )}
               <span>

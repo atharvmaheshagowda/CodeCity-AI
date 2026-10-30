@@ -61,7 +61,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
 
     for (let hop = 1; hop <= Math.min(3, maxHopDepth); hop++) {
       const targets = (hops as any)[hop] || (hops as any)[String(hop)] || [];
-      const col = HOP_COLORS[hop] || HOP_COLORS[1];
+      const col = new THREE.Color('#38bdf8');
 
       for (const rawTargetPath of targets) {
         const targetNode =
@@ -89,7 +89,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
           const tubeMat = new THREE.MeshStandardMaterial({
             color: col,
             emissive: col,
-            emissiveIntensity: 2.2,
+            emissiveIntensity: 3.4,
             roughness: 0.15,
             metalness: 0.85,
             transparent: true,
@@ -108,8 +108,8 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
   // Particle instances setup
   const particleDummy = useMemo(() => new THREE.Object3D(), []);
   const totalConduits = arcCurves.length;
-  // Up to 3 particles per conduit
-  const particlesPerConduit = lowPowerMode ? 1 : 2;
+  // Up to 3 glowing energy beads per conduit
+  const particlesPerConduit = lowPowerMode ? 1 : 3;
   const totalParticles = totalConduits * particlesPerConduit;
 
   // Frame animation loop
@@ -154,7 +154,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
           particleDummy.position.copy(pt);
           particleDummy.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
           const pPulse = 0.8 + Math.sin(t * Math.PI) * 0.3;
-          particleDummy.scale.set(0.18 * pPulse, 0.18 * pPulse, 0.52 * pPulse);
+          particleDummy.scale.set(0.36 * pPulse, 0.36 * pPulse, 0.36 * pPulse);
           particleDummy.updateMatrix();
 
           particlesRef.current.setMatrixAt(pIdx, particleDummy.matrix);
@@ -198,7 +198,7 @@ export const BlastRadiusArcs: React.FC<BlastRadiusArcsProps> = ({
           args={[undefined, undefined, totalParticles]}
         >
           <sphereGeometry args={[1, 12, 12]} />
-          <meshBasicMaterial toneMapped={false} />
+          <meshBasicMaterial color="#e0f2fe" toneMapped={false} />
         </instancedMesh>
       )}
     </group>

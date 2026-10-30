@@ -1,0 +1,2090 @@
+{
+  "repo_id": "atharvmaheshagowda_codecity-ai",
+  "name": "atharvmaheshagowda/CodeCity-AI",
+  "analyzed_at": "2026-10-30T16:12:29.063343+00:00",
+  "summary": {
+    "total_files": 15,
+    "total_loc": 3177,
+    "avg_risk": 0.791,
+    "critical_files_count": 13,
+    "model_roc_auc": 0.6667,
+    "total_dependencies": 0
+  },
+  "directory_tree": {
+    "name": "root",
+    "path": "",
+    "children": [
+      {
+        "name": "backend",
+        "path": "backend",
+        "children": [
+          {
+            "name": "graph",
+            "path": "backend/graph",
+            "children": [],
+            "files": [
+              "backend/graph/dep_graph.py"
+            ]
+          },
+          {
+            "name": "mining",
+            "path": "backend/mining",
+            "children": [],
+            "files": [
+              "backend/mining/git_miner.py",
+              "backend/mining/synthetic_repo.py"
+            ]
+          },
+          {
+            "name": "ml",
+            "path": "backend/ml",
+            "children": [],
+            "files": [
+              "backend/ml/features.py",
+              "backend/ml/shap_explainer.py",
+              "backend/ml/train.py"
+            ]
+          },
+          {
+            "name": "scripts",
+            "path": "backend/scripts",
+            "children": [],
+            "files": [
+              "backend/scripts/cache_demo_repos.py"
+            ]
+          },
+          {
+            "name": "tests",
+            "path": "backend/tests",
+            "children": [],
+            "files": [
+              "backend/tests/conftest.py",
+              "backend/tests/test_api.py",
+              "backend/tests/test_blast_radius.py",
+              "backend/tests/test_graph.py",
+              "backend/tests/test_leakage.py"
+            ]
+          }
+        ],
+        "files": [
+          "backend/main.py"
+        ]
+      },
+      {
+        "name": "docs",
+        "path": "docs",
+        "children": [],
+        "files": [
+          "docs/generate_walkthrough_pdf.py"
+        ]
+      }
+    ],
+    "files": [
+      "run.py"
+    ]
+  },
+  "files": [
+    {
+      "id": "run.py",
+      "path": "run.py",
+      "directory": "",
+      "filename": "run.py",
+      "loc": 120,
+      "mean_complexity": 3.111,
+      "max_complexity": 7.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 140,
+      "total_churn": 140,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "run.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 7.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 7.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 120.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (120 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 7.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 7.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 120.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (120 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 3.11,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (3.1)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 7.0), and large codebase footprint (120 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 2,
+      "impact_rank": 2
+    },
+    {
+      "id": "backend/main.py",
+      "path": "backend/main.py",
+      "directory": "backend",
+      "filename": "main.py",
+      "loc": 386,
+      "mean_complexity": 5.0,
+      "max_complexity": 15.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 468,
+      "total_churn": 468,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/main.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 15.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 15.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 386.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (386 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 15.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 15.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 386.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (386 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 5.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (5.0)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 15.0), and large codebase footprint (386 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 3,
+      "impact_rank": 3
+    },
+    {
+      "id": "backend/graph/dep_graph.py",
+      "path": "backend/graph/dep_graph.py",
+      "directory": "backend/graph",
+      "filename": "dep_graph.py",
+      "loc": 212,
+      "mean_complexity": 4.667,
+      "max_complexity": 18.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 257,
+      "total_churn": 257,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/graph/dep_graph.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 18.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 18.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 212.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (212 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 18.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 18.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 212.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (212 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 4.67,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (4.7)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 18.0), and large codebase footprint (212 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 4,
+      "impact_rank": 4
+    },
+    {
+      "id": "backend/mining/git_miner.py",
+      "path": "backend/mining/git_miner.py",
+      "directory": "backend/mining",
+      "filename": "git_miner.py",
+      "loc": 259,
+      "mean_complexity": 16.167,
+      "max_complexity": 35.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 313,
+      "total_churn": 313,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/mining/git_miner.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 35.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 35.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 259.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (259 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 35.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 35.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 259.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (259 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 16.17,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (16.2)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 35.0), and large codebase footprint (259 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 5,
+      "impact_rank": 5
+    },
+    {
+      "id": "backend/mining/synthetic_repo.py",
+      "path": "backend/mining/synthetic_repo.py",
+      "directory": "backend/mining",
+      "filename": "synthetic_repo.py",
+      "loc": 566,
+      "mean_complexity": 2.375,
+      "max_complexity": 5.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 625,
+      "total_churn": 625,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.9701,
+      "impact_score": 0.9701,
+      "blast_radius": {
+        "target": "backend/mining/synthetic_repo.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.8796,
+            "feature_value": 5.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 5.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 566.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (566 LOC)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": 0.6191,
+            "feature_value": 2.38,
+            "direction": "increases_risk",
+            "snippet": "elevated average complexity (2.4)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.8796,
+            "feature_value": 5.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 5.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 566.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (566 LOC)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": 0.6191,
+            "feature_value": 2.38,
+            "direction": "increases_risk",
+            "snippet": "elevated average complexity (2.4)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "explanation_text": "High defect likelihood (97.0%). Driven primarily by intricate branching complexity (max CC 5.0), and large codebase footprint (566 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 1,
+      "impact_rank": 1
+    },
+    {
+      "id": "backend/ml/features.py",
+      "path": "backend/ml/features.py",
+      "directory": "backend/ml",
+      "filename": "features.py",
+      "loc": 31,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 33,
+      "total_churn": 33,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.1906,
+      "impact_score": 0.1906,
+      "blast_radius": {
+        "target": "backend/ml/features.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2674,
+            "feature_value": 31.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (31 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2727,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -1.506,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.7293,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -1.506,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2674,
+            "feature_value": 31.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (31 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.7293,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.6119,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2727,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.1627,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "explanation_text": "Low defect risk (19.1%). Strong stability sustained by low branch complexity (max CC 1.0), and isolated module position."
+      },
+      "risk_rank": 14,
+      "impact_rank": 14
+    },
+    {
+      "id": "backend/ml/shap_explainer.py",
+      "path": "backend/ml/shap_explainer.py",
+      "directory": "backend/ml",
+      "filename": "shap_explainer.py",
+      "loc": 118,
+      "mean_complexity": 11.0,
+      "max_complexity": 23.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 141,
+      "total_churn": 141,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/ml/shap_explainer.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 23.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 23.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 118.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (118 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 23.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 23.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 118.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (118 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 11.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (11.0)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 23.0), and large codebase footprint (118 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 6,
+      "impact_rank": 6
+    },
+    {
+      "id": "backend/ml/train.py",
+      "path": "backend/ml/train.py",
+      "directory": "backend/ml",
+      "filename": "train.py",
+      "loc": 235,
+      "mean_complexity": 6.2,
+      "max_complexity": 20.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 298,
+      "total_churn": 298,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/ml/train.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 20.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 20.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 235.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (235 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 20.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 20.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 235.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (235 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 6.2,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (6.2)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 20.0), and large codebase footprint (235 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 7,
+      "impact_rank": 7
+    },
+    {
+      "id": "backend/scripts/cache_demo_repos.py",
+      "path": "backend/scripts/cache_demo_repos.py",
+      "directory": "backend/scripts",
+      "filename": "cache_demo_repos.py",
+      "loc": 57,
+      "mean_complexity": 2.0,
+      "max_complexity": 2.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 70,
+      "total_churn": 70,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.4627,
+      "impact_score": 0.4627,
+      "blast_radius": {
+        "target": "backend/scripts/cache_demo_repos.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.5191,
+            "feature_value": 57.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (57 LOC)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": 0.4157,
+            "feature_value": 2.0,
+            "direction": "increases_risk",
+            "snippet": "elevated average complexity (2.0)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -1.506,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 2.0)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.7293,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.5191,
+            "feature_value": 57.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (57 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -1.506,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 2.0)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.7293,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": 0.4157,
+            "feature_value": 2.0,
+            "direction": "increases_risk",
+            "snippet": "elevated average complexity (2.0)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.1627,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "explanation_text": "Moderate defect risk (46.3%). Watch for large codebase footprint (57 LOC), and elevated average complexity (2.0). Stabilized by low branch complexity (max CC 2.0)."
+      },
+      "risk_rank": 13,
+      "impact_rank": 13
+    },
+    {
+      "id": "backend/tests/conftest.py",
+      "path": "backend/tests/conftest.py",
+      "directory": "backend/tests",
+      "filename": "conftest.py",
+      "loc": 5,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 7,
+      "total_churn": 7,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.035,
+      "impact_score": 0.035,
+      "blast_radius": {
+        "target": "backend/tests/conftest.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.5409,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -1.6746,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.9883,
+            "feature_value": 5.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (5 LOC)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -1.6746,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.9883,
+            "feature_value": 5.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (5 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.7293,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.5409,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.3266,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.1627,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "explanation_text": "Low defect risk (3.5%). Strong stability sustained by low branch complexity (max CC 1.0), and compact module size (5 LOC)."
+      },
+      "risk_rank": 15,
+      "impact_rank": 15
+    },
+    {
+      "id": "backend/tests/test_api.py",
+      "path": "backend/tests/test_api.py",
+      "directory": "backend/tests",
+      "filename": "test_api.py",
+      "loc": 68,
+      "mean_complexity": 7.0,
+      "max_complexity": 14.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 80,
+      "total_churn": 80,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/tests/test_api.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 14.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 14.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 68.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (68 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 14.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 14.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 68.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (68 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 7.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (7.0)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 14.0), and large codebase footprint (68 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 8,
+      "impact_rank": 8
+    },
+    {
+      "id": "backend/tests/test_blast_radius.py",
+      "path": "backend/tests/test_blast_radius.py",
+      "directory": "backend/tests",
+      "filename": "test_blast_radius.py",
+      "loc": 40,
+      "mean_complexity": 5.333,
+      "max_complexity": 8.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 60,
+      "total_churn": 60,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/tests/test_blast_radius.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 8.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 8.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 40.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (40 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 8.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 8.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 40.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (40 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 5.33,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (5.3)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 8.0), and large codebase footprint (40 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 9,
+      "impact_rank": 9
+    },
+    {
+      "id": "backend/tests/test_graph.py",
+      "path": "backend/tests/test_graph.py",
+      "directory": "backend/tests",
+      "filename": "test_graph.py",
+      "loc": 38,
+      "mean_complexity": 10.0,
+      "max_complexity": 10.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 63,
+      "total_churn": 63,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/tests/test_graph.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 10.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 10.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 38.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (38 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 10.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 10.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 38.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (38 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 10.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (10.0)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 10.0), and large codebase footprint (38 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 10,
+      "impact_rank": 10
+    },
+    {
+      "id": "backend/tests/test_leakage.py",
+      "path": "backend/tests/test_leakage.py",
+      "directory": "backend/tests",
+      "filename": "test_leakage.py",
+      "loc": 58,
+      "mean_complexity": 7.0,
+      "max_complexity": 7.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 80,
+      "total_churn": 80,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "backend/tests/test_leakage.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 7.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 7.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 58.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (58 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 7.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 7.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 58.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (58 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 7.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (7.0)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 7.0), and large codebase footprint (58 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 11,
+      "impact_rank": 11
+    },
+    {
+      "id": "docs/generate_walkthrough_pdf.py",
+      "path": "docs/generate_walkthrough_pdf.py",
+      "directory": "docs",
+      "filename": "generate_walkthrough_pdf.py",
+      "loc": 984,
+      "mean_complexity": 3.0,
+      "max_complexity": 3.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "file_age_days": 0.07,
+      "days_since_last_change": 0.07,
+      "churn_90d": 1064,
+      "total_churn": 1064,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.928,
+      "impact_score": 0.928,
+      "blast_radius": {
+        "target": "docs/generate_walkthrough_pdf.py",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 3.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 3.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 984.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (984 LOC)"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 1.6259,
+            "feature_value": 3.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 3.0)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 1.2062,
+            "feature_value": 984.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (984 LOC)"
+          },
+          {
+            "feature": "fan_in",
+            "label": "Fan-In (Dependents)",
+            "shap_value": -0.4819,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "isolated module position"
+          },
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.2902,
+            "feature_value": 0.07,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "fan_out",
+            "label": "Fan-Out (Dependencies)",
+            "shap_value": -0.0565,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "low dependency footprint"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.0502,
+            "feature_value": 3.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (3.0)"
+          }
+        ],
+        "explanation_text": "High defect likelihood (92.8%). Driven primarily by intricate branching complexity (max CC 3.0), and large codebase footprint (984 LOC). Partially buffered by isolated module position."
+      },
+      "risk_rank": 12,
+      "impact_rank": 12
+    }
+  ],
+  "graph_edges": [],
+  "critical_files": [
+    "backend/mining/synthetic_repo.py",
+    "run.py",
+    "backend/main.py",
+    "backend/graph/dep_graph.py",
+    "backend/mining/git_miner.py",
+    "backend/ml/shap_explainer.py",
+    "backend/ml/train.py",
+    "backend/tests/test_api.py",
+    "backend/tests/test_blast_radius.py",
+    "backend/tests/test_graph.py",
+    "backend/tests/test_leakage.py",
+    "docs/generate_walkthrough_pdf.py",
+    "backend/scripts/cache_demo_repos.py"
+  ]
+}

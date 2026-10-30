@@ -125,8 +125,9 @@ export const useCityStore = create<CityState>((set, get) => ({
       const data = await res.json();
       set({ repos: data });
       if (data.length > 0 && !get().currentRepo) {
-        // Auto-load first cached repo
-        get().loadRepo(data[0].id);
+        // Auto-load AGENTA-WORKSPACE by default, or fallback to first
+        const target = data.find((r: any) => r.id.includes('agenta') || r.name.includes('AGENTA')) || data[0];
+        get().loadRepo(target.id);
       }
     } catch (err: any) {
       console.error('Failed to fetch repositories:', err);
@@ -140,7 +141,8 @@ export const useCityStore = create<CityState>((set, get) => ({
       const res = await fetch(`${API_BASE}/repos/${repoId}`);
       if (!res.ok) throw new Error(`Failed to load repository '${repoId}'`);
       const payload: CityPayload = await res.json();
-      set({ currentRepo: payload, isLoading: false, lastUserActivity: Date.now() });
+      const defaultSelected = payload.files.find((f) => f.filename === 'seed_db.py' || f.is_hotspot) || null;
+      set({ currentRepo: payload, selectedFile: defaultSelected, isLoading: false, lastUserActivity: Date.now() });
     } catch (err: any) {
       set({ error: err.message || 'Error loading repository city', isLoading: false });
     }
