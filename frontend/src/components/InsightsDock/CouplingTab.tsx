@@ -85,7 +85,7 @@ export const CouplingTab: React.FC = () => {
             <span>Hidden Co-Change Couplings ({pairs.length} pairs detected)</span>
           </h3>
           <p className="text-[11px] text-slate-400">
-            Files that consistently modify together in Git commits despite having NO direct AST import relation.
+            Files that are edited together in Git commits, even though they don't import each other directly. Changing one usually means you need to update the other.
           </p>
         </div>
 

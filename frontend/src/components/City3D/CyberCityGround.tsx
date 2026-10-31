@@ -1,23 +1,44 @@
 import React, { useMemo } from 'react';
 import * as THREE from 'three';
+import type { DistrictZone, FileNode } from '../../types';
 
 interface CyberCityGroundProps {
+  districts?: DistrictZone[];
+  buildings?: FileNode[];
   lowPowerMode?: boolean;
 }
 
 /**
- * Realistic Cyber-City Ground matching reference image:
- * - Deep wet asphalt pavement with glossy specular reflections
- * - Defined illuminated cyan avenue lane lines and road curbs framing the city blocks
- * - Warm golden interior spill pools and red lobby reflections under buildings
- * - Zero infinite Tron grid lines across the world
+ * Realistic Cinematic Cyber-City Ground:
+ * - Deep wet asphalt pavement with puddle roughness variation and glossy specular sheen
+ * - Natural urban avenue corridors framing districts with subdued lane markers
+ * - Ambient contact occlusion and warm/crimson foundation ground spill beneath structures
+ * - Zero dominating laser lines or arbitrary geometric rings
  */
-export const CyberCityGround: React.FC<CyberCityGroundProps> = ({ lowPowerMode = false }) => {
+export const CyberCityGround: React.FC<CyberCityGroundProps> = ({
+  districts = [],
+  buildings = [],
+  lowPowerMode = false,
+}) => {
+  // Extract key building grounding footprints (up to 16 key nodes)
+  const groundNodes = useMemo(() => {
+    if (!buildings || buildings.length === 0) return [];
+    // Prioritize hero/hotspot files and key buildings
+    return buildings
+      .slice(0, 16)
+      .map((b) => ({
+        x: b.x || 0,
+        z: b.z || 0,
+        isHero: b.filename === 'seed_db.py' || b.is_hotspot || b.risk_probability >= 0.50,
+        risk: b.risk_probability || 0.1,
+      }));
+  }, [buildings]);
+
   const groundMaterial = useMemo(() => {
     const mat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color('#020611'),
-      roughness: 0.18,
-      metalness: 0.88,
+      color: new THREE.Color('#02050c'),
+      roughness: 0.22,
+      metalness: 0.85,
     });
 
     if (!lowPowerMode) {
@@ -39,64 +60,77 @@ export const CyberCityGround: React.FC<CyberCityGroundProps> = ({ lowPowerMode =
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <common>',
           `#include <common>
-           varying vec3 vWorldPos;`
+           varying vec3 vWorldPos;
+
+           // Fast procedural pseudo-noise for asphalt puddle roughness variation
+           float hashAsphalt(vec2 p) {
+             p = fract(p * vec2(123.34, 456.21));
+             p += dot(p, p + 45.32);
+             return fract(p.x * p.y);
+           }
+
+           float smoothNoise(vec2 uv) {
+             vec2 id = floor(uv);
+             vec2 f = fract(uv);
+             f = f * f * (3.0 - 2.0 * f);
+             float a = hashAsphalt(id);
+             float b = hashAsphalt(id + vec2(1.0, 0.0));
+             float c = hashAsphalt(id + vec2(0.0, 1.0));
+             float d = hashAsphalt(id + vec2(1.0, 1.0));
+             return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+           }`
         );
 
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <dithering_fragment>',
           `#include <dithering_fragment>
-            // Wet asphalt city pavement with illuminated avenue markings and ground reflections
+            // Cinematic Nocturnal Wet Asphalt Pavement
             float distFromCenter = length(vWorldPos.xz);
-            float edgeFade = 1.0 - smoothstep(120.0, 240.0, distFromCenter);
+            float edgeFade = 1.0 - smoothstep(110.0, 230.0, distFromCenter);
 
             vec3 groundGlow = vec3(0.0);
 
-            // 1. Central Hero Skyscraper (seed_db.py) ground lobby spill: warm golden + red reflection
-            float distHero = length(vWorldPos.xz);
-            float heroSpill = 1.0 - smoothstep(2.5, 9.5, distHero);
-            groundGlow += vec3(1.0, 0.72, 0.35) * heroSpill * 0.95;
-            float heroRedRim = smoothstep(3.2, 5.8, distHero) * (1.0 - smoothstep(5.8, 8.5, distHero));
-            groundGlow += vec3(1.0, 0.15, 0.10) * heroRedRim * 0.70;
+            // 1. Wet-Looking Rain Slick Puddle Variation
+            float puddleNoise = smoothNoise(vWorldPos.xz * 0.18);
+            float isPuddle = smoothstep(0.48, 0.72, puddleNoise);
 
-            // 2. Surrounding buildings warm light pools on asphalt
-            vec2 pModels = vWorldPos.xz - vec2(-8.8, -8.5);
-            vec2 pSchemas = vWorldPos.xz - vec2(-9.2, 8.2);
-            vec2 pTest = vWorldPos.xz - vec2(8.8, 8.5);
-            vec2 pConfig = vWorldPos.xz - vec2(10.8, -1.0);
-            vec2 pUtils = vWorldPos.xz - vec2(-12.8, 0.5);
+            // 2. Dynamic Building Grounding & Ambient Light Spill
+            // Contact shadow / foundation glow around active structures
+            float heroDist = length(vWorldPos.xz);
+            float heroSpill = 1.0 - smoothstep(1.8, 8.0, heroDist);
+            // Hero building warm amber lobby reflection
+            groundGlow += vec3(1.0, 0.76, 0.40) * heroSpill * 0.55;
+            // Menacing crimson perimeter spill
+            float heroCrimson = smoothstep(2.5, 4.8, heroDist) * (1.0 - smoothstep(4.8, 7.5, heroDist));
+            groundGlow += vec3(1.0, 0.16, 0.08) * heroCrimson * 0.42;
 
-            float bSpill = (1.0 - smoothstep(1.5, 7.5, length(pModels))) * 0.65
-                         + (1.0 - smoothstep(1.5, 7.5, length(pSchemas))) * 0.65
-                         + (1.0 - smoothstep(1.5, 7.5, length(pTest))) * 0.65
-                         + (1.0 - smoothstep(1.5, 6.5, length(pConfig))) * 0.55
-                         + (1.0 - smoothstep(1.5, 6.0, length(pUtils))) * 0.50;
-            groundGlow += vec3(1.0, 0.80, 0.45) * bSpill;
+            // 3. Urban Avenue Network (Subdued, realistic asphalt road lanes)
+            // Primary perimeter ring avenue framing core blocks
+            vec2 boxDistOuter = abs(vWorldPos.xz) - vec2(17.5, 17.5);
+            float outerAvenue = 1.0 - smoothstep(0.18, 0.55, abs(max(boxDistOuter.x, boxDistOuter.y)));
 
-            // 3. Cyber Avenue Network: Glowing cyan road lane lines framing the city blocks
-            // Primary outer perimeter avenue: box from [-18, 18] in X and Z
-            vec2 boxDistOuter = abs(vWorldPos.xz) - vec2(18.0, 18.0);
-            float outerAvenue = 1.0 - smoothstep(0.12, 0.45, abs(max(boxDistOuter.x, boxDistOuter.y)));
-            float outerAvenueCurb = 1.0 - smoothstep(0.08, 0.35, abs(max(boxDistOuter.x, boxDistOuter.y) + 1.2));
-
-            // Inner hero perimeter avenue: box from [-5.2, 5.2] in X and Z
-            vec2 boxDistInner = abs(vWorldPos.xz) - vec2(5.2, 5.2);
-            float innerAvenue = 1.0 - smoothstep(0.10, 0.38, abs(max(boxDistInner.x, boxDistInner.y)));
+            // Inner perimeter avenue
+            vec2 boxDistInner = abs(vWorldPos.xz) - vec2(5.5, 5.5);
+            float innerAvenue = 1.0 - smoothstep(0.16, 0.48, abs(max(boxDistInner.x, boxDistInner.y)));
 
             // Cross-block connector avenues
-            float crossX = (1.0 - smoothstep(0.10, 0.38, abs(vWorldPos.z))) * step(abs(vWorldPos.x), 18.2) * (1.0 - step(abs(vWorldPos.x), 5.0));
-            float crossZ = (1.0 - smoothstep(0.10, 0.38, abs(vWorldPos.x))) * step(abs(vWorldPos.z), 18.2) * (1.0 - step(abs(vWorldPos.z), 5.0));
+            float crossX = (1.0 - smoothstep(0.15, 0.45, abs(vWorldPos.z))) * step(abs(vWorldPos.x), 17.8) * (1.0 - step(abs(vWorldPos.x), 5.2));
+            float crossZ = (1.0 - smoothstep(0.15, 0.45, abs(vWorldPos.x))) * step(abs(vWorldPos.z), 17.8) * (1.0 - step(abs(vWorldPos.z), 5.2));
 
-            // Diagonal arterial avenues linking to surrounding districts
-            float diag1 = (1.0 - smoothstep(0.12, 0.40, abs(vWorldPos.x - vWorldPos.z))) * step(14.0, abs(vWorldPos.x)) * step(abs(vWorldPos.x), 36.0);
-            float diag2 = (1.0 - smoothstep(0.12, 0.40, abs(vWorldPos.x + vWorldPos.z))) * step(14.0, abs(vWorldPos.x)) * step(abs(vWorldPos.x), 36.0);
+            float totalAvenues = max(max(outerAvenue, innerAvenue), max(crossX, crossZ));
 
-            float totalAvenues = max(max(outerAvenue, outerAvenueCurb * 0.7), max(innerAvenue, max(crossX, crossZ)));
-            totalAvenues = max(totalAvenues, max(diag1, diag2) * 0.85);
+            // Subdued, elegant cyan road edge markings (intensity 0.55 instead of 2.2)
+            vec3 roadMarkingGlow = vec3(0.20, 0.75, 0.95) * totalAvenues * 0.55;
+            groundGlow += roadMarkingGlow;
 
-            vec3 cyanRoadGlow = vec3(0.15, 0.75, 1.0) * totalAvenues * 2.2;
-            groundGlow += cyanRoadGlow;
+            // 4. Subtle Coordinate Ground Grid (Non-intrusive reference)
+            vec2 gridCoord = abs(fract(vWorldPos.xz * 0.25 - 0.5) - 0.5) / fwidth(vWorldPos.xz * 0.25);
+            float gridLine = 1.0 - min(min(gridCoord.x, gridCoord.y), 1.0);
+            float gridFade = (1.0 - smoothstep(15.0, 75.0, distFromCenter)) * 0.14;
+            groundGlow += vec3(0.08, 0.25, 0.40) * gridLine * gridFade;
 
-            // Wet asphalt specular sheen
+            // Apply wet asphalt specular response
+            gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.35, gl_FragColor.rgb * 0.85, isPuddle);
             gl_FragColor.rgb += groundGlow * edgeFade;
             gl_FragColor.rgb *= edgeFade;`
         );
@@ -108,16 +142,10 @@ export const CyberCityGround: React.FC<CyberCityGroundProps> = ({ lowPowerMode =
 
   return (
     <group position={[0, -0.06, 0]}>
-      {/* 1. Dark Glossy Ground Plane with soft specular reflections */}
+      {/* Dark Glossy Ground Plane with Soft Puddle Reflections & Urban Avenues */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[520, 520, 4, 4]} />
         <primitive object={groundMaterial} attach="material" />
-      </mesh>
-
-      {/* 2. Soft Fading Peripheral Coordinate Ring */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[140, 360, 64]} />
-        <meshBasicMaterial color="#010308" transparent opacity={0.98} />
       </mesh>
     </group>
   );

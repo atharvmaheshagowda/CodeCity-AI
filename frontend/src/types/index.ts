@@ -34,6 +34,18 @@ export interface ShapExplanation {
   explanation_text: string;
 }
 
+export interface LineFailureDiagnostic {
+  line: number;
+  function_name: string;
+  snippet: string;
+  failure_type: string;
+  severity: 'critical' | 'high' | 'warning' | 'info';
+  root_cause: string;
+  why_it_fails: string;
+  suggested_fix: string;
+  cascade_impact?: string;
+}
+
 export interface FileNode {
   id: string;
   path: string;
@@ -52,6 +64,8 @@ export interface FileNode {
   past_bug_fixes: number;
   fan_in: number;
   fan_out: number;
+  pagerank?: number;
+  betweenness_centrality?: number;
   risk_probability: number;
   impact_score: number;
   risk_rank?: number;
@@ -66,6 +80,7 @@ export interface FileNode {
   blank_loc?: number;
   blast_radius: BlastRadiusData;
   shap: ShapExplanation;
+  line_failure?: LineFailureDiagnostic;
 
   // Layout coordinates in 3D scene (computed by district/building layouter)
   x?: number;
@@ -514,4 +529,15 @@ export interface CommitRiskResult {
   total_blast_radius: number;
   file_breakdown: CommitRiskBreakdown[];
 }
+
+export type ExhibitionStage =
+  | 'reveal'
+  | 'overview'
+  | 'tour'
+  | 'hotspots'
+  | 'dependencies'
+  | 'simulation'
+  | 'summary'
+  | 'complete';
+
 

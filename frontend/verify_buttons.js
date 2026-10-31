@@ -26,9 +26,19 @@ async function verifyButtons() {
 
   await page.setViewport({ width: 1920, height: 1080 });
   await page.goto('http://127.0.0.1:5173', { waitUntil: 'networkidle0' });
-  await wait(2500);
+  await wait(3000);
 
-  // 1. Click "View in graph" button
+  // 1. Select seed_db.py in hotspot list to open Right Drawer
+  console.log('Selecting seed_db.py...');
+  await page.evaluate(() => {
+    const item = Array.from(document.querySelectorAll('div')).find((el) =>
+      el.textContent && el.textContent.includes('seed_db.py')
+    );
+    if (item) item.click();
+  });
+  await wait(1000);
+
+  // 2. Click "View in graph" button
   console.log('Testing "View in graph" button...');
   const viewInGraphClicked = await page.evaluate(() => {
     const btn = document.getElementById('drawer-view-in-graph-btn');
@@ -39,10 +49,14 @@ async function verifyButtons() {
     return false;
   });
   console.log('View in graph clicked:', viewInGraphClicked);
-  await wait(1000);
-  await page.screenshot({ path: path.join(screenshotsDir, 'btn_1_view_in_graph.png') });
+  await wait(1200);
+  await page.screenshot({ path: path.join(screenshotsDir, 'btn_1_view_in_graph_modal.png') });
 
-  // 2. Click Theme / Moon toggle button
+  // Close Dependency Graph modal
+  await page.keyboard.press('Escape');
+  await wait(600);
+
+  // 3. Click Theme / Moon toggle button
   console.log('Testing Theme Moon/Zap toggle button...');
   const themeToggled = await page.evaluate(() => {
     const btn = document.getElementById('nav-theme-btn');
@@ -53,17 +67,17 @@ async function verifyButtons() {
     return false;
   });
   console.log('Theme button clicked:', themeToggled);
-  await wait(800);
-  await page.screenshot({ path: path.join(screenshotsDir, 'btn_2_theme_toggled.png') });
+  await wait(1200);
+  await page.screenshot({ path: path.join(screenshotsDir, 'btn_2_theme_neon.png') });
 
-  // Toggle back to normal
+  // Toggle back to Midnight Cyber City
   await page.evaluate(() => {
     const btn = document.getElementById('nav-theme-btn');
     if (btn) btn.click();
   });
-  await wait(500);
+  await wait(600);
 
-  // 3. Click "Matrix" button
+  // 4. Click "Matrix" button
   console.log('Testing "Matrix" button...');
   const matrixClicked = await page.evaluate(() => {
     const btn = document.getElementById('nav-matrix-btn');
@@ -79,9 +93,9 @@ async function verifyButtons() {
 
   // Close Matrix modal
   await page.keyboard.press('Escape');
-  await wait(500);
+  await wait(600);
 
-  // 4. Click "Compare" button
+  // 5. Click "Compare" button
   console.log('Testing "Compare" button...');
   const compareClicked = await page.evaluate(() => {
     const btn = document.getElementById('nav-compare-btn');
@@ -97,9 +111,9 @@ async function verifyButtons() {
 
   // Close Compare modal
   await page.keyboard.press('Escape');
-  await wait(500);
+  await wait(600);
 
-  // 5. Click ">_" (Terminal) button
+  // 6. Click ">_" (Terminal) button
   console.log('Testing ">_" Terminal button...');
   const terminalClicked = await page.evaluate(() => {
     const btn = document.getElementById('nav-terminal-btn');
@@ -110,7 +124,7 @@ async function verifyButtons() {
     return false;
   });
   console.log('Terminal button clicked:', terminalClicked);
-  await wait(1000);
+  await wait(1200);
   await page.screenshot({ path: path.join(screenshotsDir, 'btn_5_terminal_drawer.png') });
 
   await browser.close();
@@ -121,4 +135,3 @@ verifyButtons().catch((e) => {
   console.error('Test error:', e);
   process.exit(1);
 });
-

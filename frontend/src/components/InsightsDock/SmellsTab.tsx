@@ -47,10 +47,10 @@ export const SmellsTab: React.FC = () => {
         <div>
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-rose-400" />
-            <span>Architecture Anti-Patterns ({smellsResult.total_smells} Detected)</span>
+            <span>Code Issues & Smells ({smellsResult.total_smells} Detected)</span>
           </h3>
           <p className="text-[11px] text-slate-400">
-            Structural debt detected via Tarjan Strongly Connected Components and multi-factor thresholds.
+            Design issues detected automatically: circular import loops, overly large files, and unused files.
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export const SmellsTab: React.FC = () => {
             <Box className="w-3.5 h-3.5" />
           </div>
           <div>
-            <div className="text-[10px] text-slate-400">God Files</div>
+            <div className="text-[10px] text-slate-400">God Files (Too Big)</div>
             <div className="text-sm font-bold font-mono text-white">{godFiles.length}</div>
           </div>
         </div>
@@ -96,7 +96,7 @@ export const SmellsTab: React.FC = () => {
             <FileQuestion className="w-3.5 h-3.5" />
           </div>
           <div>
-            <div className="text-[10px] text-slate-400">Orphan Modules</div>
+            <div className="text-[10px] text-slate-400">Unused Files (Orphans)</div>
             <div className="text-sm font-bold font-mono text-white">{orphans.length}</div>
           </div>
         </div>

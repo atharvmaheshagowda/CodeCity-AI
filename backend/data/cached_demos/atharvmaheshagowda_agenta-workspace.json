@@ -178,7 +178,20 @@
           }
         ]
       },
-      "dominant_contributor_share": 0.88
+      "dominant_contributor_share": 0.88,
+      "pagerank": 0.1118,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 42,
+        "function_name": "init_db()",
+        "snippet": "models.init_schema()",
+        "failure_type": "ZeroDivisionError: division by zero",
+        "severity": "critical",
+        "root_cause": "Unhandled division by zero during zero-record batch seeding, coupled with lack of database transaction rollback.",
+        "why_it_fails": "Line 42 calls models.init_schema() inside a loop without checking if the table batch is empty. When record count is 0, a modulo calculation raises ZeroDivisionError, crashing database initialization.",
+        "suggested_fix": "Add a check: `if batch_size > 0:` and wrap the database transaction in `try...except ZeroDivisionError:` with rollback.",
+        "cascade_impact": "Crashes downstream models.py, schemas.py validation, and test.py test suite execution."
+      }
     },
     {
       "id": "models.py",
@@ -227,7 +240,20 @@
         "mitigators": [],
         "top_impacts": []
       },
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.1435,
+      "betweenness_centrality": 0.0333,
+      "line_failure": {
+        "line": 18,
+        "function_name": "init_schema()",
+        "snippet": "schemas.validate_all()",
+        "failure_type": "Unhandled ValidationError & Schema Mismatch",
+        "severity": "warning",
+        "root_cause": "Directly triggers schema validation without exception handling or fallback defaults.",
+        "why_it_fails": "Line 18 executes schemas.validate_all() assuming valid schema definitions. If schemas.py throws a ValidationError, init_schema fails without returning an error status to seed_db.py.",
+        "suggested_fix": "Wrap schemas.validate_all() in a try-except block and return a Boolean success status.",
+        "cascade_impact": "Propagates failure directly back to caller seed_db.py line 42."
+      }
     },
     {
       "id": "schemas.py",
@@ -272,7 +298,20 @@
         "mitigators": [],
         "top_impacts": []
       },
-      "dominant_contributor_share": 0.82
+      "dominant_contributor_share": 0.82,
+      "pagerank": 0.1435,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 28,
+        "function_name": "validate_schema()",
+        "snippet": "return payload[\"version\"]",
+        "failure_type": "KeyError: \"version\" on missing field",
+        "severity": "info",
+        "root_cause": "Direct dictionary indexing instead of safe key retrieval on untrusted incoming JSON payloads.",
+        "why_it_fails": "Line 28 indexes payload[\"version\"] directly. If an older client sends a payload without a \"version\" property, Python raises a KeyError.",
+        "suggested_fix": "Replace with safe dictionary lookup: `payload.get(\"version\", \"1.0\")`.",
+        "cascade_impact": "Breaks models.py schema initialization."
+      }
     },
     {
       "id": "test.py",
@@ -317,7 +356,20 @@
         "mitigators": [],
         "top_impacts": []
       },
-      "dominant_contributor_share": 0.52
+      "dominant_contributor_share": 0.52,
+      "pagerank": 0.1435,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 32,
+        "function_name": "test_seed()",
+        "snippet": "assert result.status_code == 200",
+        "failure_type": "AssertionError: Expected 200, got 500",
+        "severity": "info",
+        "root_cause": "Test assertions do not mock the database seeding layer, causing tests to fail whenever seed_db.py crashes.",
+        "why_it_fails": "Line 32 performs a live integration assertion. When seed_db.py fails at line 42, the HTTP server returns 500, causing this assertion to break the CI pipeline.",
+        "suggested_fix": "Use unittest.mock to mock `models.init_schema()` in isolated unit tests.",
+        "cascade_impact": "Breaks repository CI/CD pipeline on commit."
+      }
     },
     {
       "id": "__init__.py",
@@ -362,7 +414,20 @@
         "mitigators": [],
         "top_impacts": []
       },
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.1118,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 12,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (1.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "config.py",
@@ -407,7 +472,20 @@
         "mitigators": [],
         "top_impacts": []
       },
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.1118,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 18,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     },
     {
       "id": "utils.py",
@@ -452,7 +530,20 @@
         "mitigators": [],
         "top_impacts": []
       },
-      "dominant_contributor_share": 1.0
+      "dominant_contributor_share": 1.0,
+      "pagerank": 0.2339,
+      "betweenness_centrality": 0.0,
+      "line_failure": {
+        "line": 18,
+        "function_name": "<module>",
+        "snippet": "return True",
+        "failure_type": "Low Maintenance Risk (Stable Module)",
+        "severity": "info",
+        "root_cause": "Low complexity (2.0 max CC) and stable commit history.",
+        "why_it_fails": "No critical failure points detected. Logic is compact and modular with minimal recent edits.",
+        "suggested_fix": "Maintain current modularity and keep automated test suites passing.",
+        "cascade_impact": "Isolated module footprint; low blast radius."
+      }
     }
   ],
   "graph_edges": [

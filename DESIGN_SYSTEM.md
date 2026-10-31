@@ -1,74 +1,94 @@
-# CodeCity AI — Design System & Visual Specification
+# CodeCity AI — Design System ("Nocturne Glass")
 
-**Visual Target**: Realistic miniature futuristic cyber-city / software metropolis inspired by the high-end industrial simulation diorama aesthetic (*Blade Runner 2049* atmospheric depth, *Tron: Legacy* illuminated pathways, and *Linear* / *visionOS* tactile glassmorphic precision).
+**Archetype**: "Nocturne Glass" — High-End Spatial Software Intelligence meets Cinematic Cyberpunk Metropolis (Fluidity of Linear + Arc + Apple visionOS glass with Blade Runner 2049 atmospheric depth).
 
 ---
 
-## 1. Spatial Metaphor & Principles
+## 1. Brand Identity & Principles
 
-1. **The Miniature City as Hero**: The 3D environment occupies 100% of the screen. Elevated isometric framing (FOV 32–34°) provides a diorama-like vantage point where every structure, street, and illuminated pathway reads with razor-sharp clarity.
-2. **10 Architectural Archetypes**: Software files are never plain cubes. They are generated procedurally as distinct architectural structures (multi-story corporate buildings, glass towers, stepped high-rises, research facilities, industrial tech centers, datacenters, brutalist blocks, compact utilities, telecom masts, and monumental landmarks).
-3. **Dual-Temperature Facade Lighting**: Windows glow with warm golden/amber interior light (~50%) mixed with cool cyan terminal lighting (~25%) framed by dark tinted glass spandrels, metallic mullions, and floor slabs. High-risk modules pulse with slow crimson warning light.
-4. **Wet Terrain with Luminous Cyan Pathways**: Dark asphalt ground plane with subtle procedural roughness, puddles, glowing cyan conduit pathways, road markings, district boundaries, and small industrial utility equipment (electrical cabinets, streetlights).
-5. **Strict Data Grounding**:
-   - Building Footprint $\propto \sqrt{\text{LOC}}$
-   - Building Height $\propto \ln(1 + \text{Complexity})$
-   - Building Risk Tint $\propto \text{Defect Risk Probability } [0.0 \to 1.0]$
-   - District = Python Directory Package
-   - Illuminated Conduits = Real AST Import & Call Dependencies
-   - Blast Radius = Reverse Reachability BFS Cascade
+### Core Promise
+> **"See where your code will break next, and what breaks with it."**
+Every spatial dimension, glass elevation, and spring transition directly reflects repository static analysis and machine-learning risk predictions.
+
+### Principles
+1. **The Metropolis is the Canvas**: The 3D scene occupies 100% of the viewport. Floating glass panels hover with optical blur and subtle specular highlights.
+2. **Clean Architectural Silhouettes**: Replaced all barrels, rings, and random spires with clean architectural skyscraper towers: sharp-beveled rectangular prisms, stepped setbacks, and flat roofs with subtle emissive trim.
+3. **Restrained Color Discipline**: Near-black navy canvas (`#020409`), ONE signature accent (electric cyan `#00f0ff`), and an honest risk gradient (emerald $\to$ amber $\to$ hot crimson).
+4. **Accessible Redundancy**: Defect risk is redundantly encoded through color, pulse frequency (slow $\to$ rapid strobe), numerical percentage, and distinctive status icons.
+5. **Fluid Motion Language**: Driven entirely by `motion/react` with spring physics, cursor reactivity, and zero abrupt layout snaps.
 
 ---
 
 ## 2. Color Palette & Semantic Tokens
 
-| Semantic Token | Hex | RGBA | Usage |
+| Token Name | Hex Value | RGBA Value | Purpose & Semantics |
 |:---|:---|:---|:---|
-| **`canvas-void`** | `#020612` | `rgba(2, 6, 18, 1.0)` | Deep midnight-blue atmospheric clear color |
-| **`ground-wet`** | `#01040a` | `rgba(1, 4, 10, 1.0)` | Obsidian wet asphalt ground plane |
-| **`accent-cyan`** | `#00f0ff` | `rgba(0, 240, 255, 1.0)` | Signature illuminated pathways, Hop 1 arcs, beacons |
-| **`window-golden`** | `#fef08a` | `rgba(254, 240, 138, 1.0)`| Warm golden interior office window glow |
-| **`window-cyan`** | `#38bdf8` | `rgba(56, 189, 248, 1.0)` | Cool cyber terminal workstation lighting |
-| **`window-dark`** | `#070d18` | `rgba(7, 13, 24, 0.95)` | Tinted unlit glass / architectural spandrel |
-| **`risk-emerald`** | `#10b981` | `rgba(16, 185, 129, 1.0)`| Low risk ($P < 0.35$), stable modules |
-| **`risk-amber`** | `#f59e0b` | `rgba(245, 158, 11, 1.0)`| Medium risk ($0.35 \le P < 0.65$), attention |
-| **`risk-crimson`** | `#ff1a40` | `rgba(255, 26, 64, 1.0)` | High risk ($P \ge 0.65$), critical defect hotspot |
-| **`hop-1`** | `#38bdf8` | `rgba(56, 189, 248, 1.0)` | Direct importers (Hop 1 blast radius) |
-| **`hop-2`** | `#c084fc` | `rgba(192, 132, 252, 1.0)`| Indirect callers (Hop 2 blast radius) |
-| **`hop-3`** | `#fb7185` | `rgba(251, 113, 133, 1.0)`| Transitive cascades (Hop 3 blast radius) |
+| **`canvas-deep`** | `#020409` | `rgba(2, 4, 9, 1.0)` | Deepest navy ambient clear color |
+| **`surface-glass`** | `#070c18` | `rgba(7, 12, 24, 0.72)` | Primary floating panels with 18px backdrop blur |
+| **`surface-elevated`**| `#0e1628` | `rgba(14, 22, 40, 0.85)` | Active cards, search inputs, modal bodies |
+| **`border-glass`** | `#ffffff` | `rgba(255, 255, 255, 0.08)` | 1px inner hairline highlight |
+| **`border-active`** | `#00f0ff` | `rgba(0, 240, 255, 0.50)` | Focus rings, active tabs, selected states |
+| **`accent-cyan`** | `#00f0ff` | `hsl(184, 100%, 50%)` | Primary brand signature, telemetry, Hop 1 arcs |
+| **`risk-emerald`** | `#10b981` | `hsl(158, 64%, 52%)` | Low defect risk ($P < 0.35$), stable modules |
+| **`risk-amber`** | `#f59e0b` | `hsl(38, 92%, 50%)` | Moderate defect risk ($0.35 \le P < 0.65$), warning |
+| **`risk-crimson`** | `#ff1a40` | `hsl(350, 100%, 55%)` | High defect risk ($P \ge 0.65$), critical hotspot |
+| **`hop-1`** | `#00f0ff` | `rgba(0, 240, 255, 1.0)` | Direct importers (Hop 1 blast conduit) |
+| **`hop-2`** | `#a855f7` | `rgba(168, 85, 247, 1.0)` | Indirect callers (Hop 2 blast conduit) |
+| **`hop-3`** | `#f43f5e` | `rgba(244, 63, 94, 1.0)` | Transitive callers (Hop 3 blast conduit) |
+| **`window-warm`** | `#fff1d0` | `rgba(255, 241, 208, 0.9)` | Warm incandescent interior window |
+| **`window-cyan`** | `#70f3ff` | `rgba(112, 243, 255, 0.9)` | Cool terminal workstation window |
+| **`window-unlit`** | `#060b14` | `rgba(6, 11, 20, 0.95)` | Dark tinted standby glass |
 
 ---
 
-## 3. Glassmorphic Surface Specifications
+## 3. Typography Scale (Self-Hosted via `@fontsource`)
+
+- **Display & Section Titles**: `Space Grotesk` (Weights: 600, 700)
+- **Primary UI Sans**: `Inter` (Weights: 400, 500, 600, 700)
+- **Numbers, Telemetry & Code**: `JetBrains Mono` (Weights: 500, 600, 700)
+
+| Role | Family | Size | Weight | Tracking | Usage |
+|:---|:---|:---|:---|:---|:---|
+| **Display Hero** | Space Grotesk | 26px (1.625rem) | 700 | -0.03em | Exhibition Mode HUD, Major Toplines |
+| **Card Header** | Space Grotesk | 15px (0.9375rem)| 600 | -0.02em | Drawer titles, Modal headers |
+| **UI Body** | Inter | 12px (0.75rem) | 400/500 | 0 | Descriptions, SHAP narratives |
+| **Data Metric** | JetBrains Mono| 18px (1.125rem) | 700 | -0.02em | Risk gauges, KPI counters, LOC |
+| **Code Micro** | JetBrains Mono| 10px (0.625rem) | 600 | +0.02em | File paths, badges, keyboard tags |
+
+---
+
+## 4. Glass Surface Specifications & CSS Tokens
 
 ```css
-/* VisionOS Frosted Optical Glass Panel */
-.glass-panel {
-  background: rgba(2, 6, 20, 0.82);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* visionOS Frosted Optical Glass */
+.glass-nocturne {
+  background: rgba(7, 12, 24, 0.74);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   box-shadow: 
-    0 24px 48px -12px rgba(0, 0, 0, 0.8),
-    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 24px 48px -12px rgba(0, 0, 0, 0.75),
+    0 4px 12px rgba(0, 0, 0, 0.40),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-/* Elevated Glass Cards */
-.glass-panel-elevated {
-  background: rgba(8, 14, 30, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.55);
+/* Elevated Interactive Glass (Cards, Lists, Modals) */
+.glass-nocturne-elevated {
+  background: rgba(14, 22, 40, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
 }
 ```
 
 ---
 
-## 4. Typography Scale (100% Offline & Self-Hosted)
+## 5. 3D Architectural Tower Geometry & Shading
 
-- **Display & Headlines**: `Space Grotesk` (`@fontsource/space-grotesk`, weights 600, 700)
-- **UI Sans**: `Inter` (`@fontsource/inter`, weights 400, 500, 600, 700)
-- **Code & Telemetry**: `JetBrains Mono` (`@fontsource/jetbrains-mono`, weights 500, 600, 700)
-
+- **Building Form**: Clean rectangular towers with sharp beveled edges.
+- **Stepped Setbacks**: Complex/taller files receive a 3-tier stepped setback (Base podium $\to$ mid shaft $\to$ penthouse crown).
+- **Flat Roofs**: Dark metallic gravel roof decks with glowing perimeter parapet trim (`#00f0ff` or risk color).
+- **Window Grid**: Procedural GLSL shader producing clean, aligned window bays with dark structural mullions and spandrels.
+- **Fresnel Rim Light**: Grazing-angle rim illumination ensures building silhouettes read cleanly against the night sky.
+- **Landmark Beacons**: Top-impact files emit a soft vertical light column and a floating holographic name badge.

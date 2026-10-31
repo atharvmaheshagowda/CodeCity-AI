@@ -103,7 +103,7 @@ export const TimeTab: React.FC = () => {
             <div>
               <h3 className="font-semibold text-white text-sm">Git History Time-Lapse</h3>
               <p className="text-[11px] text-slate-400">
-                Choreographed 4D replay: dynamically scales building heights and renders unborn files as wireframe foundations.
+                Watch your codebase grow over time: replay past months to see how files and folders expanded.
               </p>
             </div>
           </div>

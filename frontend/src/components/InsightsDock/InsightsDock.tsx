@@ -19,6 +19,7 @@ import { SmellsTab } from './SmellsTab';
 import { ReportTab } from './ReportTab';
 import { PlanTab } from './PlanTab';
 import { TimeTab } from './TimeTab';
+import { ArchitecturalInsightsTab } from './ArchitecturalInsightsTab';
 import { soundFx } from '../../utils/soundEffects';
 
 export const InsightsDock: React.FC = () => {
@@ -37,6 +38,7 @@ export const InsightsDock: React.FC = () => {
   const couplingCount = couplingResult?.pairs?.length || 0;
 
   const tabs = [
+    { id: 'insights', label: 'Overview & Insights', icon: Sparkles, badge: null },
     { id: 'impact', label: 'Impact & Cascade', icon: Flame, badge: null },
     { id: 'plan', label: 'Review Planner', icon: Clock, badge: null },
     { id: 'time', label: 'Time-Lapse', icon: History, badge: null },
@@ -63,7 +65,7 @@ export const InsightsDock: React.FC = () => {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-white/10">
+            <div className="flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-white/10 overflow-x-auto scrollbar-none">
               {tabs.map((tab) => {
                 const isActive = insightsTab === tab.id;
                 const Icon = tab.icon;
@@ -75,7 +77,7 @@ export const InsightsDock: React.FC = () => {
                       setInsightsTab(tab.id);
                     }}
                     onMouseEnter={soundFx.playHoverTick}
-                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all shrink-0 ${
                       isActive
                         ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-glow-cyan'
                         : 'text-slate-400 hover:text-slate-200 border border-transparent'
@@ -101,7 +103,7 @@ export const InsightsDock: React.FC = () => {
               toggleInsights(false);
             }}
             onMouseEnter={soundFx.playHoverTick}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 transition-all shrink-0 ml-2"
             title="Close Insights Dock (Esc)"
           >
             <X className="w-4 h-4" />
@@ -110,6 +112,7 @@ export const InsightsDock: React.FC = () => {
 
         {/* Tab Content Body */}
         <div className="flex-1 overflow-y-auto p-5">
+          {insightsTab === 'insights' && <ArchitecturalInsightsTab />}
           {insightsTab === 'impact' && <ImpactTab />}
           {insightsTab === 'plan' && <PlanTab />}
           {insightsTab === 'time' && <TimeTab />}

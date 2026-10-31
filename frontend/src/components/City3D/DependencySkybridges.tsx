@@ -7,6 +7,7 @@ interface DependencySkybridgesProps {
   graphEdges: GraphEdge[];
   allBuildingsMap: Map<string, FileNode>;
   selectedFile: FileNode | null;
+  hoveredFile?: FileNode | null;
   lowPowerMode?: boolean;
 }
 
@@ -14,6 +15,7 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
   graphEdges,
   allBuildingsMap,
   selectedFile,
+  hoveredFile = null,
   lowPowerMode = false,
 }) => {
   const particlesRef = useRef<THREE.InstancedMesh>(null);
@@ -31,6 +33,7 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
       rotation: [number, number, number];
       scale: [number, number, number];
       isRelatedToSelection: boolean;
+      isRelatedToHover: boolean;
     }> = [];
 
     const conduitList: Array<{
@@ -38,6 +41,7 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
       curve: THREE.CatmullRomCurve3;
       mesh: THREE.Mesh;
       isRelatedToSelection: boolean;
+      isRelatedToHover: boolean;
       source: string;
       target: string;
     }> = [];
@@ -75,6 +79,16 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
           src.path === selectedFile.path ||
           tgt.path === selectedFile.path);
 
+      const isHovered =
+        !!hoveredFile &&
+        (src.id === hoveredFile.id ||
+          tgt.id === hoveredFile.id ||
+          src.path === hoveredFile.path ||
+          tgt.path === hoveredFile.path);
+
+      // Distance-aware opacity falloff for distant spans
+      const distFade = Math.max(0.18, Math.min(1.0, 1.0 - (dist - 40) / 75));
+
       if (dist <= 16.0) {
         // 1. Close modules: Architectural Enclosed Skybridge
         const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
@@ -91,23 +105,28 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
           rotation: [rotX, rotY, 0],
           scale: [0.35, 0.35, bridgeLength],
           isRelatedToSelection: isRelated,
+          isRelatedToHover: isHovered,
         });
       } else {
-        // 2. Longer spans: Elevated Luminous Transit Conduit Cable with catenary sag
+        // 2. Longer spans: Upward Arched Luminous Transit Conduit Cable
         const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
-        // Realistic catenary curve dip or arched transit clearance
-        midPoint.y = Math.max(2.5, Math.min(p1.y, p2.y) - Math.min(4.0, dist * 0.08));
+        midPoint.y = Math.max(p1.y, p2.y) + Math.min(7.5, 2.2 + dist * 0.20);
 
         const curve = new THREE.CatmullRomCurve3([p1, midPoint, p2]);
         const tubeGeo = new THREE.TubeGeometry(curve, 20, 0.09, 6, false);
+
+        const activeHighlight = isRelated || isHovered;
+        const baseOpacity = activeHighlight ? 0.95 : (selectedFile ? 0.08 : 0.35 * distFade);
+        const baseEmissive = activeHighlight ? 1.8 : (selectedFile ? 0.05 : 0.30);
+
         const tubeMat = new THREE.MeshStandardMaterial({
-          color: isRelated ? '#38bdf8' : '#0369a1',
-          emissive: isRelated ? '#38bdf8' : '#0284c7',
-          emissiveIntensity: isRelated ? 1.8 : 0.45,
+          color: activeHighlight ? '#38bdf8' : '#0369a1',
+          emissive: activeHighlight ? '#38bdf8' : '#0284c7',
+          emissiveIntensity: baseEmissive,
           roughness: 0.3,
           metalness: 0.8,
           transparent: true,
-          opacity: isRelated ? 0.95 : 0.38,
+          opacity: baseOpacity,
         });
 
         conduitList.push({
@@ -115,6 +134,7 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
           curve,
           mesh: new THREE.Mesh(tubeGeo, tubeMat),
           isRelatedToSelection: isRelated,
+          isRelatedToHover: isHovered,
           source: src.id,
           target: tgt.id,
         });
@@ -122,31 +142,43 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
     }
 
     return { bridges: bridgeList, conduits: conduitList };
-  }, [graphEdges, allBuildingsMap, selectedFile]);
+  }, [graphEdges, allBuildingsMap, selectedFile, hoveredFile]);
 
   // Animated traffic packet particles along conduits
   const totalConduits = conduits.length;
-  const particlesCount = lowPowerMode ? totalConduits : totalConduits * 2;
+  const packetsPerConduit = lowPowerMode ? 1 : 2;
+  const totalParticles = totalConduits * packetsPerConduit;
 
   useFrame(({ clock }) => {
     if (!particlesRef.current || totalConduits === 0) return;
     const elapsed = clock.getElapsedTime();
 
     for (let i = 0; i < totalConduits; i++) {
-      const { curve, isRelatedToSelection } = conduits[i];
-      // Animate 1-2 traffic data packets per conduit
-      const t = (elapsed * 0.35 + i * 0.17) % 1.0;
-      const pt = curve.getPointAt(t);
+      const { curve, isRelatedToSelection, isRelatedToHover } = conduits[i];
+      const activeConduit = isRelatedToSelection || isRelatedToHover;
 
-      particleDummy.position.copy(pt);
-      const scale = isRelatedToSelection ? 0.35 : 0.22;
-      particleDummy.scale.set(scale, scale, scale);
-      particleDummy.updateMatrix();
+      for (let p = 0; p < packetsPerConduit; p++) {
+        const pIdx = i * packetsPerConduit + p;
+        const phaseOffset = p * (1.0 / packetsPerConduit);
+        const t = (elapsed * 0.38 + i * 0.19 + phaseOffset) % 1.0;
+        const pt = curve.getPointAt(t);
 
-      particlesRef.current.setMatrixAt(i, particleDummy.matrix);
+        particleDummy.position.copy(pt);
+        const baseScale = activeConduit ? 0.34 : (selectedFile ? 0.10 : 0.18);
+        // Subtle pulsation along packet trajectory
+        const scale = baseScale * (0.85 + 0.15 * Math.sin(t * Math.PI));
+        particleDummy.scale.set(scale, scale, scale);
+        particleDummy.updateMatrix();
 
-      const pCol = isRelatedToSelection ? new THREE.Color('#38bdf8') : new THREE.Color('#0ea5e9');
-      particlesRef.current.setColorAt(i, pCol);
+        particlesRef.current.setMatrixAt(pIdx, particleDummy.matrix);
+
+        const pCol = activeConduit
+          ? new THREE.Color('#38bdf8')
+          : selectedFile
+          ? new THREE.Color('#0369a1')
+          : new THREE.Color('#0284c7');
+        particlesRef.current.setColorAt(pIdx, pCol);
+      }
     }
 
     particlesRef.current.instanceMatrix.needsUpdate = true;
@@ -158,33 +190,36 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
   return (
     <group>
       {/* 1. Architectural Rigid Skybridges */}
-      {bridges.map((b) => (
-        <group key={b.id} position={b.position} rotation={b.rotation}>
-          {/* Main Enclosed Bridge Tube */}
-          <mesh scale={b.scale}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial
-              color={b.isRelatedToSelection ? '#38bdf8' : '#0c1a32'}
-              emissive={b.isRelatedToSelection ? '#38bdf8' : '#0284c7'}
-              emissiveIntensity={b.isRelatedToSelection ? 1.6 : 0.35}
-              roughness={0.25}
-              metalness={0.85}
-              transparent
-              opacity={0.88}
-            />
-          </mesh>
-          {/* Glowing Glass Window Band Along Bridge */}
-          <mesh scale={[b.scale[0] * 1.05, b.scale[1] * 0.35, b.scale[2] * 0.95]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial
-              color={b.isRelatedToSelection ? '#67e8f9' : '#38bdf8'}
-              toneMapped={false}
-              transparent
-              opacity={0.75}
-            />
-          </mesh>
-        </group>
-      ))}
+      {bridges.map((b) => {
+        const activeBridge = b.isRelatedToSelection || b.isRelatedToHover;
+        return (
+          <group key={b.id} position={b.position} rotation={b.rotation}>
+            {/* Main Enclosed Bridge Tube */}
+            <mesh scale={b.scale}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshStandardMaterial
+                color={activeBridge ? '#38bdf8' : '#0c1a32'}
+                emissive={activeBridge ? '#38bdf8' : '#0284c7'}
+                emissiveIntensity={activeBridge ? 1.6 : (selectedFile ? 0.08 : 0.35)}
+                roughness={0.25}
+                metalness={0.85}
+                transparent
+                opacity={activeBridge ? 0.95 : (selectedFile ? 0.12 : 0.80)}
+              />
+            </mesh>
+            {/* Glowing Glass Window Band Along Bridge */}
+            <mesh scale={[b.scale[0] * 1.05, b.scale[1] * 0.35, b.scale[2] * 0.95]}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshBasicMaterial
+                color={activeBridge ? '#67e8f9' : '#38bdf8'}
+                toneMapped={false}
+                transparent
+                opacity={activeBridge ? 0.85 : (selectedFile ? 0.08 : 0.55)}
+              />
+            </mesh>
+          </group>
+        );
+      })}
 
       {/* 2. Luminous Long-Distance Dependency Conduits */}
       {conduits.map((c) => (
@@ -192,10 +227,10 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
       ))}
 
       {/* 3. Traffic Data Packet Particles */}
-      {totalConduits > 0 && (
+      {totalParticles > 0 && (
         <instancedMesh
           ref={particlesRef}
-          args={[undefined, undefined, totalConduits]}
+          args={[undefined, undefined, totalParticles]}
         >
           <sphereGeometry args={[1, 8, 8]} />
           <meshBasicMaterial toneMapped={false} />
@@ -204,4 +239,3 @@ export const DependencySkybridges: React.FC<DependencySkybridgesProps> = ({
     </group>
   );
 };
-
