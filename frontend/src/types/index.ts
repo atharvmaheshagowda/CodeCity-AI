@@ -58,6 +58,12 @@ export interface FileNode {
   impact_rank?: number;
   is_hotspot?: boolean;
   archetype?: string;
+  language?: string;
+  file_class?: string;
+  is_approximate_complexity?: boolean;
+  complexity_method?: string;
+  comment_loc?: number;
+  blank_loc?: number;
   blast_radius: BlastRadiusData;
   shap: ShapExplanation;
 
@@ -92,6 +98,45 @@ export interface RepoSummary {
   critical_files_count: number;
   model_roc_auc: number;
   total_dependencies: number;
+  git_history_available?: boolean;
+}
+
+export type FileClassFilter = 'all' | 'source' | 'test' | 'config' | 'docs' | 'other';
+
+export interface LanguageCapability {
+  complexity: 'yes' | 'approx' | 'no';
+  graph: 'yes' | 'partial' | 'no';
+  model: 'validated' | 'unvalidated';
+}
+
+export interface LanguageInfo {
+  name: string;
+  display_name: string;
+  file_count: number;
+  loc: number;
+  color: string;
+  capabilities: LanguageCapability;
+}
+
+export interface LanguageGraphCoverage {
+  detected_imports: number;
+  resolved_edges: number;
+  coverage_ratio: number;
+  confidence: 'High' | 'Moderate' | 'Low' | 'Unsupported';
+}
+
+export interface GraphCoverageReport {
+  overall_coverage: number;
+  overall_confidence: 'High' | 'Moderate' | 'Low' | 'Unsupported';
+  total_detected_imports: number;
+  total_resolved_edges: number;
+  per_language: Record<string, LanguageGraphCoverage>;
+}
+
+export interface ExclusionSummary {
+  analyzed: number;
+  excluded: number;
+  reasons: Record<string, number>;
 }
 
 export interface CityPayload {
@@ -103,6 +148,15 @@ export interface CityPayload {
   files: FileNode[];
   graph_edges: GraphEdge[];
   critical_files: string[];
+  is_static_only?: boolean;
+  source_type?: 'git_url' | 'local_git' | 'local_static' | 'zip_archive';
+  languages?: LanguageInfo[];
+  file_classes?: Record<string, number>;
+  graph_coverage?: GraphCoverageReport;
+  model_used?: 'core' | 'core+graph';
+  model_rationale?: string;
+  exclusion_summary?: ExclusionSummary;
+  monorepo_roots?: string[];
 }
 
 export interface RepoListItem {
@@ -110,6 +164,8 @@ export interface RepoListItem {
   name: string;
   analyzed_at?: string;
   summary: RepoSummary;
+  languages?: LanguageInfo[];
+  is_static_only?: boolean;
 }
 
 export interface ModelCardMetrics {
@@ -128,11 +184,22 @@ export interface FeatureImportance {
   importance: number;
 }
 
+export interface LanguageModelMetrics {
+  samples: number;
+  positives: number;
+  roc_auc: number;
+  precision_at_10: number;
+  recall_at_top_10_percent: number;
+  baseline_churn_roc_auc: number;
+  confidence: 'validated' | 'low_confidence';
+}
+
 export interface ModelCardData {
   model_name: string;
   evaluation_date: string;
   training_repositories: string[];
-  held_out_repository: string;
+  held_out_repository?: string;
+  held_out_repositories?: string[];
   training_samples: number;
   held_out_samples: number;
   held_out_positives: number;
@@ -141,8 +208,15 @@ export interface ModelCardData {
     model: ModelCardMetrics;
     baseline_churn: ModelCardMetrics;
   };
+  per_language?: Record<string, LanguageModelMetrics>;
   roc_curve: RocCurvePoint[];
   feature_importances: FeatureImportance[];
+  model_architecture?: {
+    core_features: string[];
+    graph_features: string[];
+    graph_threshold: number;
+    description: string;
+  };
 }
 
 export interface DistrictZone {

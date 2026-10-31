@@ -15,27 +15,61 @@ if BACKEND_DIR not in sys.path:
     sys.path.insert(0, BACKEND_DIR)
 
 from main import generate_city_payload
-from mining.synthetic_repo import create_synthetic_flask_repo, create_synthetic_click_repo, create_synthetic_requests_repo
+from mining.synthetic_repo import (
+    create_synthetic_flask_repo,
+    create_synthetic_click_repo,
+    create_synthetic_requests_repo,
+    create_synthetic_express_repo,
+    create_synthetic_zod_repo,
+    create_synthetic_gson_repo,
+    create_synthetic_cobra_repo,
+    create_synthetic_c_repo,
+)
 
 CACHED_DEMOS_DIR = os.path.join(BACKEND_DIR, "data", "cached_demos")
 os.makedirs(CACHED_DEMOS_DIR, exist_ok=True)
 
 DEMOS = [
     {
+        "id": "pallets_flask",
+        "name": "pallets/flask (Python)",
+        "creator": create_synthetic_flask_repo,
+    },
+    {
+        "id": "expressjs_express",
+        "name": "expressjs/express (JavaScript)",
+        "creator": create_synthetic_express_repo,
+    },
+    {
+        "id": "colinhacks_zod",
+        "name": "colinhacks/zod (TypeScript)",
+        "creator": create_synthetic_zod_repo,
+    },
+    {
+        "id": "google_gson",
+        "name": "google/gson (Java)",
+        "creator": create_synthetic_gson_repo,
+    },
+    {
+        "id": "spf13_cobra",
+        "name": "spf13/cobra (Go)",
+        "creator": create_synthetic_cobra_repo,
+    },
+    {
+        "id": "c_engine",
+        "name": "matrix/engine (C/C++)",
+        "creator": create_synthetic_c_repo,
+    },
+    {
         "id": "psf_requests",
-        "name": "psf/requests",
+        "name": "psf/requests (Python)",
         "creator": create_synthetic_requests_repo,
     },
     {
         "id": "pallets_click",
-        "name": "pallets/click",
+        "name": "pallets/click (Python)",
         "creator": create_synthetic_click_repo,
     },
-    {
-        "id": "pallets_flask",
-        "name": "pallets/flask",
-        "creator": create_synthetic_flask_repo,
-    }
 ]
 
 def precompute_demo_caches():

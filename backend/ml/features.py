@@ -1,8 +1,14 @@
 """
-ML Feature Schema for CodeCity AI.
+ML Feature Schema for Multi-Language CodeCity AI.
+
+Defines:
+- CORE_FEATURE_COLUMNS: Universal metrics available for all programming languages
+- GRAPH_FEATURE_COLUMNS: Additional structural dependency metrics (fan-in, fan-out)
+- CORE_GRAPH_FEATURE_COLUMNS: Combined features when dependency graph coverage is sufficient
+- Backward-compatible FEATURE_COLUMNS
 """
 
-FEATURE_COLUMNS = [
+CORE_FEATURE_COLUMNS = [
     "loc",
     "mean_complexity",
     "max_complexity",
@@ -13,9 +19,19 @@ FEATURE_COLUMNS = [
     "churn_90d",
     "total_churn",
     "past_bug_fixes",
-    "fan_in",
-    "fan_out"
 ]
+
+GRAPH_FEATURE_COLUMNS = [
+    "fan_in",
+    "fan_out",
+]
+
+CORE_GRAPH_FEATURE_COLUMNS = CORE_FEATURE_COLUMNS + GRAPH_FEATURE_COLUMNS
+
+# Backward-compatibility alias
+FEATURE_COLUMNS = CORE_GRAPH_FEATURE_COLUMNS
+
+GRAPH_COVERAGE_THRESHOLD = 0.35
 
 FEATURE_LABELS = {
     "loc": "Lines of Code",

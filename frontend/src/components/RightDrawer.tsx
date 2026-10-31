@@ -100,6 +100,32 @@ export const RightDrawer: React.FC = () => {
               {selectedFile.filename}
             </h2>
           </div>
+
+          {/* Multi-Language & Classification Metadata */}
+          <div className="flex items-center gap-1.5 mt-1 text-[9px] font-mono flex-wrap">
+            {selectedFile.language && (
+              <span className="px-1.5 py-0.2 rounded bg-slate-800 text-cyan-300 border border-white/10 uppercase font-semibold">
+                {selectedFile.language}
+              </span>
+            )}
+            {selectedFile.file_class && (
+              <span className="px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-white/5 capitalize">
+                {selectedFile.file_class}
+              </span>
+            )}
+            {selectedFile.is_approximate_complexity ? (
+              <span
+                className="px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-500/40 font-bold"
+                title="Approximate branching heuristic"
+              >
+                ~CC: {selectedFile.max_complexity} (Approx)
+              </span>
+            ) : (
+              <span className="px-1.5 py-0.2 rounded bg-slate-900 text-emerald-300 border border-emerald-500/30">
+                CC: {selectedFile.max_complexity} ({selectedFile.complexity_method || 'AST'})
+              </span>
+            )}
+          </div>
         </div>
         <button
           onClick={() => {
@@ -225,6 +251,17 @@ export const RightDrawer: React.FC = () => {
                   <div className="text-slate-300 font-bold text-sm mt-0.5">{selectedFile.total_churn} LOC</div>
                 </div>
 
+                <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5 col-span-2">
+                  <div className="text-slate-400 text-[10px] mb-1">LOC Breakdown (Generic Counter)</div>
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="text-slate-300">Code: <b className="text-white">{selectedFile.loc}</b></span>
+                    <span className="text-slate-500">|</span>
+                    <span className="text-slate-300">Comment: <b className="text-cyan-300">{selectedFile.comment_loc || 0}</b></span>
+                    <span className="text-slate-500">|</span>
+                    <span className="text-slate-300">Blank: <b className="text-slate-400">{selectedFile.blank_loc || 0}</b></span>
+                  </div>
+                </div>
+
                 <div className="p-2 rounded-xl bg-slate-950/60 border border-white/5">
                   <div className="text-slate-400 text-[10px]">Past Bug Fixes</div>
                   <div className="text-amber-400 font-bold text-sm mt-0.5">{selectedFile.past_bug_fixes}</div>
@@ -330,6 +367,25 @@ export const RightDrawer: React.FC = () => {
               <p className="text-slate-300 text-[11px] font-sans leading-relaxed">
                 If this file breaks or undergoes an unverified signature change, failures cascade along direct and transitive AST import conduits.
               </p>
+
+              {/* Language Graph Coverage Badge */}
+              {(() => {
+                const lang = (selectedFile.language || '').toLowerCase();
+                const langCov = currentRepo?.graph_coverage?.per_language?.[lang];
+                const isApproximate = !langCov || langCov.coverage_ratio < 0.35 || langCov.confidence === 'Low' || langCov.confidence === 'Unsupported';
+
+                return isApproximate ? (
+                  <div className="p-2 rounded-xl bg-amber-950/70 border border-amber-500/40 text-[10px] text-amber-300 flex items-center gap-1.5 font-mono">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>Approximate Blast Radius &bull; {langCov ? `${(langCov.coverage_ratio * 100).toFixed(0)}% graph coverage (${langCov.confidence})` : 'Language AST graph unsupported (0 edges)'}</span>
+                  </div>
+                ) : (
+                  <div className="p-2 rounded-xl bg-emerald-950/70 border border-emerald-500/30 text-[10px] text-emerald-300 flex items-center gap-1.5 font-mono">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>Validated AST Graph Coverage ({(langCov.coverage_ratio * 100).toFixed(0)}% resolved &bull; {langCov.confidence} confidence)</span>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Hop 1 Direct Dependents */}

@@ -1,0 +1,5469 @@
+{
+  "repo_id": "spf13_cobra",
+  "name": "spf13/cobra (Go)",
+  "analyzed_at": "2026-10-30T19:58:38.921949+00:00",
+  "is_static_only": false,
+  "source_type": "local_git",
+  "summary": {
+    "total_files": 39,
+    "total_loc": 47,
+    "avg_risk": 0.066,
+    "critical_files_count": 0,
+    "model_roc_auc": 0.9107,
+    "total_dependencies": 0,
+    "git_history_available": true
+  },
+  "languages": [
+    {
+      "name": "other",
+      "display_name": "Other",
+      "file_count": 36,
+      "loc": 2,
+      "color": "#64748b",
+      "capabilities": {
+        "complexity": "approx",
+        "graph": "no",
+        "model": "unvalidated"
+      }
+    },
+    {
+      "name": "go",
+      "display_name": "Go",
+      "file_count": 3,
+      "loc": 45,
+      "color": "#06b6d4",
+      "capabilities": {
+        "complexity": "yes",
+        "graph": "yes",
+        "model": "validated"
+      }
+    }
+  ],
+  "file_classes": {
+    "source": 2,
+    "test": 1,
+    "config": 1,
+    "docs": 0,
+    "other": 35
+  },
+  "graph_coverage": {
+    "overall_coverage": 0.0,
+    "overall_confidence": "Unsupported",
+    "total_detected_imports": 5,
+    "total_resolved_edges": 0,
+    "per_language": {
+      "go": {
+        "detected_imports": 5,
+        "resolved_edges": 0,
+        "coverage_ratio": 0.0,
+        "confidence": "Unsupported"
+      }
+    }
+  },
+  "model_used": "core",
+  "model_rationale": "Dependency graph coverage is 0.0% (< 35% threshold). Universal core model applied.",
+  "monorepo_roots": [],
+  "directory_tree": {
+    "name": "root",
+    "path": "",
+    "children": [
+      {
+        "name": "git",
+        "path": "git",
+        "children": [
+          {
+            "name": "hooks",
+            "path": "git/hooks",
+            "children": [],
+            "files": [
+              "git/hooks/applypatch-msg.sample",
+              "git/hooks/commit-msg.sample",
+              "git/hooks/fsmonitor-watchman.sample",
+              "git/hooks/post-update.sample",
+              "git/hooks/pre-applypatch.sample",
+              "git/hooks/pre-commit.sample",
+              "git/hooks/pre-merge-commit.sample",
+              "git/hooks/pre-push.sample",
+              "git/hooks/pre-rebase.sample",
+              "git/hooks/pre-receive.sample",
+              "git/hooks/prepare-commit-msg.sample",
+              "git/hooks/push-to-checkout.sample",
+              "git/hooks/sendemail-validate.sample",
+              "git/hooks/update.sample"
+            ]
+          },
+          {
+            "name": "info",
+            "path": "git/info",
+            "children": [],
+            "files": [
+              "git/info/exclude"
+            ]
+          },
+          {
+            "name": "logs",
+            "path": "git/logs",
+            "children": [
+              {
+                "name": "refs",
+                "path": "git/logs/refs",
+                "children": [
+                  {
+                    "name": "heads",
+                    "path": "git/logs/refs/heads",
+                    "children": [],
+                    "files": [
+                      "git/logs/refs/heads/main"
+                    ]
+                  }
+                ],
+                "files": []
+              }
+            ],
+            "files": [
+              "git/logs/HEAD"
+            ]
+          },
+          {
+            "name": "objects",
+            "path": "git/objects",
+            "children": [
+              {
+                "name": "08",
+                "path": "git/objects/08",
+                "children": [],
+                "files": [
+                  "git/objects/08/ae3f8b880a9d82b17e9848ac9fdb9d669cd1ff"
+                ]
+              },
+              {
+                "name": "22",
+                "path": "git/objects/22",
+                "children": [],
+                "files": [
+                  "git/objects/22/ff1de43a261ee66c5a3cfdac1759f200344320"
+                ]
+              },
+              {
+                "name": "2f",
+                "path": "git/objects/2f",
+                "children": [],
+                "files": [
+                  "git/objects/2f/ab4d417928b71827a6464898dcbf701197b1cf"
+                ]
+              },
+              {
+                "name": "78",
+                "path": "git/objects/78",
+                "children": [],
+                "files": [
+                  "git/objects/78/29b364fe94854af4dafdcf4fe88e93d68687cf"
+                ]
+              },
+              {
+                "name": "96",
+                "path": "git/objects/96",
+                "children": [],
+                "files": [
+                  "git/objects/96/e9b3d49066c50c982cbc0cfd4441826934ead9"
+                ]
+              },
+              {
+                "name": "a2",
+                "path": "git/objects/a2",
+                "children": [],
+                "files": [
+                  "git/objects/a2/49908b2eb8ce5c2aa0dcee8bcefba7263091c2"
+                ]
+              },
+              {
+                "name": "a4",
+                "path": "git/objects/a4",
+                "children": [],
+                "files": [
+                  "git/objects/a4/54569aec3e7a91729205ed138ee62d5d1a544b"
+                ]
+              },
+              {
+                "name": "c7",
+                "path": "git/objects/c7",
+                "children": [],
+                "files": [
+                  "git/objects/c7/874bc8f27b19e072352b2384970092c75da2dd"
+                ]
+              },
+              {
+                "name": "cc",
+                "path": "git/objects/cc",
+                "children": [],
+                "files": [
+                  "git/objects/cc/fef07964a4e6ccd306dc1e228c25f5daaec186"
+                ]
+              },
+              {
+                "name": "ce",
+                "path": "git/objects/ce",
+                "children": [],
+                "files": [
+                  "git/objects/ce/8bf8f0d7c391f38040fef43af16d7661f8f5eb"
+                ]
+              },
+              {
+                "name": "d6",
+                "path": "git/objects/d6",
+                "children": [],
+                "files": [
+                  "git/objects/d6/e668a9ef4c069fa23a88bc86b2a1b04c86e528"
+                ]
+              },
+              {
+                "name": "ed",
+                "path": "git/objects/ed",
+                "children": [],
+                "files": [
+                  "git/objects/ed/98b86bf8ee9b0f03349585d0609427db60810d"
+                ]
+              }
+            ],
+            "files": []
+          },
+          {
+            "name": "refs",
+            "path": "git/refs",
+            "children": [
+              {
+                "name": "heads",
+                "path": "git/refs/heads",
+                "children": [],
+                "files": [
+                  "git/refs/heads/main"
+                ]
+              }
+            ],
+            "files": []
+          }
+        ],
+        "files": [
+          "git/COMMIT_EDITMSG",
+          "git/config",
+          "git/description",
+          "git/HEAD",
+          "git/index"
+        ]
+      }
+    ],
+    "files": [
+      "args.go",
+      "command.go",
+      "command_test.go",
+      "go.mod"
+    ]
+  },
+  "files": [
+    {
+      "id": "args.go",
+      "path": "args.go",
+      "directory": "",
+      "filename": "args.go",
+      "language": "go",
+      "file_class": "source",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 13,
+      "comment_loc": 0,
+      "blank_loc": 2,
+      "mean_complexity": 1.5,
+      "max_complexity": 2.0,
+      "commit_count": 2,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 180.0,
+      "days_since_last_change": 65.0,
+      "churn_90d": 0,
+      "total_churn": 12,
+      "past_bug_fixes": 1,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.105,
+      "impact_score": 0.105,
+      "blast_radius": {
+        "target": "args.go",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 0.2682,
+            "feature_value": 13.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (13 LOC)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": 0.123,
+            "feature_value": 1.5,
+            "direction": "increases_risk",
+            "snippet": "elevated average complexity (1.5)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": 0.0032,
+            "feature_value": 12.0,
+            "direction": "increases_risk",
+            "snippet": "large cumulative churn (12 lines total)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.7387,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.3744,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 2.0)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.7387,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.3744,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 2.0)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": -0.3343,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "Total Commit Count of 2.0"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 0.2682,
+            "feature_value": 13.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (13 LOC)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.2628,
+            "feature_value": 65.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (65 days dormant)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": 0.123,
+            "feature_value": 1.5,
+            "direction": "increases_risk",
+            "snippet": "elevated average complexity (1.5)"
+          }
+        ],
+        "explanation_text": "Low defect risk (10.5%). Strong stability sustained by minimal recent code churn (0 lines), and low branch complexity (max CC 2.0)."
+      },
+      "risk_rank": 2,
+      "impact_rank": 2
+    },
+    {
+      "id": "command.go",
+      "path": "command.go",
+      "directory": "",
+      "filename": "command.go",
+      "language": "go",
+      "file_class": "source",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 24,
+      "comment_loc": 0,
+      "blank_loc": 4,
+      "mean_complexity": 2.5,
+      "max_complexity": 3.0,
+      "commit_count": 2,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 180.0,
+      "days_since_last_change": 130.0,
+      "churn_90d": 0,
+      "total_churn": 30,
+      "past_bug_fixes": 1,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.3381,
+      "impact_score": 0.3381,
+      "blast_radius": {
+        "target": "command.go",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 0.7599,
+            "feature_value": 3.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 3.0)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": 0.1393,
+            "feature_value": 130.0,
+            "direction": "increases_risk",
+            "snippet": "frequent recent edits (130.0 days ago)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 0.0858,
+            "feature_value": 24.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (24 LOC)"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.4363,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": -0.398,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "Total Commit Count of 2.0"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.4363,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": 0.7599,
+            "feature_value": 3.0,
+            "direction": "increases_risk",
+            "snippet": "intricate branching complexity (max CC 3.0)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": -0.398,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "Total Commit Count of 2.0"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": 0.1393,
+            "feature_value": 130.0,
+            "direction": "increases_risk",
+            "snippet": "frequent recent edits (130.0 days ago)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": 0.0858,
+            "feature_value": 24.0,
+            "direction": "increases_risk",
+            "snippet": "large codebase footprint (24 LOC)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": 0.0774,
+            "feature_value": 30.0,
+            "direction": "increases_risk",
+            "snippet": "large cumulative churn (30 lines total)"
+          }
+        ],
+        "explanation_text": "Low defect risk (33.8%). Strong stability sustained by minimal recent code churn (0 lines), and Total Commit Count of 2.0."
+      },
+      "risk_rank": 1,
+      "impact_rank": 1
+    },
+    {
+      "id": "command_test.go",
+      "path": "command_test.go",
+      "directory": "",
+      "filename": "command_test.go",
+      "language": "go",
+      "file_class": "test",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 8,
+      "comment_loc": 0,
+      "blank_loc": 2,
+      "mean_complexity": 2.0,
+      "max_complexity": 2.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 180.0,
+      "days_since_last_change": 180.0,
+      "churn_90d": 0,
+      "total_churn": 10,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0612,
+      "impact_score": 0.0612,
+      "blast_radius": {
+        "target": "command_test.go",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": 0.1179,
+            "feature_value": 180.0,
+            "direction": "increases_risk",
+            "snippet": "frequent recent edits (180.0 days ago)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0511,
+            "feature_value": 1.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 1.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.798,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.6041,
+            "feature_value": 8.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (8 LOC)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.798,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.6041,
+            "feature_value": 8.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (8 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.4162,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 2.0)"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1344,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (2.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.1202,
+            "feature_value": 10.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": 0.1179,
+            "feature_value": 180.0,
+            "direction": "increases_risk",
+            "snippet": "frequent recent edits (180.0 days ago)"
+          }
+        ],
+        "explanation_text": "Low defect risk (6.1%). Strong stability sustained by minimal recent code churn (0 lines), and compact module size (8 LOC)."
+      },
+      "risk_rank": 4,
+      "impact_rank": 4
+    },
+    {
+      "id": "go.mod",
+      "path": "go.mod",
+      "directory": "",
+      "filename": "go.mod",
+      "language": "other",
+      "file_class": "config",
+      "is_approximate_complexity": true,
+      "complexity_method": "approximate",
+      "loc": 2,
+      "comment_loc": 0,
+      "blank_loc": 1,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 1,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 180.0,
+      "days_since_last_change": 180.0,
+      "churn_90d": 0,
+      "total_churn": 3,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0798,
+      "impact_score": 0.0798,
+      "blast_radius": {
+        "target": "go.mod",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": 0.1009,
+            "feature_value": 180.0,
+            "direction": "increases_risk",
+            "snippet": "frequent recent edits (180.0 days ago)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 1.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 1.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.5297,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.6067,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (2 LOC)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.5297,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.6067,
+            "feature_value": 2.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (2 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.251,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2386,
+            "feature_value": 3.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1483,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": 0.1009,
+            "feature_value": 180.0,
+            "direction": "increases_risk",
+            "snippet": "frequent recent edits (180.0 days ago)"
+          }
+        ],
+        "explanation_text": "Low defect risk (8.0%). Strong stability sustained by minimal recent code churn (0 lines), and compact module size (2 LOC)."
+      },
+      "risk_rank": 3,
+      "impact_rank": 3
+    },
+    {
+      "id": "git/COMMIT_EDITMSG",
+      "path": "git/COMMIT_EDITMSG",
+      "directory": "git",
+      "filename": "COMMIT_EDITMSG",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/COMMIT_EDITMSG",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 5,
+      "impact_rank": 5
+    },
+    {
+      "id": "git/config",
+      "path": "git/config",
+      "directory": "git",
+      "filename": "config",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/config",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 6,
+      "impact_rank": 6
+    },
+    {
+      "id": "git/description",
+      "path": "git/description",
+      "directory": "git",
+      "filename": "description",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/description",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 7,
+      "impact_rank": 7
+    },
+    {
+      "id": "git/HEAD",
+      "path": "git/HEAD",
+      "directory": "git",
+      "filename": "HEAD",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/HEAD",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 8,
+      "impact_rank": 8
+    },
+    {
+      "id": "git/index",
+      "path": "git/index",
+      "directory": "git",
+      "filename": "index",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/index",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 9,
+      "impact_rank": 9
+    },
+    {
+      "id": "git/hooks/applypatch-msg.sample",
+      "path": "git/hooks/applypatch-msg.sample",
+      "directory": "git/hooks",
+      "filename": "applypatch-msg.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/applypatch-msg.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 10,
+      "impact_rank": 10
+    },
+    {
+      "id": "git/hooks/commit-msg.sample",
+      "path": "git/hooks/commit-msg.sample",
+      "directory": "git/hooks",
+      "filename": "commit-msg.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/commit-msg.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 11,
+      "impact_rank": 11
+    },
+    {
+      "id": "git/hooks/fsmonitor-watchman.sample",
+      "path": "git/hooks/fsmonitor-watchman.sample",
+      "directory": "git/hooks",
+      "filename": "fsmonitor-watchman.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/fsmonitor-watchman.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 12,
+      "impact_rank": 12
+    },
+    {
+      "id": "git/hooks/post-update.sample",
+      "path": "git/hooks/post-update.sample",
+      "directory": "git/hooks",
+      "filename": "post-update.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/post-update.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 13,
+      "impact_rank": 13
+    },
+    {
+      "id": "git/hooks/pre-applypatch.sample",
+      "path": "git/hooks/pre-applypatch.sample",
+      "directory": "git/hooks",
+      "filename": "pre-applypatch.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/pre-applypatch.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 14,
+      "impact_rank": 14
+    },
+    {
+      "id": "git/hooks/pre-commit.sample",
+      "path": "git/hooks/pre-commit.sample",
+      "directory": "git/hooks",
+      "filename": "pre-commit.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/pre-commit.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 15,
+      "impact_rank": 15
+    },
+    {
+      "id": "git/hooks/pre-merge-commit.sample",
+      "path": "git/hooks/pre-merge-commit.sample",
+      "directory": "git/hooks",
+      "filename": "pre-merge-commit.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/pre-merge-commit.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 16,
+      "impact_rank": 16
+    },
+    {
+      "id": "git/hooks/pre-push.sample",
+      "path": "git/hooks/pre-push.sample",
+      "directory": "git/hooks",
+      "filename": "pre-push.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/pre-push.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 17,
+      "impact_rank": 17
+    },
+    {
+      "id": "git/hooks/pre-rebase.sample",
+      "path": "git/hooks/pre-rebase.sample",
+      "directory": "git/hooks",
+      "filename": "pre-rebase.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/pre-rebase.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 18,
+      "impact_rank": 18
+    },
+    {
+      "id": "git/hooks/pre-receive.sample",
+      "path": "git/hooks/pre-receive.sample",
+      "directory": "git/hooks",
+      "filename": "pre-receive.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/pre-receive.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 19,
+      "impact_rank": 19
+    },
+    {
+      "id": "git/hooks/prepare-commit-msg.sample",
+      "path": "git/hooks/prepare-commit-msg.sample",
+      "directory": "git/hooks",
+      "filename": "prepare-commit-msg.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/prepare-commit-msg.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 20,
+      "impact_rank": 20
+    },
+    {
+      "id": "git/hooks/push-to-checkout.sample",
+      "path": "git/hooks/push-to-checkout.sample",
+      "directory": "git/hooks",
+      "filename": "push-to-checkout.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/push-to-checkout.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 21,
+      "impact_rank": 21
+    },
+    {
+      "id": "git/hooks/sendemail-validate.sample",
+      "path": "git/hooks/sendemail-validate.sample",
+      "directory": "git/hooks",
+      "filename": "sendemail-validate.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/sendemail-validate.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 22,
+      "impact_rank": 22
+    },
+    {
+      "id": "git/hooks/update.sample",
+      "path": "git/hooks/update.sample",
+      "directory": "git/hooks",
+      "filename": "update.sample",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/hooks/update.sample",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 23,
+      "impact_rank": 23
+    },
+    {
+      "id": "git/info/exclude",
+      "path": "git/info/exclude",
+      "directory": "git/info",
+      "filename": "exclude",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/info/exclude",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 24,
+      "impact_rank": 24
+    },
+    {
+      "id": "git/logs/HEAD",
+      "path": "git/logs/HEAD",
+      "directory": "git/logs",
+      "filename": "HEAD",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/logs/HEAD",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 25,
+      "impact_rank": 25
+    },
+    {
+      "id": "git/logs/refs/heads/main",
+      "path": "git/logs/refs/heads/main",
+      "directory": "git/logs/refs/heads",
+      "filename": "main",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/logs/refs/heads/main",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 26,
+      "impact_rank": 26
+    },
+    {
+      "id": "git/objects/08/ae3f8b880a9d82b17e9848ac9fdb9d669cd1ff",
+      "path": "git/objects/08/ae3f8b880a9d82b17e9848ac9fdb9d669cd1ff",
+      "directory": "git/objects/08",
+      "filename": "ae3f8b880a9d82b17e9848ac9fdb9d669cd1ff",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/08/ae3f8b880a9d82b17e9848ac9fdb9d669cd1ff",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 27,
+      "impact_rank": 27
+    },
+    {
+      "id": "git/objects/22/ff1de43a261ee66c5a3cfdac1759f200344320",
+      "path": "git/objects/22/ff1de43a261ee66c5a3cfdac1759f200344320",
+      "directory": "git/objects/22",
+      "filename": "ff1de43a261ee66c5a3cfdac1759f200344320",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/22/ff1de43a261ee66c5a3cfdac1759f200344320",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 28,
+      "impact_rank": 28
+    },
+    {
+      "id": "git/objects/2f/ab4d417928b71827a6464898dcbf701197b1cf",
+      "path": "git/objects/2f/ab4d417928b71827a6464898dcbf701197b1cf",
+      "directory": "git/objects/2f",
+      "filename": "ab4d417928b71827a6464898dcbf701197b1cf",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/2f/ab4d417928b71827a6464898dcbf701197b1cf",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 29,
+      "impact_rank": 29
+    },
+    {
+      "id": "git/objects/78/29b364fe94854af4dafdcf4fe88e93d68687cf",
+      "path": "git/objects/78/29b364fe94854af4dafdcf4fe88e93d68687cf",
+      "directory": "git/objects/78",
+      "filename": "29b364fe94854af4dafdcf4fe88e93d68687cf",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/78/29b364fe94854af4dafdcf4fe88e93d68687cf",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 30,
+      "impact_rank": 30
+    },
+    {
+      "id": "git/objects/96/e9b3d49066c50c982cbc0cfd4441826934ead9",
+      "path": "git/objects/96/e9b3d49066c50c982cbc0cfd4441826934ead9",
+      "directory": "git/objects/96",
+      "filename": "e9b3d49066c50c982cbc0cfd4441826934ead9",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/96/e9b3d49066c50c982cbc0cfd4441826934ead9",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 31,
+      "impact_rank": 31
+    },
+    {
+      "id": "git/objects/a2/49908b2eb8ce5c2aa0dcee8bcefba7263091c2",
+      "path": "git/objects/a2/49908b2eb8ce5c2aa0dcee8bcefba7263091c2",
+      "directory": "git/objects/a2",
+      "filename": "49908b2eb8ce5c2aa0dcee8bcefba7263091c2",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/a2/49908b2eb8ce5c2aa0dcee8bcefba7263091c2",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 32,
+      "impact_rank": 32
+    },
+    {
+      "id": "git/objects/a4/54569aec3e7a91729205ed138ee62d5d1a544b",
+      "path": "git/objects/a4/54569aec3e7a91729205ed138ee62d5d1a544b",
+      "directory": "git/objects/a4",
+      "filename": "54569aec3e7a91729205ed138ee62d5d1a544b",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/a4/54569aec3e7a91729205ed138ee62d5d1a544b",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 33,
+      "impact_rank": 33
+    },
+    {
+      "id": "git/objects/c7/874bc8f27b19e072352b2384970092c75da2dd",
+      "path": "git/objects/c7/874bc8f27b19e072352b2384970092c75da2dd",
+      "directory": "git/objects/c7",
+      "filename": "874bc8f27b19e072352b2384970092c75da2dd",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/c7/874bc8f27b19e072352b2384970092c75da2dd",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 34,
+      "impact_rank": 34
+    },
+    {
+      "id": "git/objects/cc/fef07964a4e6ccd306dc1e228c25f5daaec186",
+      "path": "git/objects/cc/fef07964a4e6ccd306dc1e228c25f5daaec186",
+      "directory": "git/objects/cc",
+      "filename": "fef07964a4e6ccd306dc1e228c25f5daaec186",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/cc/fef07964a4e6ccd306dc1e228c25f5daaec186",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 35,
+      "impact_rank": 35
+    },
+    {
+      "id": "git/objects/ce/8bf8f0d7c391f38040fef43af16d7661f8f5eb",
+      "path": "git/objects/ce/8bf8f0d7c391f38040fef43af16d7661f8f5eb",
+      "directory": "git/objects/ce",
+      "filename": "8bf8f0d7c391f38040fef43af16d7661f8f5eb",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/ce/8bf8f0d7c391f38040fef43af16d7661f8f5eb",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 36,
+      "impact_rank": 36
+    },
+    {
+      "id": "git/objects/d6/e668a9ef4c069fa23a88bc86b2a1b04c86e528",
+      "path": "git/objects/d6/e668a9ef4c069fa23a88bc86b2a1b04c86e528",
+      "directory": "git/objects/d6",
+      "filename": "e668a9ef4c069fa23a88bc86b2a1b04c86e528",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/d6/e668a9ef4c069fa23a88bc86b2a1b04c86e528",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 37,
+      "impact_rank": 37
+    },
+    {
+      "id": "git/objects/ed/98b86bf8ee9b0f03349585d0609427db60810d",
+      "path": "git/objects/ed/98b86bf8ee9b0f03349585d0609427db60810d",
+      "directory": "git/objects/ed",
+      "filename": "98b86bf8ee9b0f03349585d0609427db60810d",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/objects/ed/98b86bf8ee9b0f03349585d0609427db60810d",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 38,
+      "impact_rank": 38
+    },
+    {
+      "id": "git/refs/heads/main",
+      "path": "git/refs/heads/main",
+      "directory": "git/refs/heads",
+      "filename": "main",
+      "language": "other",
+      "file_class": "other",
+      "is_approximate_complexity": false,
+      "complexity_method": "lizard",
+      "loc": 0,
+      "comment_loc": 0,
+      "blank_loc": 0,
+      "mean_complexity": 1.0,
+      "max_complexity": 1.0,
+      "commit_count": 0,
+      "distinct_authors": 1,
+      "dominant_contributor_share": 1.0,
+      "file_age_days": 0.0,
+      "days_since_last_change": 0.0,
+      "churn_90d": 0,
+      "total_churn": 0,
+      "past_bug_fixes": 0,
+      "fan_in": 0,
+      "fan_out": 0,
+      "risk_probability": 0.0569,
+      "impact_score": 0.0569,
+      "blast_radius": {
+        "target": "git/refs/heads/main",
+        "hops": {
+          "1": [],
+          "2": [],
+          "3": []
+        },
+        "all_dependents": [],
+        "total_count": 0,
+        "hop_counts": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "shap": {
+        "top_drivers": [
+          {
+            "feature": "file_age_days",
+            "label": "File Age (Days)",
+            "shap_value": 0.1498,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "newly introduced file (0 days old)"
+          },
+          {
+            "feature": "commit_count",
+            "label": "Total Commit Count",
+            "shap_value": 0.0473,
+            "feature_value": 0.0,
+            "direction": "increases_risk",
+            "snippet": "Total Commit Count of 0.0"
+          }
+        ],
+        "mitigators": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          }
+        ],
+        "top_impacts": [
+          {
+            "feature": "churn_90d",
+            "label": "90-Day Churn (Lines)",
+            "shap_value": -1.2665,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "minimal recent code churn (0 lines)"
+          },
+          {
+            "feature": "days_since_last_change",
+            "label": "Days Since Last Change",
+            "shap_value": -0.872,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "settled codebase history (0 days dormant)"
+          },
+          {
+            "feature": "loc",
+            "label": "Lines of Code",
+            "shap_value": -0.4364,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "compact module size (0 LOC)"
+          },
+          {
+            "feature": "max_complexity",
+            "label": "Max Cyclomatic Complexity",
+            "shap_value": -0.2475,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "low branch complexity (max CC 1.0)"
+          },
+          {
+            "feature": "total_churn",
+            "label": "Total Churn (Lines)",
+            "shap_value": -0.2381,
+            "feature_value": 0.0,
+            "direction": "decreases_risk",
+            "snippet": "stable code history"
+          },
+          {
+            "feature": "mean_complexity",
+            "label": "Mean Cyclomatic Complexity",
+            "shap_value": -0.1718,
+            "feature_value": 1.0,
+            "direction": "decreases_risk",
+            "snippet": "clean average complexity (1.0)"
+          }
+        ],
+        "explanation_text": "Low defect risk (5.7%). Strong stability sustained by minimal recent code churn (0 lines), and settled codebase history (0 days dormant)."
+      },
+      "risk_rank": 39,
+      "impact_rank": 39
+    }
+  ],
+  "graph_edges": [],
+  "critical_files": []
+}

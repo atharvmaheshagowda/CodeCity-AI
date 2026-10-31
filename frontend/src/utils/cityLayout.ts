@@ -20,7 +20,7 @@ export interface LayoutResult {
   scaleMultiplier?: number;
 }
 
-export function computeCityLayout(files: FileNode[]): LayoutResult {
+export function computeCityLayout(files: FileNode[], monorepoRoots?: string[]): LayoutResult {
   if (!files || files.length === 0) {
     return {
       buildings: [],
@@ -36,10 +36,25 @@ export function computeCityLayout(files: FileNode[]): LayoutResult {
   const isSparse = fileCount < 30;
   const scaleMultiplier = isSparse ? Math.min(2.0, Math.max(1.15, 1.0 + (30 - fileCount) * 0.035)) : 1.0;
 
-  // 2. Group files by directory
+  // 2. Group files by directory or monorepo root
+  const rootsSorted = monorepoRoots ? [...monorepoRoots].sort((a, b) => b.length - a.length) : [];
+
+  const getDistrictKey = (f: FileNode): string => {
+    if (rootsSorted.length > 0) {
+      const p = f.path.replace(/\\/g, '/');
+      for (const r of rootsSorted) {
+        const cleanR = r.replace(/\\/g, '/').replace(/^\/|\/$/g, '');
+        if (p === cleanR || p.startsWith(cleanR + '/')) {
+          return cleanR;
+        }
+      }
+    }
+    return f.directory || 'root';
+  };
+
   const dirMap: { [dir: string]: FileNode[] } = {};
   for (const f of files) {
-    const dir = f.directory || 'root';
+    const dir = getDistrictKey(f);
     if (!dirMap[dir]) dirMap[dir] = [];
     dirMap[dir].push(f);
   }

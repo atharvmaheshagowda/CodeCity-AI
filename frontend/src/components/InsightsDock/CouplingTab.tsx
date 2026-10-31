@@ -26,6 +26,25 @@ export const CouplingTab: React.FC = () => {
     }
   }, [currentRepo, couplingResult]);
 
+  if (currentRepo?.is_static_only) {
+    return (
+      <div className="p-8 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-center space-y-3 font-mono">
+        <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 mx-auto flex items-center justify-center">
+          <Info className="w-5 h-5" />
+        </div>
+        <h3 className="text-sm font-semibold text-amber-200 uppercase tracking-wide">Static-Only Mode: Git History Unavailable</h3>
+        <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
+          This repository was loaded as a static folder without Git history. Logical co-change coupling requires historical commits to compute Jaccard co-change frequencies.
+        </p>
+        <div className="pt-2">
+          <span className="text-[11px] text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-white/10">
+            Static AST Graph, Complexity, and Blast Radius remain 100% active.
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   if (!couplingResult) {
     return (
       <div className="py-12 text-center text-slate-500 font-mono text-xs">

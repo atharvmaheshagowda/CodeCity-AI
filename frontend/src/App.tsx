@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Loader2, AlertCircle, RefreshCw, PanelLeftOpen } from 'lucide-react';
 import { useCityStore } from './store/useCityStore';
 import { Navbar } from './components/Navbar';
@@ -15,6 +15,9 @@ import { InsightsDock } from './components/InsightsDock/InsightsDock';
 import { HotspotScatterModal } from './components/HotspotScatterModal';
 import { TerminalLogDrawer } from './components/TerminalLogDrawer';
 import { RepoComparisonModal } from './components/RepoComparisonModal';
+import { LanguageCapabilitiesModal } from './components/LanguageCapabilitiesModal';
+import { ExclusionRulesModal } from './components/ExclusionRulesModal';
+import { StaticModeBanner } from './components/StaticModeBanner';
 import { ColorMode } from './types';
 
 export const App: React.FC = () => {
@@ -33,7 +36,12 @@ export const App: React.FC = () => {
     isModelCardOpen,
     isCommandPaletteOpen,
     isOnboardingOpen,
+    isCapabilitiesModalOpen,
+    isExclusionRulesModalOpen,
     isLeftPanelCollapsed,
+    selectedLanguage,
+    selectedFileClass,
+    impactFocusMode,
     isLoading,
     error,
     fetchRepos,
@@ -46,7 +54,37 @@ export const App: React.FC = () => {
     recordUserActivity,
   } = useCityStore();
 
-  const isModalOpen = isModelCardOpen || isCommandPaletteOpen || isOnboardingOpen;
+  const isModalOpen =
+    isModelCardOpen ||
+    isCommandPaletteOpen ||
+    isOnboardingOpen ||
+    isCapabilitiesModalOpen ||
+    isExclusionRulesModalOpen;
+
+  // Filter files passed to 3D city scene based on active language, file class, and impact focus mode
+  const cityFiles = useMemo(() => {
+    if (!currentRepo) return [];
+    let list = currentRepo.files;
+
+    if (selectedLanguage) {
+      list = list.filter(
+        (f) => (f.language || 'other').toLowerCase() === selectedLanguage.toLowerCase()
+      );
+    }
+
+    if (selectedFileClass && selectedFileClass !== 'all') {
+      list = list.filter(
+        (f) => (f.file_class || 'source').toLowerCase() === selectedFileClass.toLowerCase()
+      );
+    }
+
+    if (impactFocusMode && impactFocusMode !== 'all') {
+      const n = typeof impactFocusMode === 'number' ? impactFocusMode : parseInt(impactFocusMode);
+      list = [...list].sort((a, b) => b.impact_score - a.impact_score).slice(0, n);
+    }
+
+    return list;
+  }, [currentRepo, selectedLanguage, selectedFileClass, impactFocusMode]);
 
   // Initial load
   useEffect(() => {
@@ -99,6 +137,9 @@ export const App: React.FC = () => {
       {/* 1. Header Navigation Bar */}
       <Navbar />
 
+      {/* 1B. Static Mode Banner (Rendered when repository has no Git history) */}
+      <StaticModeBanner />
+
       {/* 2. Main Content Viewport: Fullscreen 3D Canvas with Floating Chrome */}
       <div className="flex flex-1 relative overflow-hidden">
         {/* Left Intelligence Panel (Floating & Collapsible) */}
@@ -112,7 +153,7 @@ export const App: React.FC = () => {
             className="absolute left-3 top-3 z-20 glass-panel p-2 rounded-xl border border-white/10 hover:border-cyan-500/50 text-slate-300 hover:text-white shadow-glass-panel transition-all animate-fade-in"
             title="Expand Intelligence Panel"
           >
-            <PanelLeftOpen className="w-4 h-4 text-accent-cyan" />
+            <PanelLeftOpen className="w-4 h-4 text-cyan-400" />
           </button>
         )}
 
@@ -121,7 +162,7 @@ export const App: React.FC = () => {
           {isLoading ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 bg-[#030712]/95 z-30 animate-fade-in">
               <div className="relative">
-                <Loader2 className="w-12 h-12 text-accent-cyan animate-spin" />
+                <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
                 <div className="absolute inset-0 blur-xl bg-cyan-500/40 rounded-full" />
               </div>
               <div className="text-center">
@@ -129,14 +170,14 @@ export const App: React.FC = () => {
                   Constructing 3D CodeCity Metropolis...
                 </div>
                 <div className="text-xs text-slate-400 mt-1.5 font-mono">
-                  Synthesizing AST blast radius graph & procedural facades
+                  Synthesizing multi-language AST blast radius graph & procedural facades
                 </div>
               </div>
             </div>
           ) : error ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-[#030712] z-30 animate-fade-in">
               <div className="max-w-md p-6 glass-panel rounded-2xl border border-rose-500/40 text-center space-y-4 shadow-glow-rose">
-                <AlertCircle className="w-12 h-12 text-accent-rose mx-auto" />
+                <AlertCircle className="w-12 h-12 text-rose-400 mx-auto" />
                 <div>
                   <h3 className="text-base font-bold text-white">Connection or Data Error</h3>
                   <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-mono">{error}</p>
@@ -152,7 +193,7 @@ export const App: React.FC = () => {
             </div>
           ) : currentRepo ? (
             <CityScene
-              files={currentRepo.files}
+              files={cityFiles}
               graphEdges={currentRepo.graph_edges || []}
               selectedFile={selectedFile}
               hoveredFile={hoveredFile}
@@ -192,6 +233,8 @@ export const App: React.FC = () => {
       <HotspotScatterModal />
       <TerminalLogDrawer />
       <RepoComparisonModal />
+      <LanguageCapabilitiesModal />
+      <ExclusionRulesModal />
     </div>
   );
 };

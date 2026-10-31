@@ -22,6 +22,8 @@ import {
   CommitRiskResult,
   PlannerResult,
   BacktestResult,
+  FileClassFilter,
+  LanguageInfo,
 } from '../types';
 
 const API_BASE = 'http://127.0.0.1:8000/api';
@@ -47,6 +49,17 @@ interface CityState {
   presentationMode: boolean;
   isLoading: boolean;
   error: string | null;
+
+  // Multi-Language & Filtering States
+  selectedLanguage: string | null;
+  selectedFileClass: FileClassFilter;
+  impactFocusMode: 'all' | 50 | 100 | 250;
+  isCapabilitiesModalOpen: boolean;
+  isExclusionRulesModalOpen: boolean;
+  customExcludes: string[];
+  allLanguagesRegistry: any[];
+  defaultExclusions: { directories: string[]; extensions: string[]; filenames: string[] } | null;
+  isUploadingZip: boolean;
 
   // Cinematic Redesign Feature Flags & States
   lowPowerMode: boolean;
@@ -150,7 +163,17 @@ interface CityState {
   openModelCard: () => Promise<void>;
   closeModelCard: () => void;
   toggleOnboarding: () => void;
-  analyzeRepository: (url: string) => Promise<void>;
+  analyzeRepository: (urlOrPath: string, options?: { maxCommits?: number; maxFiles?: number; customExcludes?: string[] }) => Promise<void>;
+  uploadZipArchive: (file: File) => Promise<void>;
+  setSelectedLanguage: (lang: string | null) => void;
+  setSelectedFileClass: (cls: FileClassFilter) => void;
+  setImpactFocusMode: (mode: 'all' | 50 | 100 | 250) => void;
+  toggleCapabilitiesModal: (open?: boolean) => void;
+  toggleExclusionRulesModal: (open?: boolean) => void;
+  addCustomExclude: (pattern: string) => void;
+  removeCustomExclude: (pattern: string) => void;
+  fetchLanguageRegistry: () => Promise<void>;
+  fetchDefaultExclusions: () => Promise<void>;
 
   // Intelligence Actions
   toggleInsights: (open?: boolean) => void;
@@ -210,6 +233,17 @@ export const useCityStore = create<CityState>((set, get) => ({
   presentationMode: false,
   isLoading: false,
   error: null,
+
+  // Multi-Language & Filtering Defaults
+  selectedLanguage: null,
+  selectedFileClass: 'all',
+  impactFocusMode: 'all',
+  isCapabilitiesModalOpen: false,
+  isExclusionRulesModalOpen: false,
+  customExcludes: [],
+  allLanguagesRegistry: [],
+  defaultExclusions: null,
+  isUploadingZip: false,
 
   // Cinematic defaults
   lowPowerMode: false,
@@ -388,26 +422,38 @@ export const useCityStore = create<CityState>((set, get) => ({
   closeModelCard: () => set({ isModelCardOpen: false, lastUserActivity: Date.now() }),
   toggleOnboarding: () => set((state) => ({ isOnboardingOpen: !state.isOnboardingOpen, lastUserActivity: Date.now() })),
 
-  analyzeRepository: async (url: string) => {
+  analyzeRepository: async (urlOrPath: string, options?: { maxCommits?: number; maxFiles?: number; customExcludes?: string[] }) => {
+    const isLocal = urlOrPath.startsWith('/') || /^[a-zA-Z]:[\\/]/.test(urlOrPath);
     set({
       isAnalyzing: true,
       analysisProgress: 0.1,
-      analysisMessage: 'Initializing clone...',
+      analysisMessage: isLocal ? 'Validating local folder...' : 'Initializing clone...',
       analysisError: null,
       lastUserActivity: Date.now()
     });
     try {
+      const payload: any = {
+        max_commits: options?.maxCommits || 1500,
+        max_files: options?.maxFiles || 500,
+        custom_excludes: options?.customExcludes || get().customExcludes
+      };
+      if (isLocal) {
+        payload.local_path = urlOrPath;
+      } else {
+        payload.url = urlOrPath;
+      }
+
       const res = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
+        body: JSON.stringify(payload)
       });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.detail || 'Analysis request failed');
       }
       const data = await res.json();
-      set({ analysisJobId: data.job_id, analysisProgress: 0.3, analysisMessage: 'Mining AST and git history...' });
+      set({ analysisJobId: data.job_id, analysisProgress: 0.3, analysisMessage: 'Mining AST and history...' });
 
       // Poll status
       const poll = setInterval(async () => {
@@ -434,6 +480,109 @@ export const useCityStore = create<CityState>((set, get) => ({
       }, 1000);
     } catch (e: any) {
       set({ isAnalyzing: false, analysisError: e.message || 'Failed to start analysis' });
+    }
+  },
+
+  uploadZipArchive: async (file: File) => {
+    set({
+      isAnalyzing: true,
+      isUploadingZip: true,
+      analysisProgress: 0.1,
+      analysisMessage: `Uploading ${file.name} for safe extraction...`,
+      analysisError: null,
+      lastUserActivity: Date.now()
+    });
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch(`${API_BASE}/upload-zip`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'ZIP upload failed');
+      }
+      const data = await res.json();
+      set({
+        isUploadingZip: false,
+        analysisJobId: data.job_id,
+        analysisProgress: 0.25,
+        analysisMessage: 'Extracting archive safely & parsing AST...'
+      });
+
+      // Poll status
+      const poll = setInterval(async () => {
+        try {
+          const sRes = await fetch(`${API_BASE}/analyze/${data.job_id}`);
+          if (!sRes.ok) return;
+          const status = await sRes.json();
+          set({
+            analysisProgress: status.progress,
+            analysisMessage: status.message
+          });
+          if (status.status === 'done') {
+            clearInterval(poll);
+            set({ isAnalyzing: false, analysisJobId: null });
+            await get().fetchRepos();
+            await get().loadRepo(status.repo_id);
+          } else if (status.status === 'failed') {
+            clearInterval(poll);
+            set({ isAnalyzing: false, analysisError: status.error || 'ZIP Analysis failed' });
+          }
+        } catch {
+          // ignore transient poll error
+        }
+      }, 1000);
+    } catch (e: any) {
+      set({ isAnalyzing: false, isUploadingZip: false, analysisError: e.message || 'ZIP upload failed' });
+    }
+  },
+
+  setSelectedLanguage: (lang) => set({ selectedLanguage: lang, lastUserActivity: Date.now() }),
+  setSelectedFileClass: (cls) => set({ selectedFileClass: cls, lastUserActivity: Date.now() }),
+  setImpactFocusMode: (mode) => set({ impactFocusMode: mode, lastUserActivity: Date.now() }),
+  toggleCapabilitiesModal: (open) =>
+    set((s) => ({
+      isCapabilitiesModalOpen: open !== undefined ? open : !s.isCapabilitiesModalOpen,
+      lastUserActivity: Date.now()
+    })),
+  toggleExclusionRulesModal: (open) =>
+    set((s) => ({
+      isExclusionRulesModalOpen: open !== undefined ? open : !s.isExclusionRulesModalOpen,
+      lastUserActivity: Date.now()
+    })),
+  addCustomExclude: (pattern) =>
+    set((s) => ({
+      customExcludes: s.customExcludes.includes(pattern) ? s.customExcludes : [...s.customExcludes, pattern],
+      lastUserActivity: Date.now()
+    })),
+  removeCustomExclude: (pattern) =>
+    set((s) => ({
+      customExcludes: s.customExcludes.filter((p) => p !== pattern),
+      lastUserActivity: Date.now()
+    })),
+  fetchLanguageRegistry: async () => {
+    try {
+      const res = await fetch(`${API_BASE}/languages`);
+      if (res.ok) {
+        const data = await res.json();
+        set({ allLanguagesRegistry: data });
+      }
+    } catch (e) {
+      console.error('Failed to fetch languages registry:', e);
+    }
+  },
+  fetchDefaultExclusions: async () => {
+    try {
+      const res = await fetch(`${API_BASE}/exclusions/default`);
+      if (res.ok) {
+        const data = await res.json();
+        set({ defaultExclusions: data });
+      }
+    } catch (e) {
+      console.error('Failed to fetch default exclusions:', e);
     }
   },
 

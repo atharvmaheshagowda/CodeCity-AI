@@ -1,104 +1,126 @@
-# CodeCity AI — Advanced Intelligence & Graphics Extension Master Tracker (`TODO.md`)
+# CodeCity AI — Multi-Language Extension Master Tracker (`TODO.md`)
 
-## Priority Order: P0 -> P1 -> P2 -> Final Polish
-
----
-
-### Step 0: Data Preparation & Offline Caches
-- [x] Enrich synthetic repo generator (`backend/mining/synthetic_repo.py`) to produce deep 180-day commit histories, real co-change patterns, tests (`tests/test_*.py`), routes, and models for `pallets_flask`, `psf_requests`, and `pallets_click`.
-- [x] Precompute and cache full analysis JSON in `backend/data/cached_demos/` so all new capabilities load offline in <50ms.
-- [x] Implement graceful degradation ("Not enough history" empty states) for the 7-file reference repo (`atharvmaheshagowda_agenta-workspace`).
+## Loop Protocol Milestones
 
 ---
 
-### Phase 1: Priority P0 Features (Core Impact, Coupling, Contagion, What-If, Smells & Report)
-- [x] **A1: Traceback-to-blast-radius**:
-  - [x] Backend: `POST /api/traceback` parser for Python stack traces, frame extraction, AST node resolution, and cascade traversal.
-  - [x] Frontend: Traceback input panel inside Insights dock, building crash flash (`#ef4444`), staggered ripple animation, and impact summary ("1 crashed, N dependents, X tests at risk").
-- [x] **A2: Simulate failure**:
-  - [x] Context menu / drawer action to trigger instant failure simulation cascade without needing a traceback.
-- [x] **A5: Path explorer**:
-  - [x] Backend: `GET /api/path?source=...&target=...` shortest dependency path computation via NetworkX.
-  - [x] Frontend: File picker in Insights dock, animated directional route beam highlighting through intermediate nodes.
-- [x] **B1: Hidden coupling tunnels**:
-  - [x] Backend: `GET /api/coupling` mining co-change from git history (support >= 2, confidence/Jaccard, excluding existing imports and bulk commits > 30 files).
-  - [x] Frontend: 3D glowing underground/surface curved tunnels between coupled buildings, toggleable visual layer, ranked pair list with plain-English explanation.
-- [x] **B3: Risk contagion**:
-  - [x] Backend: `GET /api/contagion` personalized PageRank diffusion ($\alpha=0.85$) along dependency graph.
-  - [x] Frontend: "Contagion" color mode pill, spreading heat halo shader, drawer neighbor attribution ("Contributed by X% from dependent Y").
-- [x] **B4: Counterfactual what-if**:
-  - [x] Backend: `POST /api/whatif` re-running ML model inference with user-adjusted complexity, churn, LOC, and bug fixes.
-  - [x] Frontend: Drawer sliders for actionable features, real-time animated morphing of risk gauge, delta SHAP bars, and building height/color.
-- [x] **C3: Architecture smells**:
-  - [x] Backend: `GET /api/smells` detecting circular dependencies (Tarjan SCC), god files, and orphan files.
-  - [x] Frontend: Smells tab in Insights dock, glowing circular dependency arcs, god file beacon, smells visual layer toggle.
-- [x] **C4: Report export**:
-  - [x] Backend: `GET /api/report` computing 0-100 Code Health Score with documented formula.
-  - [x] Frontend: Report viewer tab, offline Markdown export, and print-friendly HTML report (`window.print()`).
-- [x] **P0 Verification**:
-  - [x] Pytest test suite for P0 endpoints (24/24 passing).
-  - [x] Frontend Vitest tests (7/7 passing) and clean build (0 errors).
-  - [x] 1920x1080 and 1366x768 screenshots & critique verified.
+### Milestone 1: Input Sources & File Filtering
+- [x] Implement `backend/mining/languages.py`:
+  - [x] Language registry (extension + shebang detection for 30+ languages, capabilities mapping)
+  - [x] File classifier (`source`, `test`, `config`, `docs`, `other`)
+  - [x] Exclusion engine (defaults: `.git`, `node_modules`, `vendor`, `dist`, `build`, `target`, `out`, `.venv`, `__pycache__`, `coverage`, `.next`, `.idea`, binary/image/font extensions, lockfiles, minified files, generated code headers, max file size)
+  - [x] `.gitignore` parsing via `pathspec`
+- [x] Implement `backend/mining/input_sources.py`:
+  - [x] Support public git URLs (GitHub, GitLab, Bitbucket, any HTTPS/SSH remote) with shallow clone & error handling
+  - [x] Support local folders with git history
+  - [x] Support local folders WITHOUT git history (Static-only mode: LOC, complexity, graph; history features disabled)
+  - [x] Support ZIP upload (`POST /api/upload-zip` and analyze flow) with Zip-Slip path traversal protection and Zip-Bomb size/entry limits
+  - [x] Monorepo detection (multiple project roots: `package.json`, `go.mod`, `pom.xml`, `Cargo.toml`, `pyproject.toml`, `packages/*`, `apps/*`, etc.)
+  - [x] Configurable caps (`max_files`, `max_commits`, `max_size_mb`) and progress streaming updates
 
 ---
 
-### Phase 2: Priority P1 Features (Breaking Changes, Test Impact, Backtest, Trajectory, Plan, Uncertainty, Timelapse, Diff Risk, Scatter & Model Card)
-- [x] **A3: Breaking-change detector**:
-  - [x] Backend: `POST /api/breaking-change` AST diffing of function signatures (params, defaults, *args/**kwargs), finding broken call sites across the codebase.
-  - [x] Frontend: Breaking change editor in Insights dock, highlighted broken caller list and 3D building beacons.
-- [x] **A4: Test-impact view**:
-  - [x] Backend: `GET /api/tests/impact` detecting test files (`tests/`, `test_*.py`) and import/call edges.
-  - [x] Frontend: Test coverage visual layer, "uncovered danger zones" (high impact, 0 covering tests) marked with amber caution stripes.
-- [x] **B2: Backtest trust score**:
-  - [x] Backend: Temporal backtest replay at historical cutoffs (T-90d, T-60d, T-30d), precision@10, ROC-AUC, capture rate vs churn baseline.
-  - [x] Test: `test_leakage.py` expansion proving strict temporal split with zero future leakage.
-  - [x] Frontend: Trust score badge in UI and detailed historical backtest panel in Model Card.
-- [x] **B5: Risk trajectory**:
-  - [x] Multi-cutoff model evaluation generating historical risk sparkline in file drawer with rapid-rise alert.
-- [x] **B6: Review budget planner**:
-  - [x] Backend: `POST /api/plan` greedy knapsack optimization (reviewers, hours, effort from LOC & CC) maximizing expected risk reduction.
-  - [x] Frontend: Interactive budget planner tab, ordered file checklist, 3D target building highlight, plan export.
-- [x] **B7: Uncertainty estimation**:
-  - [x] Tree variance / bootstrap spread across forest $\rightarrow \pm$ confidence band in gauge, hazy halo in 3D.
-- [x] **C1: Time-lapse visualizer**:
-  - [x] Backend: `GET /api/timelapse` monthly repo snapshots.
-  - [x] Frontend: Timeline scrub bar with Play/Pause, speed control, growing buildings and flaring bug-fix hotspots.
-- [x] **C2: Commit/diff risk checker**:
-  - [x] Backend: `POST /api/commit-risk` computing union blast radius, affected tests, and combined probability $1 - \prod (1 - r_i)$.
-  - [x] Frontend: Commit selector and unified diff paste box with instant risk evaluation.
-- [x] **C5: Hotspot scatter plot**:
-  - [x] Interactive Complexity vs Churn SVG scatter plot linked bidirectionally to 3D buildings and camera framing.
-- [x] **C6: Model Card upgrades**:
-  - [x] Model comparison (RandomForest vs HistGradientBoosting vs Churn), calibration curve, walk-forward backtest, and permutation importances.
-- [x] **P1 Verification**:
-  - [x] Pytest test suite for P1 endpoints (32/32 passing).
-  - [x] Vitest frontend tests and clean build.
-  - [x] 1920x1080 and 1366x768 screenshots & critique.
+### Milestone 2: Language-Agnostic Metrics Engine
+- [x] Implement `backend/mining/metrics.py`:
+  - [x] Generic line-of-code counter (code, comment, blank split for all languages)
+  - [x] Cyclomatic complexity engine:
+    - [x] Radon for Python (100% backward-compatible, identical metrics)
+    - [x] Lizard for 30+ languages (JS, TS, Java, Go, Rust, Ruby, PHP, C, C++, C#, Kotlin, Swift, etc.)
+    - [x] Keyword branching heuristic fallback for unsupported languages (marked as "approximate")
+  - [x] Unit tests verifying complexity and LOC across Python, JS, TS, Java, Go, Rust, C/C++
 
 ---
 
-### Phase 3: Priority P2 Features (Node Types, Analysis Log, Bus Factor, Repo Comparison, Leaderboard & Command Search)
-- [x] **A6: Node types**:
-  - [x] Detection of test suites, configs, entrypoints, and DB models $\rightarrow$ in-scene 3D badges with distinct halos and styles.
-- [x] **A7: Live analysis log**:
-  - [x] Terminal-style streaming log for analysis tasks, AST parsing, and graph operations.
-- [x] **B8: Knowledge concentration layer**:
-  - [x] File-level dominant contributor percentage ("Bus Factor Risk") color mode and layer without revealing author names.
-- [x] **C7: Repo-vs-repo side-by-side comparison**:
-  - [x] Dual-repo comparison modal comparing health scores, risk distributions, and architectural metrics.
-- [x] **C8: Exhibition leaderboard & demo attract tour**:
-  - [x] Continuous 3D orbit, autonomous hotspot tour with 7.5s progress timer, and interactive stepper pills.
-- [x] **C9: Rule-based search syntax**:
-  - [x] Query rules (`risk:>0.5`, `loc:>100`, `cc:>10`, `ext:py`) in file filter and command palette.
-- [x] **P2 Verification**:
-  - [x] Pytest test suite (32/32 passing).
-  - [x] Vitest frontend unit tests (7/7 passing).
-  - [x] Clean frontend production build (`dist/` generated with zero TS errors).
-  - [x] Puppeteer full-HD suite (`p2_1` through `p2_5`) captured and visually verified.
+### Milestone 3: Multi-Language Dependency Graph
+- [x] Implement `backend/graph/multi_lang_graph.py`:
+  - [x] Parser plugin interface: `extract_imports(file)` and `resolve_import(ref)`
+  - [x] JavaScript / TypeScript resolver (relative imports, `require`, index files, extensions, `tsconfig.json` paths)
+  - [x] Java / Kotlin resolver (package + import -> file)
+  - [x] Go resolver (`go.mod` module path, package directory mapping)
+  - [x] C / C++ resolver (local `#include "..."` with include directory resolution)
+  - [x] Rust resolver (`mod`, `use crate::...`, `super::...`)
+  - [x] Ruby resolver (`require_relative`, `require`)
+  - [x] PHP resolver (`use`, `require`, `include`)
+  - [x] C# resolver (namespace / `using` best-effort resolution)
+  - [x] Python resolver (uses existing `ASTDependencyParser` preserving 100% behavior)
+  - [x] Best-effort function-level call linking where feasible
+  - [x] Graph coverage score calculation (`resolved_edges / detected_imports` per language and repo-wide)
+  - [x] Confidence badge computation and blast radius "approximate" labeling for low coverage
 
 ---
 
-### Phase 4: Final Polish, Documentation & Verification
-- [x] Updated `README.md` with full feature walkthrough and offline commands.
-- [x] Authored `DEMO_SCRIPT.md` with a 3-minute presenter guide.
-- [x] Documented architectural decisions in `DECISIONS.md`.
+### Milestone 4: History Mining Hardening
+- [x] Update `backend/mining/git_miner.py`:
+  - [x] Commit cap and time window enforcement
+  - [x] Git rename tracking (`follow_renames`)
+  - [x] Skip merge commits for churn calculation
+  - [x] Skip bulk/format/vendor commits (> 30 files touched)
+  - [x] Bound maximum diffs to prevent memory spikes (10,000 line cap)
+  - [x] Multilingual bug-fix regex (`fix`, `bug`, `error`, `corrige`, `fallo`, `fehle`, `behebe`, `баг`, `исправ`, issue references `#\d+`)
+  - [x] Multi-language file extraction at HEAD and historical cutoffs
+  - [x] Fast incremental caching for re-analysis
+
+---
+
+### Milestone 5: Multi-Language Model Training & Inference
+- [x] Update `backend/ml/features.py`:
+  - [x] Core feature set (10 features available across all languages)
+  - [x] Graph feature set (fan-in, fan-out)
+- [x] Create `scripts/train_multilang.py`:
+  - [x] Multi-language corpus training pipeline (JS, TS, Java, Go, Rust, Ruby, PHP, C/C++, Python)
+  - [x] Strict temporal splits within repos, held-out evaluation repos
+  - [x] Train `core_model` and `core_graph_model`
+  - [x] Dual-model inference: use `core_graph_model` when graph coverage >= 0.35, else `core_model`
+  - [x] Compute per-language ROC-AUC, precision@10, recall@top 10% vs churn baseline
+  - [x] Save models and update `backend/data/metrics.json` with per-language metrics
+  - [x] Add multi-language temporal leakage test in `backend/tests/test_multilang_leakage.py`
+
+---
+
+### Milestone 6: UI & 3D Visualizer Updates
+- [x] Frontend input & source selection:
+  - [x] Accept any Git URL, local path, or Drag-and-Drop ZIP upload
+  - [x] Source-type indicator badges (Git URL, Local Folder, ZIP, Static Mode)
+  - [x] Caps configuration and exclusion rules editor modal
+- [x] Language & File-Class filtering:
+  - [x] Language chips with file counts and capability badges
+  - [x] "Capabilities" modal per language (Complexity: yes/approx/no, Graph: yes/partial/no, Model: validated/unvalidated)
+  - [x] File-class filter pills (`All`, `Source`, `Tests`, `Config`, `Docs`)
+  - [x] Analysis summary card (languages found, analyzed vs skipped, graph coverage, model used)
+- [x] Static-only mode degradation:
+  - [x] Warning banner and graceful disablement of history layers (coupling, timelapse, trajectory, backtest)
+- [x] Model Card "By Language" tab:
+  - [x] Per-language performance table vs Churn baseline, accuracy badges
+- [x] Large repo performance:
+  - [x] "Top N files by impact" focus mode (50, 100, 250, All)
+  - [x] Level-of-detail and district aggregation blocks maintaining 55+ FPS
+
+---
+
+### Milestone 7: Tests & Verification
+- [x] Backend test suite:
+  - [x] Unit tests for language detection, classification, and exclusions
+  - [x] Unit tests for multi-language metrics (Radon + Lizard + Heuristics)
+  - [x] Unit tests for multi-language graph resolvers (JS, TS, Java, Go, Rust, Ruby, PHP, C, Python)
+  - [x] Unit tests for static-only mode and ZIP upload / Zip-Slip rejection
+  - [x] Leakage tests for multi-language training pipeline
+  - [x] End-to-end integration tests analyzing fixture repos across languages
+  - [x] Verify all 60 tests pass (100% passing)
+- [x] Frontend test suite:
+  - [x] Vitest unit tests for language filtering, capabilities, and file classes (13/13 passing)
+  - [x] Clean TypeScript compilation (`tsc -b`) and production build
+
+---
+
+### Milestone 8: Cached Demos, Documentation & Verification
+- [x] Generate rich multi-language cached demos in `backend/data/cached_demos/`:
+  - [x] Python: `pallets_flask`, `psf_requests`, `pallets_click`, `agenta-workspace`
+  - [x] JavaScript: `expressjs_express`
+  - [x] TypeScript: `colinhacks_zod`
+  - [x] Java: `google_gson`
+  - [x] Go: `spf13_cobra`
+  - [x] C/C++: `c_engine`
+- [x] Run application, verify offline guarantee (0 runtime external network requests)
+- [x] Capture browser screenshots at 1920x1080 and 1366x768 across multi-language workflows
+- [x] Update `DECISIONS.md`, `README.md`, `DEMO_SCRIPT.md`
+

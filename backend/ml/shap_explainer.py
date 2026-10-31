@@ -5,7 +5,7 @@ Computes SHAP feature importance for each file and translates contributions into
 clear, human-readable engineering narratives using domain-tailored templates.
 """
 
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import numpy as np
 import pandas as pd
 import shap
@@ -81,16 +81,27 @@ def build_plain_english_narrative(risk_prob: float, top_drivers: List[Dict[str, 
 
 
 class CodeCityExplainer:
-    def __init__(self, model):
+    def __init__(self, model, feature_columns: Optional[List[str]] = None):
         self.model = model
+        self.feature_columns = (
+            feature_columns
+            or getattr(model, "feature_names_in_", None)
+            or list(getattr(model, "feature_names_in_", []))
+            or FEATURE_COLUMNS
+        )
+        if isinstance(self.feature_columns, np.ndarray):
+            self.feature_columns = self.feature_columns.tolist()
         # Use TreeExplainer for tree models
         self.explainer = shap.TreeExplainer(model)
 
-    def explain_dataframe(self, df: pd.DataFrame, risk_probs: np.ndarray) -> List[Dict[str, Any]]:
+    def explain_dataframe(self, df: pd.DataFrame, risk_probs: np.ndarray, feature_columns: Optional[List[str]] = None) -> List[Dict[str, Any]]:
         """
         Computes SHAP explanations for all rows in df.
         """
-        X = df[FEATURE_COLUMNS].fillna(0.0)
+        cols = feature_columns or self.feature_columns or FEATURE_COLUMNS
+        if isinstance(cols, np.ndarray):
+            cols = cols.tolist()
+        X = df[cols].fillna(0.0)
         shap_values = self.explainer.shap_values(X)
         
         # In multi-class or binary xgboost, shap_values can be 2D array or list of arrays
@@ -107,7 +118,7 @@ class CodeCityExplainer:
             prob = float(risk_probs[i])
 
             features_with_shap = []
-            for feat_idx, feat in enumerate(FEATURE_COLUMNS):
+            for feat_idx, feat in enumerate(cols):
                 sv = float(row_shap[feat_idx])
                 fv = float(row_vals[feat])
                 features_with_shap.append({

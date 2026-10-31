@@ -48,6 +48,22 @@ export const TimeTab: React.FC = () => {
 
   const hasSnapshots = Boolean(timelapseResult && timelapseResult.snapshots && timelapseResult.snapshots.length > 0);
 
+  if (currentRepo?.is_static_only) {
+    return (
+      <div className="p-8 text-center space-y-4 rounded-2xl bg-amber-950/30 border border-amber-500/40">
+        <History className="w-8 h-8 text-amber-400 mx-auto" />
+        <div className="space-y-1">
+          <h4 className="text-sm font-bold text-amber-200 font-mono uppercase tracking-wide">
+            Static-Only Mode: Git History Unavailable
+          </h4>
+          <p className="text-xs text-slate-300 font-mono max-w-md mx-auto">
+            Time-lapse 4D city growth replay requires Git commit history. This workspace was loaded in static mode without a .git folder.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!hasSnapshots) {
     return (
       <div className="p-8 text-center space-y-4 rounded-2xl bg-slate-900/40 border border-white/5">

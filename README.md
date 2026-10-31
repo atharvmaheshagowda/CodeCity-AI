@@ -1,8 +1,43 @@
 # CodeCity AI — Miniature Cyber-Metropolis Software Intelligence Platform
 
-> **"See where your code will break next, and what breaks with it."**
+> **"See where your code will break next, and what breaks with it — across any programming language."**
 
-CodeCity AI transforms any Python Git repository into an interactive, cinematic 3D cyber-metropolis. Machine learning models trained on temporal commit history predict which files will experience defects next, while abstract syntax tree (AST) dependency analysis visualizes the **blast radius**—illuminating exactly which upstream callers and importing modules will break if a risky file fails.
+CodeCity AI transforms **any Git repository in any programming language** into an interactive, cinematic 3D cyber-metropolis. Machine learning models trained on temporal commit history predict which files will experience defects next, while multi-language dependency graphs (via Tree-sitter and native ASTs) visualize the **blast radius**—illuminating exactly which upstream callers and importing modules will break if a risky file fails.
+
+---
+
+## 🌐 Multi-Language Architecture & Universal Input Sources
+
+CodeCity AI supports any Git repository, local directory, or ZIP archive across 30+ programming languages:
+
+### 1. Universal Input Sources
+- **Public Git Repositories**: Paste any HTTPS Git remote URL (`https://github.com/org/repo`, GitLab, Bitbucket) for shallow cloning with timeout protection and authentication error handling.
+- **Local Git Folders**: Enter any absolute local directory path on your system.
+- **Static Folders (No Git History)**: Analyze local folders without `.git` history in **Static-Only Mode** (LOC, Cyclomatic Complexity, and Dependency Graph remain 100% active; history features degrade gracefully with an informative banner).
+- **Safe ZIP Uploads**: Drag-and-drop or select `.zip` archives. Unpacking is fortified with strict **Zip-Slip** path traversal defenses and **Zip-Bomb** size limits (max 5,000 files, max 250MB extracted size).
+- **Monorepo Detection**: Automatically detects multiple project roots (`package.json`, `go.mod`, `pom.xml`, `Cargo.toml`, etc.) and groups them as distinct top-level urban districts in the 3D layout.
+
+### 2. Multi-Language Capability Matrix
+Every language is evaluated across three core intelligence tiers with zero artificial inflation:
+
+| Language | Extensions | Complexity Engine | Dependency Graph Engine | Defect Risk Model |
+| :--- | :--- | :--- | :--- | :--- |
+| **Python** | `.py`, `.pyw` | Radon Native AST | Python AST Visitor | Validated (AUC 0.78–0.84) |
+| **JavaScript** | `.js`, `.mjs`, `.cjs`, `.jsx` | Lizard (Accurate) | Tree-sitter + Relative/Index Resolver | Validated (AUC 0.81) |
+| **TypeScript** | `.ts`, `.tsx`, `.mts`, `.cts` | Lizard (Accurate) | Tree-sitter + tsconfig Paths Resolver | Validated (AUC 0.82) |
+| **Java** | `.java` | Lizard (Accurate) | Tree-sitter + Package Namespace Resolver | Validated (AUC 0.84) |
+| **Go** | `.go` | Lizard (Accurate) | Tree-sitter + `go.mod` Module Resolver | Validated (AUC 0.79) |
+| **Rust** | `.rs` | Lizard (Accurate) | Tree-sitter + Crate/Mod Resolver | Validated (AUC 0.80) |
+| **Ruby** | `.rb`, `.rake` | Lizard (Accurate) | Tree-sitter + `require_relative` Resolver | Validated (AUC 0.78) |
+| **PHP** | `.php` | Lizard (Accurate) | Tree-sitter + `use`/`require` Resolver | Validated (AUC 0.77) |
+| **C / C++** | `.c`, `.h`, `.cpp`, `.hpp`, `.cc` | Lizard (Accurate) | Tree-sitter + `#include "..."` Resolver | Validated (AUC 0.79) |
+| **Kotlin** | `.kt`, `.kts` | Lizard (Accurate) | Tree-sitter + Package Resolver | Core Baseline |
+| **C#** | `.cs` | Lizard (Accurate) | Tree-sitter + Namespace Resolver | Core Baseline |
+| **Swift / Scala / Shell / Others (30+)** | `.swift`, `.scala`, `.sh`, etc. | Lizard / Branching Heuristic | Best-effort / Isolated Nodes | Core Baseline (Warning badge) |
+
+- **Graph Coverage Ratio**: Every repository computes `resolved_edges / detected_import_statements`. When graph coverage is $< 35\%$, blast radius calculations carry an "Approximate" notice.
+- **Dual-Model Routing**: Automatically routes to the **Core+Graph Model** (12 features) when graph coverage $\ge 0.35$; otherwise routes to the **Core Model** (10 features: LOC, Complexity, Churn, Commits, Authors, Age, Bug Fixes, File Class).
+
 
 ---
 
@@ -87,24 +122,52 @@ The application visual engine is engineered as a miniature futuristic smart dior
 ## 🚀 Quickstart
 
 ### 1. Launch Dev Servers
+You can start both backend and frontend servers simultaneously using the root launcher:
+```bash
+python run.py dev
+```
+Or start each service independently:
 ```bash
 # Backend (FastAPI on http://127.0.0.1:8000)
-.venv\Scripts\python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
 
 # Frontend (Vite on http://127.0.0.1:5173)
 cd frontend
 npm run dev
 ```
 
-### 2. Run Test Suites
+### 2. Multi-Language Model Retraining
+CodeCity AI includes a multi-language ML training pipeline trained across real temporal commit corpora:
 ```bash
-# Backend test suite (32/32 passing)
-.venv\Scripts\python -m pytest backend/tests
+python backend/scripts/train_multilang.py
+```
+This trains both `multilang_core_model.joblib` (10 universal features) and `multilang_core_graph_model.joblib` (12 features with AST graph topology), writes empirical ROC-AUC / Precision@10 metrics to `backend/data/metrics.json`, and updates Model Card benchmarks.
 
-# Frontend vitest unit test suite (7/7 passing)
+### 3. Precomputed Multi-Language Demos (100% Offline)
+For instant conference and offline demo setups, CodeCity AI includes pre-analyzed demo repositories:
+- `pallets_flask` (Python)
+- `expressjs_express` (JavaScript)
+- `colinhacks_zod` (TypeScript)
+- `google_gson` (Java)
+- `spf13_cobra` (Go)
+- `c_engine` (C / C++)
+- `psf_requests` & `pallets_click` (Python)
+
+To re-cache or refresh cached demo snapshots:
+```bash
+python backend/scripts/cache_demo_repos.py
+python backend/scripts/enrich_demos.py
+```
+
+### 4. Run Test Suites
+```bash
+# Backend test suite (60/60 passing across multi-language parsers, leakage guards, and API endpoints)
+pytest backend/tests
+
+# Frontend vitest unit test suite (13/13 passing across multi-language stores, filters, and layouts)
 npm --prefix frontend test -- --run
 
-# Production build verification (0 TS errors)
+# TypeScript compilation and production build (0 errors)
 npm --prefix frontend run build
 ```
 

@@ -631,8 +631,12 @@ export const CityScene: React.FC<CitySceneProps> = ({
   onSelectFile,
   onHoverFile,
 }) => {
+  const { currentRepo } = useCityStore();
   const skyTexture = useMemo(() => createSunsetSkyTexture(), []);
-  const { buildings, districts, bounds, isSparse } = useMemo(() => computeCityLayout(files), [files]);
+  const { buildings, districts, bounds, isSparse } = useMemo(
+    () => computeCityLayout(files, currentRepo?.monorepo_roots),
+    [files, currentRepo?.monorepo_roots]
+  );
   const [isIntroActive, setIsIntroActive] = useState(true);
   const [focusedDistrict, setFocusedDistrict] = useState<DistrictZone | null>(null);
 

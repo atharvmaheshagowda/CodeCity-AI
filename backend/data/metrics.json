@@ -1,26 +1,94 @@
 {
-  "model_name": "XGBoost Defect Predictor",
-  "evaluation_date": "2026-10-29 18:24:06 UTC",
+  "model_name": "Multi-Language XGBoost Defect Predictor",
+  "evaluation_date": "2026-10-30 19:45:25 UTC",
   "training_repositories": [
     "pallets/flask",
     "pallets/click",
-    "psf/requests"
+    "psf/requests",
+    "expressjs/express",
+    "colinhacks/zod",
+    "google/gson",
+    "spf13/cobra",
+    "math_engine/c"
   ],
-  "held_out_repository": "httpie/cli",
-  "training_samples": 27,
-  "held_out_samples": 8,
-  "held_out_positives": 2,
+  "held_out_repositories": [
+    "httpie/cli",
+    "express_heldout",
+    "zod_heldout",
+    "gson_heldout",
+    "cobra_heldout",
+    "c_heldout"
+  ],
+  "training_samples": 54,
+  "held_out_samples": 35,
+  "held_out_positives": 7,
   "used_synthetic_fallback": true,
   "metrics": {
     "model": {
-      "roc_auc": 0.6667,
-      "precision_at_10": 0.25,
-      "recall_at_top_10_percent": 0.0
+      "roc_auc": 0.9107,
+      "precision_at_10": 0.5,
+      "recall_at_top_10_percent": 0.4286
     },
     "baseline_churn": {
-      "roc_auc": 0.5833,
-      "precision_at_10": 0.25,
+      "roc_auc": 0.6378,
+      "precision_at_10": 0.3,
       "recall_at_top_10_percent": 0.0
+    }
+  },
+  "per_language": {
+    "c": {
+      "samples": 4,
+      "positives": 1,
+      "roc_auc": 0.8333,
+      "precision_at_10": 0.25,
+      "recall_at_top_10_percent": 0.0,
+      "baseline_churn_roc_auc": 0.1667,
+      "confidence": "validated"
+    },
+    "go": {
+      "samples": 4,
+      "positives": 1,
+      "roc_auc": 1.0,
+      "precision_at_10": 0.25,
+      "recall_at_top_10_percent": 1.0,
+      "baseline_churn_roc_auc": 0.6667,
+      "confidence": "validated"
+    },
+    "java": {
+      "samples": 5,
+      "positives": 1,
+      "roc_auc": 1.0,
+      "precision_at_10": 0.2,
+      "recall_at_top_10_percent": 1.0,
+      "baseline_churn_roc_auc": 0.75,
+      "confidence": "validated"
+    },
+    "javascript": {
+      "samples": 7,
+      "positives": 1,
+      "roc_auc": 1.0,
+      "precision_at_10": 0.1429,
+      "recall_at_top_10_percent": 1.0,
+      "baseline_churn_roc_auc": 0.8333,
+      "confidence": "validated"
+    },
+    "python": {
+      "samples": 8,
+      "positives": 2,
+      "roc_auc": 0.9167,
+      "precision_at_10": 0.25,
+      "recall_at_top_10_percent": 0.5,
+      "baseline_churn_roc_auc": 0.5833,
+      "confidence": "validated"
+    },
+    "typescript": {
+      "samples": 7,
+      "positives": 1,
+      "roc_auc": 1.0,
+      "precision_at_10": 0.1429,
+      "recall_at_top_10_percent": 1.0,
+      "baseline_churn_roc_auc": 0.6667,
+      "confidence": "validated"
     }
   },
   "roc_curve": [
@@ -29,15 +97,47 @@
       "tpr": 0.0
     },
     {
-      "fpr": 0.167,
-      "tpr": 0.0
+      "fpr": 0.0,
+      "tpr": 0.143
     },
     {
-      "fpr": 0.333,
-      "tpr": 0.0
+      "fpr": 0.0,
+      "tpr": 0.571
     },
     {
-      "fpr": 0.333,
+      "fpr": 0.036,
+      "tpr": 0.714
+    },
+    {
+      "fpr": 0.214,
+      "tpr": 0.714
+    },
+    {
+      "fpr": 0.214,
+      "tpr": 0.857
+    },
+    {
+      "fpr": 0.286,
+      "tpr": 0.857
+    },
+    {
+      "fpr": 0.357,
+      "tpr": 0.857
+    },
+    {
+      "fpr": 0.393,
+      "tpr": 0.857
+    },
+    {
+      "fpr": 0.393,
+      "tpr": 1.0
+    },
+    {
+      "fpr": 0.679,
+      "tpr": 1.0
+    },
+    {
+      "fpr": 0.821,
       "tpr": 1.0
     },
     {
@@ -48,19 +148,19 @@
   "feature_importances": [
     {
       "feature": "loc",
-      "importance": 0.3386
+      "importance": 0.1029
     },
     {
       "feature": "mean_complexity",
-      "importance": 0.0525
+      "importance": 0.0689
     },
     {
       "feature": "max_complexity",
-      "importance": 0.2043
+      "importance": 0.1021
     },
     {
       "feature": "commit_count",
-      "importance": 0.0
+      "importance": 0.1118
     },
     {
       "feature": "distinct_authors",
@@ -68,19 +168,19 @@
     },
     {
       "feature": "file_age_days",
-      "importance": 0.1477
+      "importance": 0.0
     },
     {
       "feature": "days_since_last_change",
-      "importance": 0.0
+      "importance": 0.0584
     },
     {
       "feature": "churn_90d",
-      "importance": 0.0
+      "importance": 0.1028
     },
     {
       "feature": "total_churn",
-      "importance": 0.0
+      "importance": 0.1787
     },
     {
       "feature": "past_bug_fixes",
@@ -88,11 +188,31 @@
     },
     {
       "feature": "fan_in",
-      "importance": 0.192
+      "importance": 0.1332
     },
     {
       "feature": "fan_out",
-      "importance": 0.0648
+      "importance": 0.1413
     }
-  ]
+  ],
+  "model_architecture": {
+    "core_features": [
+      "loc",
+      "mean_complexity",
+      "max_complexity",
+      "commit_count",
+      "distinct_authors",
+      "file_age_days",
+      "days_since_last_change",
+      "churn_90d",
+      "total_churn",
+      "past_bug_fixes"
+    ],
+    "graph_features": [
+      "fan_in",
+      "fan_out"
+    ],
+    "graph_threshold": 0.35,
+    "description": "Dual-routing inference: uses Core+Graph model when graph coverage >= 35%, else falls back to Core model."
+  }
 }

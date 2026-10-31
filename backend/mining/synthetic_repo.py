@@ -601,9 +601,568 @@ def create_synthetic_httpie_repo(dest_path: str) -> str:
     return dest_path
 
 
+def create_synthetic_express_repo(dest_path: str) -> str:
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path, ignore_errors=True)
+    os.makedirs(dest_path, exist_ok=True)
+    _run_git(["init", "-b", "main"], cwd=dest_path)
+    _run_git(["config", "user.name", "TJ Holowaychuk"], cwd=dest_path)
+    _run_git(["config", "user.email", "tj@vision-media.ca"], cwd=dest_path)
+
+    base = datetime.now(timezone.utc) - timedelta(days=180)
+
+    _commit_at(dest_path, base, 0, "TJ Holowaychuk", "tj@vision-media.ca", "Initial Express framework skeleton", {
+        "package.json": '{\n  "name": "express",\n  "version": "4.18.2",\n  "main": "lib/express.js"\n}\n',
+        "lib/express.js": (
+            "const EventEmitter = require('events').EventEmitter;\n"
+            "const proto = require('./application');\n"
+            "const Route = require('./router/route');\n"
+            "const Router = require('./router/index');\n\n"
+            "function createApplication() {\n"
+            "  const app = function(req, res, next) {\n"
+            "    app.handle(req, res, next);\n"
+            "  };\n"
+            "  return Object.assign(app, proto);\n"
+            "}\n"
+            "exports = module.exports = createApplication;\n"
+            "exports.Router = Router;\n"
+            "exports.Route = Route;\n"
+        ),
+        "lib/application.js": (
+            "const Router = require('./router/index');\n"
+            "const middleware = require('./middleware/init');\n\n"
+            "const app = exports = module.exports = {};\n"
+            "app.init = function() {\n"
+            "  this._router = new Router();\n"
+            "  this.use(middleware.init(this));\n"
+            "};\n"
+            "app.use = function(fn) {\n"
+            "  if (typeof fn !== 'function') throw new TypeError('Middleware must be a function');\n"
+            "  return this._router.use(fn);\n"
+            "};\n"
+            "app.handle = function(req, res, callback) {\n"
+            "  this._router.handle(req, res, callback);\n"
+            "};\n"
+        ),
+        "lib/router/index.js": (
+            "const Route = require('./route');\n\n"
+            "function Router() {\n"
+            "  this.stack = [];\n"
+            "}\n"
+            "Router.prototype.use = function(fn) {\n"
+            "  this.stack.push({ handle: fn });\n"
+            "  return this;\n"
+            "};\n"
+            "Router.prototype.route = function(path) {\n"
+            "  const route = new Route(path);\n"
+            "  this.stack.push({ path: path, route: route });\n"
+            "  return route;\n"
+            "};\n"
+            "Router.prototype.handle = function(req, res, out) {\n"
+            "  for (let i = 0; i < this.stack.length; i++) {\n"
+            "    if (this.stack[i].handle) this.stack[i].handle(req, res, out);\n"
+            "  }\n"
+            "};\n"
+            "module.exports = Router;\n"
+        ),
+        "lib/router/route.js": (
+            "function Route(path) {\n"
+            "  this.path = path;\n"
+            "  this.methods = {};\n"
+            "}\n"
+            "Route.prototype.dispatch = function(req, res, done) {\n"
+            "  if (!this.methods[req.method]) return done();\n"
+            "  return done(null);\n"
+            "};\n"
+            "module.exports = Route;\n"
+        ),
+        "lib/middleware/init.js": (
+            "exports.init = function(app) {\n"
+            "  return function expressInit(req, res, next) {\n"
+            "    req.app = app;\n"
+            "    res.app = app;\n"
+            "    if (next) next();\n"
+            "  };\n"
+            "};\n"
+        ),
+        "test/app.test.js": (
+            "const express = require('../lib/express');\n\n"
+            "describe('Express Application', () => {\n"
+            "  it('should initialize cleanly', () => {\n"
+            "    const app = express();\n"
+            "    if (!app) throw new Error('app should exist');\n"
+            "  });\n"
+            "});\n"
+        )
+    })
+
+    # Day 40: Bug fix in Router pre-T
+    _commit_at(dest_path, base, 40, "Douglas Christopher Wilson", "doug@somethingdoug.com", "Fix router crash when route stack is null or undefined", {
+        "lib/router/index.js": (
+            "const Route = require('./route');\n\n"
+            "function Router() {\n"
+            "  this.stack = [];\n"
+            "}\n"
+            "Router.prototype.use = function(fn) {\n"
+            "  if (!fn) return this;\n"
+            "  this.stack.push({ handle: fn });\n"
+            "  return this;\n"
+            "};\n"
+            "Router.prototype.route = function(path) {\n"
+            "  const route = new Route(path);\n"
+            "  this.stack.push({ path: path, route: route });\n"
+            "  return route;\n"
+            "};\n"
+            "Router.prototype.handle = function(req, res, out) {\n"
+            "  if (!this.stack || !Array.isArray(this.stack)) return out ? out() : null;\n"
+            "  for (let i = 0; i < this.stack.length; i++) {\n"
+            "    if (this.stack[i] && this.stack[i].handle) {\n"
+            "      this.stack[i].handle(req, res, out);\n"
+            "    }\n"
+            "  }\n"
+            "};\n"
+            "module.exports = Router;\n"
+        )
+    })
+
+    # CUTOFF T = Day 90
+    # Day 120: Post-T Bug Fix in application.js
+    _commit_at(dest_path, base, 120, "Douglas Christopher Wilson", "doug@somethingdoug.com", "Fix bug #4182: handle exception in express.handle and preserve error state", {
+        "lib/application.js": (
+            "const Router = require('./router/index');\n"
+            "const middleware = require('./middleware/init');\n\n"
+            "const app = exports = module.exports = {};\n"
+            "app.init = function() {\n"
+            "  this._router = new Router();\n"
+            "  this.use(middleware.init(this));\n"
+            "};\n"
+            "app.use = function(fn) {\n"
+            "  if (typeof fn !== 'function') throw new TypeError('Middleware must be a function');\n"
+            "  return this._router.use(fn);\n"
+            "};\n"
+            "app.handle = function(req, res, callback) {\n"
+            "  try {\n"
+            "    if (!this._router) this.init();\n"
+            "    this._router.handle(req, res, callback);\n"
+            "  } catch (err) {\n"
+            "    if (callback) callback(err);\n"
+            "  }\n"
+            "};\n"
+        )
+    })
+
+    return dest_path
+
+
+def create_synthetic_zod_repo(dest_path: str) -> str:
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path, ignore_errors=True)
+    os.makedirs(dest_path, exist_ok=True)
+    _run_git(["init", "-b", "main"], cwd=dest_path)
+    _run_git(["config", "user.name", "Colin McDonnell"], cwd=dest_path)
+    _run_git(["config", "user.email", "colin@zod.dev"], cwd=dest_path)
+
+    base = datetime.now(timezone.utc) - timedelta(days=180)
+
+    _commit_at(dest_path, base, 0, "Colin McDonnell", "colin@zod.dev", "Initial Zod TypeScript architecture", {
+        "tsconfig.json": '{\n  "compilerOptions": {\n    "target": "ES2022",\n    "module": "commonjs",\n    "paths": {\n      "@/*": ["src/*"]\n    }\n  }\n}\n',
+        "package.json": '{\n  "name": "zod",\n  "version": "3.22.4"\n}\n',
+        "src/index.ts": (
+            'export * from "./types";\n'
+            'export * from "./schemas";\n'
+            'export * from "./helpers/parseUtil";\n'
+        ),
+        "src/types.ts": (
+            'export type ParseReturnType<T> = { status: "valid"; value: T } | { status: "aborted"; error: any };\n'
+            'export interface ZodTypeDef {\n'
+            '  errorMap?: any;\n'
+            '  description?: string;\n'
+            '}\n'
+            'export abstract class ZodType<Output = any, Def extends ZodTypeDef = ZodTypeDef> {\n'
+            '  readonly _def!: Def;\n'
+            '  abstract _parse(input: any): ParseReturnType<Output>;\n'
+            '  parse(data: unknown): Output {\n'
+            '    const result = this._parse(data);\n'
+            '    if (result.status === "valid") return result.value;\n'
+            '    throw new Error("Validation error");\n'
+            '  }\n'
+            '}\n'
+        ),
+        "src/helpers/parseUtil.ts": (
+            'import { ParseReturnType } from "../types";\n\n'
+            'export const OK = <T>(value: T): ParseReturnType<T> => ({\n'
+            '  status: "valid",\n'
+            '  value,\n'
+            '});\n'
+            'export const INVALID = (error: any): ParseReturnType<never> => ({\n'
+            '  status: "aborted",\n'
+            '  error,\n'
+            '});\n'
+        ),
+        "src/schemas.ts": (
+            'import { ZodType, ZodTypeDef } from "./types";\n'
+            'import { OK, INVALID } from "./helpers/parseUtil";\n\n'
+            'export class ZodString extends ZodType<string> {\n'
+            '  _parse(input: any) {\n'
+            '    if (typeof input === "string") return OK(input);\n'
+            '    return INVALID("Expected string");\n'
+            '  }\n'
+            '}\n'
+            'export const string = (): ZodString => new ZodString();\n'
+        ),
+        "tests/basic.test.ts": (
+            'import { string } from "../src/schemas";\n\n'
+            'describe("ZodString", () => {\n'
+            '  it("validates string inputs", () => {\n'
+            '    const s = string();\n'
+            '    if (s.parse("hello") !== "hello") throw new Error("Failed");\n'
+            '  });\n'
+            '});\n'
+        )
+    })
+
+    # Day 50: Bug fix in parseUtil pre-T
+    _commit_at(dest_path, base, 50, "Colin McDonnell", "colin@zod.dev", "Fix parsing bug for undefined input values", {
+        "src/helpers/parseUtil.ts": (
+            'import { ParseReturnType } from "../types";\n\n'
+            'export const OK = <T>(value: T): ParseReturnType<T> => ({\n'
+            '  status: "valid",\n'
+            '  value,\n'
+            '});\n'
+            'export const INVALID = (error: any): ParseReturnType<never> => ({\n'
+            '  status: "aborted",\n'
+            '  error: error ?? "Unknown error",\n'
+            '});\n'
+        )
+    })
+
+    # CUTOFF T = Day 90
+    # Day 115: Post-T Bug Fix in schemas.ts
+    _commit_at(dest_path, base, 115, "Colin McDonnell", "colin@zod.dev", "Fix regression in string schema coercion and empty input error", {
+        "src/schemas.ts": (
+            'import { ZodType, ZodTypeDef } from "./types";\n'
+            'import { OK, INVALID } from "./helpers/parseUtil";\n\n'
+            'export class ZodString extends ZodType<string> {\n'
+            '  _parse(input: any) {\n'
+            '    if (typeof input === "string") return OK(input);\n'
+            '    if (input === null || input === undefined) return INVALID("Received null or undefined");\n'
+            '    return INVALID("Expected string");\n'
+            '  }\n'
+            '}\n'
+            'export const string = (): ZodString => new ZodString();\n'
+        )
+    })
+
+    return dest_path
+
+
+def create_synthetic_gson_repo(dest_path: str) -> str:
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path, ignore_errors=True)
+    os.makedirs(dest_path, exist_ok=True)
+    _run_git(["init", "-b", "main"], cwd=dest_path)
+    _run_git(["config", "user.name", "Inderjeet Singh"], cwd=dest_path)
+    _run_git(["config", "user.email", "inderjeet@google.com"], cwd=dest_path)
+
+    base = datetime.now(timezone.utc) - timedelta(days=180)
+
+    _commit_at(dest_path, base, 0, "Inderjeet Singh", "inderjeet@google.com", "Initial Gson Java project structure", {
+        "pom.xml": '<project><modelVersion>4.0.0</modelVersion><groupId>com.google.code.gson</groupId><artifactId>gson</artifactId><version>2.10.1</version></project>',
+        "src/main/java/com/google/gson/Gson.java": (
+            "package com.google.gson;\n\n"
+            "import com.google.gson.JsonElement;\n"
+            "import com.google.gson.JsonObject;\n\n"
+            "public class Gson {\n"
+            "  public String toJson(Object src) {\n"
+            "    if (src == null) return \"null\";\n"
+            "    return src.toString();\n"
+            "  }\n"
+            "  public <T> T fromJson(String json, Class<T> classOfT) {\n"
+            "    if (json == null) return null;\n"
+            "    return null;\n"
+            "  }\n"
+            "}\n"
+        ),
+        "src/main/java/com/google/gson/JsonElement.java": (
+            "package com.google.gson;\n\n"
+            "public abstract class JsonElement {\n"
+            "  public boolean isJsonObject() {\n"
+            "    return this instanceof JsonObject;\n"
+            "  }\n"
+            "  public JsonObject getAsJsonObject() {\n"
+            "    if (isJsonObject()) return (JsonObject) this;\n"
+            "    throw new IllegalStateException(\"Not a JSON Object\");\n"
+            "  }\n"
+            "}\n"
+        ),
+        "src/main/java/com/google/gson/JsonObject.java": (
+            "package com.google.gson;\n\n"
+            "import java.util.HashMap;\n"
+            "import java.util.Map;\n\n"
+            "public class JsonObject extends JsonElement {\n"
+            "  private final Map<String, JsonElement> members = new HashMap<>();\n"
+            "  public void add(String property, JsonElement value) {\n"
+            "    members.put(property, value);\n"
+            "  }\n"
+            "  public JsonElement get(String property) {\n"
+            "    return members.get(property);\n"
+            "  }\n"
+            "}\n"
+        ),
+        "src/test/java/com/google/gson/GsonTest.java": (
+            "package com.google.gson;\n\n"
+            "public class GsonTest {\n"
+            "  public void testGsonNotNull() {\n"
+            "    Gson gson = new Gson();\n"
+            "    assert gson != null;\n"
+            "  }\n"
+            "}\n"
+        )
+    })
+
+    # Day 50: Pre-T bug fix
+    _commit_at(dest_path, base, 50, "Joel Leitch", "joelleitch@google.com", "Fix NullPointerException bug in JsonObject.get", {
+        "src/main/java/com/google/gson/JsonObject.java": (
+            "package com.google.gson;\n\n"
+            "import java.util.HashMap;\n"
+            "import java.util.Map;\n\n"
+            "public class JsonObject extends JsonElement {\n"
+            "  private final Map<String, JsonElement> members = new HashMap<>();\n"
+            "  public void add(String property, JsonElement value) {\n"
+            "    if (property != null) members.put(property, value);\n"
+            "  }\n"
+            "  public JsonElement get(String property) {\n"
+            "    if (property == null) return null;\n"
+            "    return members.get(property);\n"
+            "  }\n"
+            "}\n"
+        )
+    })
+
+    # CUTOFF T = Day 90
+    # Day 110: Post-T bug fix in Gson.java
+    _commit_at(dest_path, base, 110, "Inderjeet Singh", "inderjeet@google.com", "Fix crash: handle empty json string without throwing runtime error", {
+        "src/main/java/com/google/gson/Gson.java": (
+            "package com.google.gson;\n\n"
+            "import com.google.gson.JsonElement;\n"
+            "import com.google.gson.JsonObject;\n\n"
+            "public class Gson {\n"
+            "  public String toJson(Object src) {\n"
+            "    if (src == null) return \"null\";\n"
+            "    return src.toString();\n"
+            "  }\n"
+            "  public <T> T fromJson(String json, Class<T> classOfT) {\n"
+            "    if (json == null || json.trim().isEmpty()) return null;\n"
+            "    return null;\n"
+            "  }\n"
+            "}\n"
+        )
+    })
+
+    return dest_path
+
+
+def create_synthetic_cobra_repo(dest_path: str) -> str:
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path, ignore_errors=True)
+    os.makedirs(dest_path, exist_ok=True)
+    _run_git(["init", "-b", "main"], cwd=dest_path)
+    _run_git(["config", "user.name", "Steve Francia"], cwd=dest_path)
+    _run_git(["config", "user.email", "spf@spf13.com"], cwd=dest_path)
+
+    base = datetime.now(timezone.utc) - timedelta(days=180)
+
+    _commit_at(dest_path, base, 0, "Steve Francia", "spf@spf13.com", "Initial Cobra Go CLI framework", {
+        "go.mod": "module github.com/spf13/cobra\n\ngo 1.21\n",
+        "command.go": (
+            "package cobra\n\n"
+            "import (\n"
+            "    \"fmt\"\n"
+            "    \"strings\"\n"
+            ")\n\n"
+            "type Command struct {\n"
+            "    Use string\n"
+            "    Short string\n"
+            "    Run func(cmd *Command, args []string)\n"
+            "    commands []*Command\n"
+            "}\n\n"
+            "func (c *Command) AddCommand(cmds ...*Command) {\n"
+            "    for _, cmd := range cmds {\n"
+            "        c.commands = append(c.commands, cmd)\n"
+            "    }\n"
+            "}\n\n"
+            "func (c *Command) Execute() error {\n"
+            "    if c.Run != nil {\n"
+            "        c.Run(c, []string{})\n"
+            "    }\n"
+            "    return nil\n"
+            "}\n"
+        ),
+        "args.go": (
+            "package cobra\n\n"
+            "import \"errors\"\n\n"
+            "func ExactArgs(n int) func(*Command, []string) error {\n"
+            "    return func(c *Command, args []string) error {\n"
+            "        if len(args) != n {\n"
+            "            return errors.New(\"invalid argument count\")\n"
+            "        }\n"
+            "        return nil\n"
+            "    }\n"
+            "}\n"
+        ),
+        "command_test.go": (
+            "package cobra\n\n"
+            "import \"testing\"\n\n"
+            "func TestCommandExecute(t *testing.T) {\n"
+            "    cmd := &Command{Use: \"test\"}\n"
+            "    if err := cmd.Execute(); err != nil {\n"
+            "        t.Fatalf(\"Execute failed: %v\", err)\n"
+            "    }\n"
+            "}\n"
+        )
+    })
+
+    # Day 50: Pre-T bug fix
+    _commit_at(dest_path, base, 50, "Steve Francia", "spf@spf13.com", "Fix nil pointer error in AddCommand when subcommands are nil", {
+        "command.go": (
+            "package cobra\n\n"
+            "import (\n"
+            "    \"fmt\"\n"
+            "    \"strings\"\n"
+            ")\n\n"
+            "type Command struct {\n"
+            "    Use string\n"
+            "    Short string\n"
+            "    Run func(cmd *Command, args []string)\n"
+            "    commands []*Command\n"
+            "}\n\n"
+            "func (c *Command) AddCommand(cmds ...*Command) {\n"
+            "    for _, cmd := range cmds {\n"
+            "        if cmd != nil {\n"
+            "            c.commands = append(c.commands, cmd)\n"
+            "        }\n"
+            "    }\n"
+            "}\n\n"
+            "func (c *Command) Execute() error {\n"
+            "    if c.Run != nil {\n"
+            "        c.Run(c, []string{})\n"
+            "    }\n"
+            "    return nil\n"
+            "}\n"
+        )
+    })
+
+    # CUTOFF T = Day 90
+    # Day 115: Post-T bug fix in args.go
+    _commit_at(dest_path, base, 115, "Steve Francia", "spf@spf13.com", "Fix bug in argument validation and error formatting for ExactArgs", {
+        "args.go": (
+            "package cobra\n\n"
+            "import (\n"
+            "    \"errors\"\n"
+            "    \"fmt\"\n"
+            ")\n\n"
+            "func ExactArgs(n int) func(*Command, []string) error {\n"
+            "    return func(c *Command, args []string) error {\n"
+            "        if len(args) != n {\n"
+            "            return fmt.Errorf(\"accepts %d arg(s), received %d\", n, len(args))\n"
+            "        }\n"
+            "        return nil\n"
+            "    }\n"
+            "}\n"
+        )
+    })
+
+    return dest_path
+
+
+def create_synthetic_c_repo(dest_path: str) -> str:
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path, ignore_errors=True)
+    os.makedirs(dest_path, exist_ok=True)
+    _run_git(["init", "-b", "main"], cwd=dest_path)
+    _run_git(["config", "user.name", "Dennis Ritchie"], cwd=dest_path)
+    _run_git(["config", "user.email", "dmr@bell-labs.com"], cwd=dest_path)
+
+    base = datetime.now(timezone.utc) - timedelta(days=180)
+
+    _commit_at(dest_path, base, 0, "Dennis Ritchie", "dmr@bell-labs.com", "Initial C Math Engine", {
+        "include/math_engine.h": (
+            "#ifndef MATH_ENGINE_H\n"
+            "#define MATH_ENGINE_H\n\n"
+            "int add(int a, int b);\n"
+            "int multiply(int a, int b);\n"
+            "int divide(int a, int b);\n\n"
+            "#endif\n"
+        ),
+        "src/math_engine.c": (
+            "#include \"math_engine.h\"\n\n"
+            "int add(int a, int b) {\n"
+            "    return a + b;\n"
+            "}\n\n"
+            "int multiply(int a, int b) {\n"
+            "    return a * b;\n"
+            "}\n\n"
+            "int divide(int a, int b) {\n"
+            "    if (b == 0) return 0;\n"
+            "    return a / b;\n"
+            "}\n"
+        ),
+        "src/solver.c": (
+            "#include \"math_engine.h\"\n\n"
+            "int compute_hypotenuse_squared(int x, int y) {\n"
+            "    int x2 = multiply(x, x);\n"
+            "    int y2 = multiply(y, y);\n"
+            "    return add(x2, y2);\n"
+            "}\n"
+        ),
+        "tests/test_solver.c": (
+            "#include \"math_engine.h\"\n"
+            "#include <assert.h>\n\n"
+            "int main() {\n"
+            "    assert(add(2, 3) == 5);\n"
+            "    return 0;\n"
+            "}\n"
+        )
+    })
+
+    # Day 50: Pre-T bug fix
+    _commit_at(dest_path, base, 50, "Dennis Ritchie", "dmr@bell-labs.com", "Fix division by zero crash bug in divide", {
+        "src/math_engine.c": (
+            "#include \"math_engine.h\"\n\n"
+            "int add(int a, int b) {\n"
+            "    return a + b;\n"
+            "}\n\n"
+            "int multiply(int a, int b) {\n"
+            "    return a * b;\n"
+            "}\n\n"
+            "int divide(int a, int b) {\n"
+            "    if (b == 0) {\n"
+            "        return -1; /* error sentinel */\n"
+            "    }\n"
+            "    return a / b;\n"
+            "}\n"
+        )
+    })
+
+    # CUTOFF T = Day 90
+    # Day 120: Post-T bug fix
+    _commit_at(dest_path, base, 120, "Dennis Ritchie", "dmr@bell-labs.com", "Fix integer overflow bug in solver hypotenuse calculation", {
+        "src/solver.c": (
+            "#include \"math_engine.h\"\n\n"
+            "int compute_hypotenuse_squared(int x, int y) {\n"
+            "    long long x2 = (long long)multiply(x, x);\n"
+            "    long long y2 = (long long)multiply(y, y);\n"
+            "    return (int)(x2 + y2);\n"
+            "}\n"
+        )
+    })
+
+    return dest_path
+
+
 def create_synthetic_git_repo(dest_path: str, repo_name: str = "demo_repo") -> str:
     """
-    Dispatcher for named synthetic repos.
+    Dispatcher for named synthetic repos across multiple languages.
     """
     clean = repo_name.lower()
     if "flask" in clean:
@@ -614,6 +1173,16 @@ def create_synthetic_git_repo(dest_path: str, repo_name: str = "demo_repo") -> s
         return create_synthetic_requests_repo(dest_path)
     elif "httpie" in clean:
         return create_synthetic_httpie_repo(dest_path)
+    elif "express" in clean:
+        return create_synthetic_express_repo(dest_path)
+    elif "zod" in clean:
+        return create_synthetic_zod_repo(dest_path)
+    elif "gson" in clean:
+        return create_synthetic_gson_repo(dest_path)
+    elif "cobra" in clean:
+        return create_synthetic_cobra_repo(dest_path)
+    elif "c" in clean or "math" in clean:
+        return create_synthetic_c_repo(dest_path)
     else:
         return create_synthetic_flask_repo(dest_path)
 
