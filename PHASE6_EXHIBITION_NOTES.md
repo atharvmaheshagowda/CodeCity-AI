@@ -74,3 +74,4 @@ Phase 6 elevates CodeCity AI's Exhibition Mode from a basic rotating hotspot cyc
 11. `screenshots/phase6_sparse_ecotrace.png` (Small Sparse Repository Verification)
 12. `screenshots/phase6_dense_flask.png` (Dense Repository Verification)
 13. `screenshots/phase6_exit_clean_return.png` (Clean Exit & State Restoration)
+

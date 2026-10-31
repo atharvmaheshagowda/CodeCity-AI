@@ -97,3 +97,4 @@ Each insight provides:
 - **Zero Cloud Calls / Zero Telemetry**: 100% offline self-contained operation.
 - **Memory & Render Budgets**: All graph metrics cached; canvas framerate $\ge 60\text{ FPS}$ on baseline hardware.
 - **Temporal Integrity**: All training and validation strictly respect temporal cutoffs with zero future data leakage.
+

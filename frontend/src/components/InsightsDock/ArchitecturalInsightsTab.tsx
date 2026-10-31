@@ -466,3 +466,4 @@ export const ArchitecturalInsightsTab: React.FC = () => {
     </div>
   );
 };
+

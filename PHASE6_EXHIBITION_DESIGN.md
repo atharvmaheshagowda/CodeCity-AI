@@ -108,3 +108,4 @@ When reduced motion is detected or configured:
 - **Instanced Geometry Reuse**: Reuses existing building archetype instanced meshes and ground shaders; zero extra Three.js draw calls created for the presentation.
 - **Zero Cloud Footprint**: 100% offline, zero network telemetry, self-hosted fonts.
 - **Low-Power Mode Degradation**: When Low-Power mode is active, stage transitions reduce postprocessing passes and particle count without disrupting the sequence.
+

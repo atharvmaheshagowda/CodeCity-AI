@@ -84,3 +84,4 @@ Phase 5 elevated CodeCity AI's existing predictive and static analytics into a u
 - Time-Lapse 4D Replay: `frontend/screenshots/phase5_test_timelapse.png`
 - Representative Dense Repo (`pallets/flask`): `frontend/screenshots/phase5_test_flask_dense.png`
 - Sparse Baseline Repo (`ecotrace-ai`): `frontend/screenshots/phase5_test_ecotrace_sparse.png`
+
